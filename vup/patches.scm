@@ -12,4 +12,4 @@
     (package (inherit old-xkeyboard-config)
       (source (origin 
                 (inherit old-source)
-                (patches (append (origin-patches old-source) (search-patches '("vup.patch")))))))))
+                (patches (append (origin-patches old-source) (search-patches "vup.patch"))))))))
