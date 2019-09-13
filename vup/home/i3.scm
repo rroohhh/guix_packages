@@ -13,7 +13,7 @@
     i3-color-configuration
     i3-color-spec
     make-i3-color-spec
-    ))
+    i3-home))
 
 (define-record-type* <i3-configuration> 
     i3-configuration make-i3-configuration i3-configuration?
