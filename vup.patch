@@ -1,0 +1,241 @@
+diff -Naur a/rules/base.extras.xml b/rules/base.extras.xml
+--- a/rules/base.extras.xml	2019-05-31 01:30:31.000000000 +0200
++++ b/rules/base.extras.xml	2019-08-03 16:25:26.026178302 +0200
+@@ -142,6 +142,12 @@
+         </variant>
+         <variant>
+           <configItem>
++            <name>vup</name>
++            <description>German (vup)</description>
++          </configItem>
++        </variant>
++        <variant>
++          <configItem>
+             <name>koy</name>
+             <description>German (KOY)</description>
+           </configItem>
+diff -Naur a/rules/base.xml b/rules/base.xml
+--- a/rules/base.xml	2019-05-31 01:30:31.000000000 +0200
++++ b/rules/base.xml	2019-08-03 16:27:07.054794853 +0200
+@@ -3499,6 +3499,12 @@
+         </variant>
+         <variant>
+           <configItem>
++            <name>vup</name>
++            <description>German (vup)</description>
++          </configItem>
++        </variant>
++        <variant>
++          <configItem>
+             <name>mac</name>
+             <description>German (Macintosh)</description>
+           </configItem>
+diff -Naur a/rules/evdev.xml b/rules/evdev.xml
+--- a/rules/evdev.xml	2019-05-31 01:30:43.000000000 +0200
++++ b/rules/evdev.xml	2019-08-03 16:27:43.614294224 +0200
+@@ -3499,6 +3499,12 @@
+         </variant>
+         <variant>
+           <configItem>
++            <name>vup</name>
++            <description>German (vup)</description>
++          </configItem>
++        </variant>
++        <variant>
++          <configItem>
+             <name>mac</name>
+             <description>German (Macintosh)</description>
+           </configItem>
+diff -Naur a/symbols/de b/symbols/de
+--- a/symbols/de	2019-05-31 01:30:31.000000000 +0200
++++ b/symbols/de	2019-08-03 16:30:13.153523476 +0200
+@@ -469,6 +469,135 @@
+     include "level5(ralt_switch_lock)"
+ };
+ 
++// vup layout
++
++partial alphanumeric_keys modifier_keys keypad_keys
++xkb_symbols "vup_base" {
++
++    // Levels in vup jargon
++    // --------------------------------------------------------------
++    // Ebene 1: normal
++    // Ebene 2: Shift
++    // Ebene 3: Mod3
++    // Ebene 4: Mod4 (for marking something use Shift + Mod4)
++    // Ebene 5: Shift + Mod3
++    // Ebene 6: Mod3 + Mod4
++    // Compose (not a level): Mod3 + Tab
++    // Feststelltaste (Capslock): Shift + Shift
++    // Mod4-Lock: Mod4 + Mod4
++    // Mod4-Lock: Shift + Mod3 + Tab
++
++    // Legend
++    // ===============
++    // Levels in Xkbmap jargon to be found here in the definitions. 
++    // These are the levels used, and Xorg's translations:
++    // --------------------------------------------------------------
++    // Xorg:       Level1                   Level2                   Level3                   Level4                   Level5                   Level6                   Level7                   Level8                   
++    // Vup:        Ebene1                   Ebene2                   Ebene3                   Ebene5                   Ebene4                   Pseudo-Ebene             Ebene6                   ???                      
++    // Keys (vup): None                     Shift                    Mod3                     Mod3 + Shift             Mod4                     Mod4 + Shift             Mod3 + Mod4              Mod3 + Mod4 + Shift      
++
++
++    // Alphanumeric-keys
++    // ===============
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++
++    // Tab as Multi_key (Compose)
++    // --------------------------------------------------------------
++    key  <TAB> { [ Tab,                     ISO_Left_Tab,            Multi_key,               ISO_Level5_Lock,         NoSymbol,                NoSymbol,                NoSymbol,                ISO_Level5_Lock          ] };
++
++    key <BKSL>	{ [ Return , Return, Return, Return, Return, Return, Return, Return ] };
++
++    // Number row
++    // -------------------------------------------------------------
++    key <TLDE> { [ space,   NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE01> { [ 1,          onesuperior,   NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE02> { [ 2,          twosuperior,   NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE03> { [ 3,          threesuperior, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE04> { [ 4,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE05> { [ 5,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE06> { [ 6,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE07> { [ 7,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE08> { [ 8,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE09> { [ 9,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key <AE10> { [ 0,          NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
++    key <AE11> { [ odiaeresis, Odiaeresis,    NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++    key <AE12> { [ NoSymbol,   NoSymbol,      NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++
++    // Top row
++    // --------------------------------------------------------------
++    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
++    key <AD01> { [ v,         V,      at,           NoSymbol,        U3D1, logicalor, NoSymbol,   NoSymbol ] };
++    key <AD02> { [ u,         U,      ampersand,    NoSymbol,    infinity, U222E, NoSymbol,       NoSymbol ] };
++    key <AD03> { [ p,         P,      EuroSign,     NoSymbol,    Greek_pi, Greek_PI, NoSymbol,    NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++    key <AD04> { [ period,    colon,  less,      NoSymbol,   elementof, U21A6, NoSymbol,       NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
++    key <AD05> { [ b,         B,      greater,         NoSymbol,  Greek_beta, UD7, NoSymbol,  NoSymbol ] };
++    key <AD06> { [ x,         X,      plus,         NoSymbol,    Greek_xi, Greek_XI, NoSymbol,    NoSymbol ] };
++    key <AD07> { [ g,         G,      bracketleft,  NoSymbol, Greek_gamma, Greek_GAMMA, NoSymbol, NoSymbol ] };
++    key <AD08> { [ c,         C,      bracketright, NoSymbol,   Greek_chi, U2102, NoSymbol,       NoSymbol ] };
++    key <AD09> { [ f,         F,      slash,        NoSymbol,   Greek_phi, Greek_PHI, NoSymbol,   NoSymbol ] };
++    key <AD10> { [ z,         Z,      acute,        NoSymbol,  Greek_zeta, U2124, NoSymbol,       NoSymbol ] };
++    key <AD11> { [ k,         K,      asciitilde,        NoSymbol, Greek_kappa, intersection, NoSymbol,       NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++    key <AD12> { [ BackSpace, Delete, NoSymbol,     NoSymbol,    NoSymbol, NoSymbol, NoSymbol,    NoSymbol ] };
++
++    // Middle row
++    // --------------------------------------------------------------
++    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
++    key <AC01> { [ r, R, exclam,         NoSymbol,     Greek_rho, U211D, NoSymbol,         NoSymbol ] };
++    key <AC02> { [ i, I, dollar,         NoSymbol,    Greek_iota, implies, NoSymbol,       NoSymbol ] };
++    key <AC03> { [ e, E, colon,          NoSymbol, Greek_epsilon, U2203, NoSymbol,         NoSymbol ] };
++    key <AC04> { [ a, A, parenleft,      NoSymbol,   Greek_alpha, U2200, NoSymbol,         NoSymbol ] };
++    key <AC05> { [ o, O, parenright,     NoSymbol, Greek_omicron, nabla, NoSymbol,         NoSymbol ] };
++    key <AC06> { [ d, D, braceright,     NoSymbol,   Greek_delta, Greek_DELTA, NoSymbol,   NoSymbol ] };
++    key <AC07> { [ s, S, braceleft,      NoSymbol,   Greek_sigma, Greek_SIGMA, NoSymbol,   NoSymbol ] };
++    key <AC08> { [ n, N, backslash,      NoSymbol,      Greek_nu, U2115, NoSymbol,         NoSymbol ] };
++    key <AC09> { [ t, T, equal,          NoSymbol,     Greek_tau, U21D4, NoSymbol,      NoSymbol ] };
++    key <AC10> { [ l, L, underscore,     NoSymbol,  Greek_lambda, Greek_LAMBDA, NoSymbol,  NoSymbol ] };
++    key <AC11> { [ y, Y, periodcentered, NoSymbol, Greek_upsilon, Greek_UPSILON, NoSymbol, NoSymbol ] };
++
++    // Bottom row
++    // --------------------------------------------------------------
++    key <AB01> { [ q,          Q,          numbersign,  NoSymbol,    NoSymbol, U211A, NoSymbol,       NoSymbol ] };
++    key <AB02> { [ udiaeresis, Udiaeresis, question,    NoSymbol,   U2282, U2286, NoSymbol,   NoSymbol ] };
++    key <AB03> { [ adiaeresis, Adiaeresis, bar,         NoSymbol,   Greek_eta, logicaland, NoSymbol,       NoSymbol ] };
++    key <AB04> { [ h,          H,          percent,     NoSymbol,   Greek_psi, Greek_PSI, NoSymbol,   NoSymbol ] };
++    key <AB05> { [ ssharp,     U1E9E,      grave,       NoSymbol,        U3F0, U228A, NoSymbol,       NoSymbol ] };
++    key <AB06> { [ m,          M,          asterisk,    NoSymbol,    Greek_mu, integral, NoSymbol,    NoSymbol ] };
++    key <AB07> { [ w,          W,          asciicircum, NoSymbol, Greek_omega, Greek_OMEGA, NoSymbol, NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++    key <AB08> { [ comma,      semicolon,  quotedbl,    NoSymbol,       U03D5, union, NoSymbol,       NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
++    key <AB09> { [ j,          J,          apostrophe,  NoSymbol, Greek_theta, Greek_THETA, NoSymbol, NoSymbol ] };
++    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
++    key <AB10> { [ minus,      underscore, NoSymbol,    NoSymbol,    NoSymbol, NoSymbol, NoSymbol,    NoSymbol ] };
++    key  <KP1> { [ space,      space,      space,       space,       space,    space,    space,       space    ] };
++
++    // Space key
++    // --------------------------------------------------------------
++//    key <SPCE> { [ space, space, space, NoSymbol, NoSymbol, NoSymbol, NoSymbol, NoSymbol ] };
++};
++
++partial alphanumeric_keys modifier_keys keypad_keys
++xkb_symbols "vup" {
++    include "de(vup_base)"
++
++    name[Group1]= "German (vup)";
++
++    include "shift(space_shift)"
++    include "level3(caps_switch)"
++//    include "level3(bksl_switch)"
++    include "level5(lsgt_switch_lock)"
++    include "level5(rshift_switch_lock)"
++
++    key <LFSH> { [ Control_L ] };
++    key <LCTL> { [ Multi_key ] };
++    modifier_map Control { <LFSH>, <RCTL> };
++};
++
+ // Copied from macintosh_vndr/de
+ // olh@suse.de   very close to MacOS map
+ 
+@@ -915,6 +1044,7 @@
+     key <AB08> { [ w,                       W,                       NoSymbol,                Greek_omega,             NoSymbol,                NoSymbol,                Greek_OMEGA,             NoSymbol                 ] };
+     key <AB09> { [ m,                       M,                       NoSymbol,                Greek_mu,                NoSymbol,                NoSymbol,                ifonlyif,                NoSymbol                 ] };
+     key <AB10> { [ z,                       Z,                       NoSymbol,                Greek_zeta,              NoSymbol,                NoSymbol,                U2124,                   NoSymbol                 ] };
++    key  <KP1> { [ space,                   space,                 space,                   space,           space,                  space,                  space,               space                 ] };
+ };
+ 
+ partial alphanumeric_keys modifier_keys keypad_keys
+@@ -925,6 +1055,7 @@
+     name[Group1]= "German (Aus der Neo-Welt)";
+ 
+     include "shift(both_capslock)"
++    include "shift(space_shift)"
+     include "level3(caps_switch)"
+     include "level3(bksl_switch)"
+     include "level5(lsgt_switch_lock)"
+diff -Naur a/symbols/shift b/symbols/shift
+--- a/symbols/shift	2019-05-31 01:30:31.000000000 +0200
++++ b/symbols/shift	2019-08-03 16:30:46.773895094 +0200
+@@ -17,6 +17,14 @@
+     };
+ };
+ 
++// space as shift
++partial modifier_keys
++xkb_symbols "space_shift" {
++  key <SPCE> {
++    type[Group1]="ONE_LEVEL",
++    symbols[Group1] = [ Shift_L ]
++  };
++};
+ 
+ // Toggle CapsLock when pressed together with the other Shift key.
+ partial modifier_keys
+diff -Naur a/symbols/level5 b/symbols/level5
+--- a/symbols/level5	2019-05-31 01:30:31.000000000 +0200
++++ b/symbols/level5	2019-08-03 16:30:46.773895094 +0200
+@@ -112,6 +112,16 @@
+ };
+ 
+ partial modifier_keys
++xkb_symbols "rshift_switch_lock" {
++  include "level5(lock)"
++  key <RTSH> {
++    type[Group1] = "EIGHT_LEVEL",
++    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift,
++                        ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
++  };
++};
++
++partial modifier_keys
+ xkb_symbols "lsgt_switch_lock_cancel" {
+   include "level5(lock)"
+   key <LSGT> {

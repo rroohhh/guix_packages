@@ -1,5 +1,6 @@
 (define-module (vup patches)
   #:use-module (guix packages)
+  #:use-module (gnu packages) ;; search-patches
   #:use-module (gnu packages xorg))
 
 ;; patch xkeyboard-config to include my vup layout
@@ -11,4 +12,4 @@
     (package (inherit old-xkeyboard-config)
       (source (origin 
                 (inherit old-source)
-                (patches (append (origin-patches old-source) '("vup.patch"))))))))
+                (patches (append (origin-patches old-source) (search-patches '("vup.patch")))))))))
