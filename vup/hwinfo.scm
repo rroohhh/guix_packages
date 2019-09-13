@@ -21,23 +21,7 @@
    (arguments '(#:phases
                 (modify-phases %standard-phases
                   (delete 'check)))) ;; there are no tests
-;;   (arguments '(#:phases
-;;                (modify-phases %standard-phases
-;;                  (delete 'configure) 
-;;                  (delete 'check) 
-;;                  ;; The upstream makefile does not include an install phase.
-;;                  (replace 'install
-;;                    (lambda* (#:key outputs #:allow-other-keys)
-;;                      (let* ((out (assoc-ref outputs "out"))
-;;                             (bin (string-append out "/bin")))
-;;                        (for-each (lambda (file)
-;;                                    (install-file file bin)
-;;                                    (delete-file file))
-;;                                  '("caps2esc")))
-;;                      #t)))))
    (home-page "https://github.com/rroohhh/hwinfo")
    (synopsis "Hardware information tool")
    (description "Hardware information tool with influxdb and zsh completion support.")
    (license agpl3)))
-
-hwinfo
