@@ -1,6 +1,7 @@
 (define-module (vup home i3)
   #:use-module (guix gexp)
   #:use-module (guix records)
+  #:use-module (guix import utils) ;; for flatten
   #:use-module (ice-9 match)
   #:use-module (ice-9 format)
   #:use-module (srfi srfi-1)
@@ -106,9 +107,7 @@
 (define (generate-i3-key-bindings config)
   (map 
     (lambda (binding) 
-      (format #f "bindsym ~a ~a"
-        (string-join (car binding) "+")
-        (cadr binding))) 
+      `("bindsym " ,(string-join (car binding) "+") " " ,(cadr binding)))
     config))
 
 (define (i3-yes-no bool)
@@ -145,7 +144,7 @@
       `("bar {"
         ,(format #f "workspace_buttons ~a" (i3-yes-no workspace-buttons))
         ,(format #f "strip_workspace_numbers ~a" (i3-yes-no strip-workspace-numbers))
-        ,(format #f "status_command ~a" status-command)
+        ("status_command " ,status-command)
         ,@(generate-i3-font-config font)
         ,(format #f "position ~a" position)
         ,@(generate-i3-bar-color-config colors)
@@ -155,34 +154,35 @@
 
 (define (generate-i3-config config)
   (match config
-         (($ <i3-configuration> extra-config colors font bar 
-             inner-gaps outer-gaps smart-gaps 
-             smart-borders floating-modifier 
-             key-bindings)
-	  #~(with-output-to-file #$output
-              (lambda _
-  	      (format #t "~a"
-                  (string-join (append 
-                                 (list 
-                                   (if inner-gaps
-                                       (format #f "gaps inner ~d" inner-gaps))
-                                   (if outer-gaps
-                                       (format #f "gaps outer ~d" outer-gaps))
-                                   (if smart-gaps
-                                       (format #f "smart_gaps on"))
-                                   (if smart-borders
-                                       (format #f "smart_borders on"))
-                                   (string-append "floating_modifier " floating-modifier))
-                                 #$extra-config
-                                 (generate-i3-font-config font)
-                                 #$(generate-i3-bar-config bar)
-                                 (generate-i3-color-config colors)
-                                 #$(generate-i3-key-bindings key-bindings))
-                               "\n")))))))
+     (($ <i3-configuration> extra-config colors font bar 
+         inner-gaps outer-gaps smart-gaps 
+         smart-borders floating-modifier 
+         key-bindings)
+     (flatten (map (lambda (line) `(,line "\n")) 
+       (append 
+         (list 
+           (if inner-gaps
+               (format #f "gaps inner ~d" inner-gaps))
+           (if outer-gaps
+               (format #f "gaps outer ~d" outer-gaps))
+           (if smart-gaps
+               (format #f "smart_gaps on"))
+           (if smart-borders
+               (format #f "smart_borders on"))
+           (string-append "floating_modifier " floating-modifier))
+         extra-config
+         (generate-i3-font-config font)
+         (generate-i3-bar-config bar)
+         (generate-i3-color-config colors)
+         (generate-i3-key-bindings key-bindings)))))))
 
 (define (i3-home config)
   (computed-file "i3-home"
-    #~(let ((config #$(computed-file "config" (generate-i3-config config)))
+    #~(let ((config #$(computed-file "config" #~(with-output-to-file #$output 
+	                                          (lambda _ 
+						    (set-port-encoding! (current-output-port) "UTF-8")    ;; shitty hack for unicode to work
+						    (format #t "~a" (string-append #$@(generate-i3-config config)))))))  
+;;    #~(let ((config #$(apply mixed-text-file "config" (generate-i3-config config)))   ; can't use this, as it breaks unicode :(
 	    (i3-dir (string-append #$output "/.config/i3")))
 	(use-modules (guix build utils))
 	(mkdir-p i3-dir)
