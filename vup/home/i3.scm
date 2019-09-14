@@ -159,28 +159,30 @@
              inner-gaps outer-gaps smart-gaps 
              smart-borders floating-modifier 
              key-bindings)
-          (string-join (append 
-                         (list 
-                           (if inner-gaps
-                               (format #f "gaps inner ~d" inner-gaps))
-                           (if outer-gaps
-                               (format #f "gaps outer ~d" outer-gaps))
-                           (if smart-gaps
-                               (format #f "smart_gaps on"))
-                           (if smart-borders
-                               (format #f "smart_borders on"))
-                           (string-append "floating_modifier " floating-modifier))
-                         extra-config
-                         (generate-i3-font-config font)
-                         (generate-i3-bar-config bar)
-                         (generate-i3-color-config colors)
-                         (generate-i3-key-bindings key-bindings)
-                         )
-                       "\n"))))
+	  #~(with-output-to-file #$output
+              (lambda _
+  	      (format #t "~a"
+                  (string-join (append 
+                                 (list 
+                                   (if inner-gaps
+                                       (format #f "gaps inner ~d" inner-gaps))
+                                   (if outer-gaps
+                                       (format #f "gaps outer ~d" outer-gaps))
+                                   (if smart-gaps
+                                       (format #f "smart_gaps on"))
+                                   (if smart-borders
+                                       (format #f "smart_borders on"))
+                                   (string-append "floating_modifier " floating-modifier))
+                                 #$extra-config
+                                 (generate-i3-font-config font)
+                                 #$(generate-i3-bar-config bar)
+                                 (generate-i3-color-config colors)
+                                 #$(generate-i3-key-bindings key-bindings))
+                               "\n")))))))
 
 (define (i3-home config)
   (computed-file "i3-home"
-    #~(let ((config #$(plain-file "config" (generate-i3-config config)))
+    #~(let ((config #$(computed-file "config" (generate-i3-config config)))
 	    (i3-dir (string-append #$output "/.config/i3")))
 	(use-modules (guix build utils))
 	(mkdir-p i3-dir)
