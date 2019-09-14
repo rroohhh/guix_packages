@@ -6,10 +6,11 @@
 ;; patch xkeyboard-config to include my vup layout
 (let* 
   ((old-xkeyboard-config (module-ref (resolve-module '(gnu packages xorg)) 'xkeyboard-config))
-   (old-source (package-source old-xkeyboard-config)))
+   (old-source (package-source old-xkeyboard-config))
+   (patched-pkg (package (inherit old-xkeyboard-config)
+	          (source (origin (inherit old-source)
+				  (patches (append (origin-patches old-source) (search-patches "vup.patch"))))))))
 
   (module-define! (resolve-module '(gnu packages xorg)) 'xkeyboard-config
     (package (inherit old-xkeyboard-config)
-      (source (origin 
-                (inherit old-source)
-                (patches (append (origin-patches old-source) (search-patches "vup.patch"))))))))
+      (replacement patched-pkg))))
