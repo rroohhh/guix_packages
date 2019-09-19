@@ -11,6 +11,7 @@
 	          (source (origin (inherit old-source)
 				  (patches (append (origin-patches old-source) (search-patches "vup.patch"))))))))
 
-  (module-define! (resolve-module '(gnu packages xorg)) 'xkeyboard-config
-    (package (inherit old-xkeyboard-config)
-      (replacement patched-pkg))))
+  (if (not (package-replacement old-xkeyboard-config))
+    (module-define! (resolve-module '(gnu packages xorg)) 'xkeyboard-config
+      (package (inherit old-xkeyboard-config)
+        (replacement patched-pkg)))))
