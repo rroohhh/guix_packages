@@ -88,6 +88,7 @@
          ; (rust-bootstrapped-package rust-1.38 "1.38.0"
          ;   "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
     (package
+	  (name "rust-nightly")
       (inherit base-rust)
 	  (inputs (append (package-inputs base-rust) `(("lld" ,lld-8))))
       (arguments
