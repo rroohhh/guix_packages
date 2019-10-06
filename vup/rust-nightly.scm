@@ -90,7 +90,6 @@
     (package
       (inherit base-rust)
 	  (name "rust-nightly")
-	  (inputs (append (package-inputs base-rust) `(("lld" ,lld-8))))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
