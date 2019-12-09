@@ -130,3 +130,66 @@
 	(arguments '(#:phases
 				 (modify-phases %standard-phases
 				   (delete 'check))))))
+
+(define-public python-ordereddict
+  (package
+    (name "python-ordereddict")
+    (version "1.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ordereddict" version))
+        (sha256
+          (base32
+            "07qvy11nvgxpzarrni3wrww3vpc9yafgi2bch4j2vvvc42nb8d8w"))))
+    (build-system python-build-system)
+    (home-page "UNKNOWN")
+    (synopsis
+      "A drop-in substitute for Py2.7's new collections.OrderedDict that works in Python 2.4-2.6.")
+    (description
+      "A drop-in substitute for Py2.7's new collections.OrderedDict that works in Python 2.4-2.6.")
+    (license #f)))
+
+(define-public python-funcsigs
+  (package
+    (name "python-funcsigs")
+    (version "1.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "funcsigs" version))
+        (sha256
+          (base32
+            "0l4g5818ffyfmfs1a924811azhjj8ax9xd1cffr1mzd3ycn0zfx7"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-ordereddict" ,python-ordereddict)))
+    (home-page "http://funcsigs.readthedocs.org")
+	(arguments
+	 `(#:phases
+	   (modify-phases %standard-phases
+					  (delete 'check))))
+    (synopsis
+      "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+")
+    (description
+      "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+")
+    (license #f)))
+
+(define-public python-pint
+  (package
+    (name "python-pint")
+    (version "0.9")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "Pint" version))
+        (sha256
+          (base32
+            "1qp43xb8m9hhk1yi4ibdla0wx7b78avv65009hcq2krzsslskn1j"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-funcsigs" ,python-funcsigs)))
+    (home-page "https://github.com/hgrecco/pint")
+    (synopsis "Physical quantities module")
+    (description "Physical quantities module")
+    (license license:bsd-3)))
