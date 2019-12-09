@@ -81,9 +81,16 @@
                       (string-append "\nCommand::new(\"" bash "/bin/sh\")\n")))
                    #t))))))))))
 
+(define-public rust-1.39
+  (let ((base-rust
+         (rust-bootstrapped-package rust-1.38 "1.39.0"
+           "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
+    (package
+      (inherit base-rust))))
+
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.38.0"
+         (rust-bootstrapped-package rust-1.38 "1.39.0"
            "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
          ; (rust-bootstrapped-package rust-1.38 "1.38.0"
          ;   "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
@@ -138,37 +145,4 @@ ar = \"" binutils "/bin/ar" "\"
 jemalloc = \"" jemalloc "/lib/libjemalloc_pic.a" "\"
 [dist]
 ") port)))
-                   #t)))
-			 (add-before 'configure 'configure-cargo-home
-               (lambda _
-                 (let ((cargo-home (string-append (getcwd) "/.cargo")))
-                   (mkdir-p cargo-home)
-                   (setenv "CARGO_HOME" cargo-home)
-                   #t)))
-			 (replace 'patch-command-exec-tests
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((coreutils (assoc-ref inputs "coreutils")))
-                   (substitute* "src/test/ui/command-exec.rs"
-                     ((" Command::new\\(\"echo\"\\)")
-                      (string-append "\nCommand::new(\"" coreutils "/bin/echo\")\n")))
-                   #t)))
-			 (add-after 'patch-tests 'patch-command-uid-gid-tests-ls
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((coreutils (assoc-ref inputs "coreutils")))
-                   (substitute* "src/test/ui/command-uid-gid.rs"
-                     ((" Command::new\\(\"/bin/ls\"\\)")
-                      (string-append "\nCommand::new(\"" coreutils "/bin/ls\")\n")))
-                   #t)))
-			 (add-after 'patch-tests 'patch-command-uid-gid-tests-sh
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((bash (assoc-ref inputs "bash")))
-                   (substitute* "src/test/ui/command-uid-gid.rs"
-                     ((" Command::new\\(\"/bin/sh\"\\)")
-                      (string-append "\nCommand::new(\"" bash "/bin/sh\")\n")))
-                   #t)))
-             (add-before 'configure 'configure-cargo-home
-               (lambda _
-                 (let ((cargo-home (string-append (getcwd) "/.cargo")))
-                   (mkdir-p cargo-home)
-                   (setenv "CARGO_HOME" cargo-home)
                    #t))))))))))
