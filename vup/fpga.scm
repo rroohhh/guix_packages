@@ -35,7 +35,7 @@
 
 
 (define-public yosys-git
-  (let ((commit "3c6a566d865e3d70f8793225a6d211ce3d6246a1")
+  (let ((commit "ecb0c68f0751b3bd97f8da94e7bd2258987d58e1")
 		(version "0.9"))
   ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
    (package
@@ -116,7 +116,7 @@
 				  #t)))))))))
 
 (define-public trellis
-  (let ((commit "1c49486ebf65e7f099002273efe85dcb422490a1"))
+  (let ((commit "4e0b21597774084fca16762d5f5d88573420f1bf"))
 	(package
 	 (name "trellis")
 	 (version (string-append "1.0-71-g" (string-take commit 7)))
@@ -152,10 +152,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "58db38c746ad081563379d04beed1a080e080c19"))
+  (let ((commit "dd73a7ff9f6605ef689d5645c06d34585ec0eacc"))
 	(package
 	 (name "nextpnr")
-	 (version (string-append "2019.10.11-" (string-take commit 9)))
+	 (version (string-append "2019.12.09-" (string-take commit 9)))
 	 (source (origin
 			  (method git-fetch)
 			  (uri (git-reference
@@ -183,5 +183,5 @@ open Verilog to bitstream toolchain for these devices.")
 						   (string-append "-DPYTRELLIS_LIBDIR=" (assoc-ref %build-inputs "trellis") "/lib/trellis"))))
 	 (synopsis "nextpnr -- a portable FPGA place and route tool")
 	 (description "nextpnr aims to be a vendor neutral, timing driven, FOSS FPGA place and route tool.")
-	 (home-page "https://github.com/yosyshq/yosys")
+	 (home-page "https://github.com/yosyshq/nextpnr")
 	 (license license:isc))))
