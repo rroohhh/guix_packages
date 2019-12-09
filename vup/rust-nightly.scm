@@ -84,14 +84,14 @@
 (define-public rust-1.39
   (let ((base-rust
          (rust-bootstrapped-package rust-1.38 "1.39.0"
-           "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
+           "0mwkc1bnil2cfyf6nglpvbn2y0zfbv44zfhsd5qg4c9rm6vgd8dl")))
     (package
       (inherit base-rust))))
 
 (define-public rust-nightly
   (let ((base-rust
          (rust-bootstrapped-package rust-1.38 "1.39.0"
-           "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
+           "0mwkc1bnil2cfyf6nglpvbn2y0zfbv44zfhsd5qg4c9rm6vgd8dl")))
          ; (rust-bootstrapped-package rust-1.38 "1.38.0"
          ;   "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
     (package
