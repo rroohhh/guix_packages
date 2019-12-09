@@ -1,6 +1,7 @@
 (define-module (vup python-xyz)
   #:use-module (guix utils)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
   #:use-module (guix packages)
   #:use-module (guix download)
