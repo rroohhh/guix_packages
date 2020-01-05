@@ -193,3 +193,21 @@
     (synopsis "Physical quantities module")
     (description "Physical quantities module")
     (license license:bsd-3)))
+
+(define-public python-colorhash
+  (package
+    (name "python-colorhash")
+    (version "1.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri "https://files.pythonhosted.org/packages/bf/e9/b1d948c518ac6f683711a38a9c5bb84597f417ac2fc9296a49c40c1b2dab/colorhash-1.0.2.tar.bz2")
+        (sha256
+          (base32
+            "0r777ry4c8d24j7g7p8b95smnfr64liljfc0zvjxcpidv31jbyg0"))))
+    (build-system python-build-system)
+    (home-page
+      "https://bitbucket.org/fk/python-color-hash")
+    (synopsis "Generate a color based on a value")
+    (description "Generate a color based on a value")
+    (license license:expat)))
