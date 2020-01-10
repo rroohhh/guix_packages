@@ -18,7 +18,7 @@
 
 ; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "623b5e82513d076a19f864c01930ad1838498894")
+  (let ((commit "144c5be8246800d5bd36dc3e177364063e8d2e40")
 		(revision "1"))
 	(package
 	 (inherit guix:abc)
@@ -31,11 +31,11 @@
 			  (file-name (git-file-name (package-name guix:abc) version))
 			  (sha256
 			   (base32
-				"1mrfqwsivflqdzc3531r6mzp33dfyl6dnqjdwfcq137arqh36m67")))))))
+				"0spqpv4klhk7j5hlb0h974jlrg4lgb7mnk1183plnq0il4sk1zid")))))))
 
 
 (define-public yosys-git
-  (let ((commit "ecb0c68f0751b3bd97f8da94e7bd2258987d58e1")
+  (let ((commit "ed491939c269f5acb9d53109744870251b50e095")
 		(version "0.9"))
   ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
    (package
@@ -48,7 +48,7 @@
 				   (commit commit)))
 			 (sha256
 			  (base32
-			   "1sakzsxxy9girjki7vgqj9gn24waamxzscmfdcqcrqxp997163db"))
+			   "04dkahs7c6k21bvcwpk4bxcr7s48s7zr9qikk1fajrm1cx8as8ny"))
 			 (file-name (git-file-name (package-name guix:yosys) version))))
 	(inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
@@ -116,7 +116,7 @@
 				  #t)))))))))
 
 (define-public trellis
-  (let ((commit "4e0b21597774084fca16762d5f5d88573420f1bf"))
+  (let ((commit "e43f5451126166540ba986084da0d27e2037d8a1"))
 	(package
 	 (name "trellis")
 	 (version (string-append "1.0-71-g" (string-take commit 7)))
@@ -129,7 +129,7 @@
 			  (file-name (git-file-name name version))
 			  (sha256
 			   (base32
-				"1s3gb65zr3jsai7hvjs0f863k4qq78vnp10id1gh6cdd796dhpzx"))))
+				"1j6qppiq0lb89zx71xkbzsr1rhfvvrzydilnacwqfyhz3vqvdyni"))))
 	 (build-system cmake-build-system)
 	 (inputs `(("python" ,python) ("boost" ,boost-python3)))
 	 (arguments
@@ -152,10 +152,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "dd73a7ff9f6605ef689d5645c06d34585ec0eacc"))
+  (let ((commit "abfe31d5d22a0ed1cc6ef32cf73fc1826b090b1c"))
 	(package
 	 (name "nextpnr")
-	 (version (string-append "2019.12.09-" (string-take commit 9)))
+	 (version (string-append "2020.01.01-" (string-take commit 9)))
 	 (source (origin
 			  (method git-fetch)
 			  (uri (git-reference
@@ -164,7 +164,7 @@ open Verilog to bitstream toolchain for these devices.")
 			  (file-name (git-file-name name version))
 			  (sha256
 			   (base32
-				"1y8vm97cjwr9b97g0w57243x3gd7g074p6yzqgkk2yvi9ql99flk"))))
+				"0vnnshl19whh82zzmnfk5sxn7s8r5ih1h76s0bwkb521fgdzzih8"))))
 	 (build-system cmake-build-system)
 	 (inputs `(("python" ,python)
 			   ("boost" ,boost-python3)
