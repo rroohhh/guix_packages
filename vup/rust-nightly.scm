@@ -12,6 +12,9 @@
 (use-modules (guix build-system cmake))
 (use-modules ((guix licenses) #:prefix license:))
 
+(define %cargo-reference-hash
+  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+
 (define* (nix-system->gnu-triplet-for-rust
           #:optional (system (%current-system)))
   (match system
@@ -41,7 +44,6 @@
      (alist-replace "cargo-bootstrap" (list base-rust "cargo")
                     (alist-replace "rustc-bootstrap" (list base-rust)
                                    (package-native-inputs base-rust))))))
-
 
 (define-public rust-1.38
   (let ((base-rust
@@ -81,26 +83,66 @@
                       (string-append "\nCommand::new(\"" bash "/bin/sh\")\n")))
                    #t))))))))))
 
+
 (define-public rust-1.39
   (let ((base-rust
          (rust-bootstrapped-package rust-1.38 "1.39.0"
            "0mwkc1bnil2cfyf6nglpvbn2y0zfbv44zfhsd5qg4c9rm6vgd8dl")))
     (package
-      (inherit base-rust))))
-
-(define-public rust-nightly
-  (let ((base-rust
-         (rust-bootstrapped-package rust-1.38 "1.39.0"
-           "0mwkc1bnil2cfyf6nglpvbn2y0zfbv44zfhsd5qg4c9rm6vgd8dl")))
-         ; (rust-bootstrapped-package rust-1.38 "1.38.0"
-         ;   "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
-    (package
       (inherit base-rust)
-	  (name "rust-nightly")
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
           `(modify-phases ,phases
+			 ;; the checksums moved from a big blob at the end to the individual packages
+             (replace 'patch-cargo-checksums
+               (lambda* _
+                 (use-modules (guix build cargo-utils))
+                 (substitute* "Cargo.lock"
+                   (("checksum = .*$")
+                    (string-append "checksum = \"" ,%cargo-reference-hash "\"\n")))
+                 (generate-all-checksums "vendor")
+                 #t)))))))))
+
+(define-public rust-1.40
+  (rust-bootstrapped-package rust-1.39 "1.40.0"
+    "1ba9llwhqm49w7sz3z0gqscj039m53ky9wxzhaj11z6yg1ah15yx"))
+
+(define-public rust-nightly
+  (let ((base-rust
+         (rust-bootstrapped-package rust-1.39 "1.40.0"
+           "1ba9llwhqm49w7sz3z0gqscj039m53ky9wxzhaj11z6yg1ah15yx")))
+    (package
+      (inherit base-rust)
+	  (name "rust-nightly")
+	  (source
+        (origin
+          (inherit (package-source base-rust))
+          (snippet '(begin
+                      (delete-file-recursively "src/llvm-project")
+                      (delete-file-recursively "vendor/jemalloc-sys/jemalloc")
+                      #t))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments base-rust)
+         ((#:phases phases)
+          `(modify-phases ,phases
+			 (delete 'remove-unsupported-tests)
+			 (add-after 'install 'fixup-install
+			   (lambda* (#:key inputs outputs #:allow-other-keys)
+				 (let* ((out (assoc-ref outputs "out"))
+						(target-system ,(or (%current-target-system)
+											(nix-system->gnu-triplet
+											 (%current-system))))
+						(out-libs (string-append out "/lib/rustlib/"
+												 target-system "/lib")))
+				   (mkdir-p out-libs)
+
+				   (for-each
+					 (lambda (file)
+			           (copy-file (string-append out "/lib/" file)
+                                    (string-append out "/lib/rustlib/" target-system "/lib/" file)))
+                     '("librustc_driver-ea714330082e255b.so" "librustc_macros-7bc422cb42f2abdc.so" "libstd-38842ad84adf0ce6.so" "libtest-37b181cebd6810e9.so"))
+				 #t)))
              (replace 'configure
                (lambda* (#:key inputs outputs #:allow-other-keys)
                  (let* ((out (assoc-ref outputs "out"))
