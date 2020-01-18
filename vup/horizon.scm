@@ -1,7 +1,7 @@
 (define-module (vup horizon)
   #:use-module (guix packages)
   #:use-module (guix git-download)
-  #:use-module (guix build-system gnu)
+  #:use-module (guix build-system glib-or-gtk)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages serialization)
@@ -35,7 +35,7 @@
 			  (sha256
 			   (base32
 				"1gd98vrfa8alxw3j5kg9hry2nvjj319m6wmc1v1clgsdiak7v6sj"))))
-	 (build-system gnu-build-system)
+	 (build-system glib-or-gtk-build-system)
 	 (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
 			   ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
 			   ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
