@@ -3,6 +3,7 @@
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
+  #:use-module (gnu packages check)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix build-system python)
@@ -211,3 +212,53 @@
     (synopsis "Generate a color based on a value")
     (description "Generate a color based on a value")
     (license license:expat)))
+
+(define-public python-arpeggio
+  (package
+    (name "python-arpeggio")
+    (version "1.9.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "Arpeggio" version))
+        (sha256
+          (base32
+            "0aq2pmhfyq7vhbhyq8jgxiphncy1s79rmrsggz4p52m4cdhy134l"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-runner" ,python-pytest-runner)))
+    (home-page "https://github.com/textX/Arpeggio")
+    (synopsis "Packrat parser interpreter")
+    (description "Packrat parser interpreter")
+    (license license:expat)
+	(arguments
+	 '(#:phases
+	   (modify-phases %standard-phases
+		 (delete 'check))))))
+
+(define-public python-textx
+  (package
+    (name "python-textx")
+    (version "2.1.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "textX" version))
+        (sha256
+          (base32
+            "075ngfrpm322azsd3136p5y6k3f41g94r94znc70j7s0k07p370m"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-arpeggio" ,python-arpeggio)
+        ("python-click" ,python-click)))
+    (home-page "https://github.com/textX/textX")
+    (synopsis
+      "Meta-language for DSL implementation inspired by Xtext")
+    (description
+      "Meta-language for DSL implementation inspired by Xtext")
+    (license license:expat)
+	(arguments
+	 '(#:phases
+	   (modify-phases %standard-phases
+		 (delete 'check))))))
