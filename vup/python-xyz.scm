@@ -1,11 +1,15 @@
 (define-module (vup python-xyz)
   #:use-module (guix utils)
+  #:use-module (gnu packages assembly)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
   #:use-module (gnu packages check)
+  #:use-module (vup fpga)
+  #:use-module (nonfree packages linux)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix build-system python)
   #:use-module ((guix licenses) #:prefix license:))
 
@@ -262,3 +266,173 @@
 	 '(#:phases
 	   (modify-phases %standard-phases
 		 (delete 'check))))))
+
+(define (make-linux-module-builder linux)
+  (package
+    (inherit linux)
+    (name (string-append (package-name linux) "-module-builder"))
+    (native-inputs
+     `(("linux" ,linux)
+       ,@(package-native-inputs linux)))
+    (arguments
+     (substitute-keyword-arguments (package-arguments linux)
+      ((#:phases phases)
+       `(modify-phases ,phases
+          (replace 'build
+            (lambda _
+              (invoke "make" "modules_prepare")))
+          (delete 'strip) ; faster.
+          (replace 'install
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              (let* ((out (assoc-ref outputs "out"))
+                     (out-lib-build (string-append out "/lib/modules/build")))
+                ; TODO: Only preserve the minimum, i.e. [Kbuild], Kconfig, scripts, include, ".config".
+                (copy-recursively "." out-lib-build)
+                (let* ((linux (assoc-ref inputs "linux")))
+                  (install-file (string-append linux "/System.map")
+                                out-lib-build)
+                  (let ((source (string-append linux "/Module.symvers")))
+                    (if (file-exists? source)
+                        (install-file source out-lib-build))))
+                #t)))))))))
+
+(define-public python-chipsec
+  (package
+    (name "python-chipsec")
+    (version "1.4.4")
+    (source
+      (origin
+        (method git-fetch)
+		(uri (git-reference
+			  (url "https://github.com/chipsec/chipsec")
+			  (commit "1.4.7")))
+        (sha256
+          (base32
+            "11qi4m4hqkylf1wd7f921r0p7xg5prpmfkmb7l9nn7sb95zz0sjr"))))
+    (build-system python-build-system)
+	(inputs
+	 `(("linux" ,linux-nonfree)
+	   ("nasm" ,nasm)
+	   ("linux-module-builder" ,(make-linux-module-builder linux-nonfree))))
+    (home-page "https://github.com/chipsec/chipsec")
+    (synopsis
+      "CHIPSEC: Platform Security Assessment Framework")
+    (description
+      "CHIPSEC: Platform Security Assessment Framework")
+    (license #f)
+	(arguments
+	 `(#:phases
+	   (modify-phases %standard-phases
+		 (add-after 'unpack 'set-kernel-src-dir
+			 (lambda* (#:key inputs #:allow-other-keys)
+			   (let* ((kernel-dir (assoc-ref inputs "linux-module-builder"))
+					  (kernel-src-dir (string-append kernel-dir "/lib/modules/build")))
+				 (setenv "KERNEL_SRC_DIR" kernel-src-dir)))))))))
+
+(define-public python-nmigen
+  (package
+    (name "python-nmigen")
+    (version "0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nmigen" version))
+        (sha256
+          (base32
+            "177y9pq6389wswiag4v7w2x9vjg42l8f1srkighf8vpvf2axmxn8"))))
+    (build-system python-build-system)
+	(inputs `(("yosys" ,yosys-git)))
+    (propagated-inputs
+      `(("python-jinja2" ,python-jinja2)
+        ("python-pyvcd" ,python-pyvcd)
+        ("python-setuptools" ,python-setuptools)))
+    (home-page "")
+	(arguments
+	 `(#:phases
+	   (modify-phases %standard-phases
+         (delete 'check))))
+    (synopsis
+      "Python toolbox for building complex digital hardware")
+    (description
+      "Python toolbox for building complex digital hardware")
+    (license license:bsd-3)))
+
+(define-public python-nmigen-boards
+  (package
+    (name "python-nmigen-boards")
+    (version "0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nmigen-boards" version))
+        (sha256
+          (base32
+            "1zzq6kh1aycrxszbdcwmyhhpnivmfa4l5jvvkcf3kyk9qv5c05zf"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-nmigen" ,python-nmigen)
+        ("python-setuptools" ,python-setuptools)))
+    (home-page "")
+    (synopsis
+      "Board and connector definitions for nMigen")
+    (description
+      "Board and connector definitions for nMigen")
+    (license license:bsd-3)))
+
+(define-public python-nmigen-stdio
+  (package
+    (name "python-nmigen-stdio")
+    (version "0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nmigen-stdio" version))
+        (sha256
+          (base32
+            "0xv356lpwd3cb8cv70l0jgbz775pd7hk8ad2rzp92pysiykcnq08"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-nmigen" ,python-nmigen)))
+    (home-page "")
+    (synopsis "Industry standard I/O for nMigen")
+    (description "Industry standard I/O for nMigen")
+    (license license:bsd-3)))
+
+(define-public python-nmigen-soc
+  (package
+    (name "python-nmigen-soc")
+    (version "0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nmigen-soc" version))
+        (sha256
+          (base32
+            "0bgf9kar86nd70c0dizxf3l3rcrrddyw9kg9r8cn36ir6rkj4az4"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-nmigen" ,python-nmigen)))
+    (home-page "")
+    (synopsis "System on Chip toolkit for nMigen")
+    (description "System on Chip toolkit for nMigen")
+    (license license:bsd-3)))
+
+(define-public python-varname
+  (package
+    (name "python-varname")
+    (version "0.0.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "python-varname" version))
+        (sha256
+          (base32
+            "044wz39rbd60qy9f27v179q98c1sbjcba2rf71g9m475ls3m5vqh"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/pwwang/python-varname")
+    (synopsis
+      "Retrieving variable names of function or class calls.")
+    (description
+      "Retrieving variable names of function or class calls.")
+    (license license:expat)))
