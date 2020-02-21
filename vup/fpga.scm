@@ -18,7 +18,7 @@
 
 ; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "144c5be8246800d5bd36dc3e177364063e8d2e40")
+  (let ((commit "71f2b40320127561175ad60f6f2428f3438e5243")
 		(revision "1"))
 	(package
 	 (inherit guix:abc)
@@ -31,11 +31,11 @@
 			  (file-name (git-file-name (package-name guix:abc) version))
 			  (sha256
 			   (base32
-				"0spqpv4klhk7j5hlb0h974jlrg4lgb7mnk1183plnq0il4sk1zid")))))))
+				"15sn146ajxql7l1h8rsag5lhn4spwvgjhwzqawfr78snzadw8by3")))))))
 
 
 (define-public yosys-git
-  (let ((commit "ed491939c269f5acb9d53109744870251b50e095")
+  (let ((commit "cd044a2bb6adf7a5e00d4a6c075e9489d852d733")
 		(version "0.9"))
   ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
    (package
@@ -48,7 +48,7 @@
 				   (commit commit)))
 			 (sha256
 			  (base32
-			   "04dkahs7c6k21bvcwpk4bxcr7s48s7zr9qikk1fajrm1cx8as8ny"))
+			   "05gmzlbkj8z13yqg6jx2i8015yd8dqn5lpjlsd55rwvmjjizh65c"))
 			 (file-name (git-file-name (package-name guix:yosys) version))))
 	(inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
@@ -116,7 +116,7 @@
 				  #t)))))))))
 
 (define-public trellis
-  (let ((commit "e43f5451126166540ba986084da0d27e2037d8a1"))
+  (let ((commit "4e4b95c8e03583d48d76d1229f9c7825e2ee5be1"))
 	(package
 	 (name "trellis")
 	 (version (string-append "1.0-71-g" (string-take commit 7)))
@@ -129,7 +129,7 @@
 			  (file-name (git-file-name name version))
 			  (sha256
 			   (base32
-				"1j6qppiq0lb89zx71xkbzsr1rhfvvrzydilnacwqfyhz3vqvdyni"))))
+				"0p8yqdm9z39ny3brnnrajq7pw46vbrny1syxxig0m7hw41k4lb4f"))))
 	 (build-system cmake-build-system)
 	 (inputs `(("python" ,python) ("boost" ,boost-python3)))
 	 (arguments
@@ -152,10 +152,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "abfe31d5d22a0ed1cc6ef32cf73fc1826b090b1c"))
+  (let ((commit "affb12cc27ebf409eade062c4c59bb98569d8147"))
 	(package
 	 (name "nextpnr")
-	 (version (string-append "2020.01.01-" (string-take commit 9)))
+	 (version (string-append "2020.02.20-" (string-take commit 9)))
 	 (source (origin
 			  (method git-fetch)
 			  (uri (git-reference
@@ -164,7 +164,7 @@ open Verilog to bitstream toolchain for these devices.")
 			  (file-name (git-file-name name version))
 			  (sha256
 			   (base32
-				"0vnnshl19whh82zzmnfk5sxn7s8r5ih1h76s0bwkb521fgdzzih8"))))
+				"0ap7rgrkg5lzvmmm5x55l8gwm9zn2h9011hmafjn2x3778vk2pmq"))))
 	 (build-system cmake-build-system)
 	 (inputs `(("python" ,python)
 			   ("boost" ,boost-python3)
@@ -179,8 +179,8 @@ open Verilog to bitstream toolchain for these devices.")
 						   "-DUSE_OPENMP=ON"
 						   "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
 						   (string-append "-DICEBOX_ROOT=" (assoc-ref %build-inputs "icestorm") "/share/icebox")
-						   (string-append "-DTRELLIS_ROOT=" (assoc-ref %build-inputs "trellis") "/share/trellis")
-						   (string-append "-DPYTRELLIS_LIBDIR=" (assoc-ref %build-inputs "trellis") "/lib/trellis"))))
+						   (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis")))))
+;						   (string-append "-DPYTRELLIS_LIBDIR=" (assoc-ref %build-inputs "trellis") "/lib/trellis"))))
 	 (synopsis "nextpnr -- a portable FPGA place and route tool")
 	 (description "nextpnr aims to be a vendor neutral, timing driven, FOSS FPGA place and route tool.")
 	 (home-page "https://github.com/yosyshq/nextpnr")
