@@ -1,16 +1,19 @@
 (define-module (vup python-xyz)
   #:use-module (guix utils)
   #:use-module (gnu packages assembly)
+  #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
   #:use-module (gnu packages check)
   #:use-module (vup fpga)
+  #:use-module (vup smt)
   #:use-module (nonfree packages linux)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix build-system python)
+  #:use-module (guix build-system gnu)
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public python-bitarray
@@ -299,13 +302,14 @@
 (define-public python-chipsec
   (package
     (name "python-chipsec")
-    (version "1.4.4")
+    (version "1.4.7")
     (source
       (origin
         (method git-fetch)
 		(uri (git-reference
 			  (url "https://github.com/chipsec/chipsec")
 			  (commit "1.4.7")))
+		(file-name (git-file-name name version))
         (sha256
           (base32
             "11qi4m4hqkylf1wd7f921r0p7xg5prpmfkmb7l9nn7sb95zz0sjr"))))
@@ -341,16 +345,13 @@
           (base32
             "177y9pq6389wswiag4v7w2x9vjg42l8f1srkighf8vpvf2axmxn8"))))
     (build-system python-build-system)
-	(inputs `(("yosys" ,yosys-git)))
+	(inputs `(("yosys" ,yosys-git)
+			  ("symbiyosys" ,symbiyosys)))
     (propagated-inputs
       `(("python-jinja2" ,python-jinja2)
         ("python-pyvcd" ,python-pyvcd)
         ("python-setuptools" ,python-setuptools)))
     (home-page "")
-	(arguments
-	 `(#:phases
-	   (modify-phases %standard-phases
-         (delete 'check))))
     (synopsis
       "Python toolbox for building complex digital hardware")
     (description
@@ -436,3 +437,41 @@
     (description
       "Retrieving variable names of function or class calls.")
     (license license:expat)))
+
+(define-public symbiyosys
+  (let ((commit "0a7013017f9d583ef6cc8d10712f4bf11cf6e024"))
+    (package
+	  (name "symbiyosys")
+	  (version (string-append "2020.02.20-" (string-take commit 9)))
+      (source
+        (origin
+          (method git-fetch)
+		  (uri (git-reference
+				(url "https://github.com/YosysHQ/SymbiYosys")
+				(commit commit)))
+		  (file-name (git-file-name name version))
+		  (sha256
+		   (base32
+			"08xz8sgvs1qy7jxp8ma5yl49i6nl7k6bkhry4afdvwg3fvwis39c"))))
+	  (inputs `(("python" ,python)
+				("yosys" ,yosys-git)))
+	  (propagated-inputs `(("yices" ,yices)))
+	  (arguments
+	   `(#:make-flags `(,(string-append "PREFIX=" %output))
+		 #:phases (modify-phases %standard-phases
+					(add-before 'install 'patch-yosys
+					  (lambda* (#:key inputs outputs #:allow-other-keys)
+						(let ((out (assoc-ref outputs "out"))
+							  (yosys (assoc-ref inputs "yosys")))
+						  (substitute* '("sbysrc/sby.py" "sbysrc/sby_core.py")
+						 	(("##yosys-sys-path##") (string-append "sys.path += [p + \"/share/yosys/python3/\" for p in [\"" out "\", \"" yosys "\"]]"))
+							(("/usr/bin/env\", \"bash") (which "bash"))))
+						#t))
+					(delete 'configure) ; no configure
+					(delete 'build)     ; no compilation
+					(delete 'check))))  ; no tests
+	  (build-system gnu-build-system)
+	  (home-page "https://github.com/YosysHQ/SymbiYosys")
+	  (synopsis "SymbiYosys (sby) -- Front-end for Yosys-based formal verification flows")
+	  (description "SymbiYosys (sby) is a front-end driver program for Yosys-based formal hardware verification flows.")
+	  (license license:isc))))
