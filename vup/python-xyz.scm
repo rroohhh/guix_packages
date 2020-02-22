@@ -8,7 +8,7 @@
   #:use-module (gnu packages check)
   #:use-module (vup fpga)
   #:use-module (vup smt)
-  #:use-module (nonfree packages linux)
+  #:use-module (vup linux)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
