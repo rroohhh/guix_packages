@@ -5,6 +5,7 @@
   #:use-module (guix git-download)
   #:use-module (guix build-system cmake)
   #:use-module (gnu packages audio)
+  #:use-module (gnu packages libreoffice)
   #:use-module (gnu packages pulseaudio)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages linux)
@@ -187,7 +188,7 @@
     		"0rpvxsgjzhqm5xcffdsyws7cf3awv98p1y1zmkdsnq80h4v046lv")))))))
 
 (define-public telegram-desktop
-  (let ((version "1.9.14"))
+  (let ((version "1.9.19"))
 	(package
 	 (name "telegram-desktop")
 	 (version version)
@@ -195,13 +196,15 @@
 			  (method git-fetch)
 			  (uri (git-reference
 					(url "https://github.com/telegramdesktop/tdesktop")
-					(commit (string-append "v" version))))
+					(commit (string-append "v" version))
+					(recursive? #t)))
 			  (file-name (git-file-name name version))
 			  (sha256
 			   (base32
-				"13vqcb8h88q3i96d9da8083kqw4gr4z29cljlcljn8bwjf4wmzlq"))))
+				"1ri6vm9h42ja5nz0m12xbngsn3l6clv1sgwb12ah8qhkz10389wc"))))
 	 (inputs `(("qtbase" ,qtbase)
 			   ("qtimageformats" ,qtimageformats)
+			   ("hunspell" ,hunspell)
 			   ("gtk3" ,gtk+)
 			   ("libdbusmenu-qt" ,libdbusmenu-qt)
 			   ("enchant" ,enchant)
