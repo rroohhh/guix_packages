@@ -475,3 +475,53 @@
 	  (synopsis "SymbiYosys (sby) -- Front-end for Yosys-based formal verification flows")
 	  (description "SymbiYosys (sby) is a front-end driver program for Yosys-based formal hardware verification flows.")
 	  (license license:isc))))
+
+(define-public python-skyfield
+  (package
+    (name "python-skyfield")
+    (version "1.17")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "skyfield" version))
+        (sha256
+          (base32
+            "06f3smnzjnirwb06jpxk16vd041kaq9x7ab49ski31vppzlcaddh"))))
+    (build-system python-build-system)
+	(arguments
+	 `(#:phases (modify-phases %standard-phases
+							   (delete 'check))))
+    (home-page
+      "http://github.com/brandon-rhodes/python-skyfield/")
+    (synopsis "Elegant astronomy for Python")
+    (description "Elegant astronomy for Python")
+    (license license:expat)))
+
+(define-public python-astropy
+  (package
+    (name "python-astropy")
+    (version "4.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "astropy" version))
+        (sha256
+          (base32
+            "06vpq95jyxd8fkp5q0nhd6b9nzl1ng59rbb3qndf0kd8pbh00hj0"))))
+    (build-system python-build-system)
+	(arguments
+	 `(#:phases (modify-phases %standard-phases
+							   (delete 'check))))
+    (propagated-inputs
+      `(("python-numpy" ,python-numpy)))
+    (native-inputs
+      `(("python-coverage" ,python-coverage)
+        ("python-ipython" ,python-ipython)
+        ("python-objgraph" ,python-objgraph)
+        ("python-skyfield" ,python-skyfield)))
+    (home-page "http://astropy.org")
+    (synopsis
+      "Community-developed python astronomy tools")
+    (description
+      "Community-developed python astronomy tools")
+    (license #f)))
