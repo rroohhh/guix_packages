@@ -15,10 +15,10 @@
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/rroohhh/xkeylogger")
-           (commit "77d2408aeff3f43a3c0ba6c2b78138e26bdcce1e")))
+           (commit "e0e45faecf6cbbe313c300e6e6d91587e6f865cf")))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "1ch6zbmbd9y84syhdfdc90xmn3gy3q3j49683gg2qq6kb4f2zzkg"))))
+      (base32 "15243aqin14syvadzgqg1f93c8acg8finj7qrv2w1fjsjrpdd768"))))
    (build-system gnu-build-system)
    (arguments '(#:make-flags `("CC=gcc")
 				#:phases
