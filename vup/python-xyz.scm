@@ -545,3 +545,42 @@
     (description
       "Implements a topological sort algorithm.")
     (license #f)))
+
+(define-public python-sexpdata
+  (package
+    (name "python-sexpdata")
+    (version "0.0.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "sexpdata" version))
+        (sha256
+          (base32
+            "1q4lsjyzzqrdv64l0pv4ij9nd8gqhvxqcrpxc2xpxs652sk2gj0s"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/tkf/sexpdata")
+    (synopsis "S-expression parser for Python")
+    (description "S-expression parser for Python")
+    (license license:bsd-3)))
+
+(define-public python-epc
+  (package
+    (name "python-epc")
+    (version "0.0.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "epc" version))
+        (sha256
+          (base32
+            "09bx1ln1bwa00917dndlgs4k589h8qx2x080xch5m58p92kjwkd1"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-sexpdata" ,python-sexpdata)
+       ("python-nose" ,python-nose)))
+    (home-page "https://github.com/tkf/python-epc")
+    (synopsis
+      "EPC (RPC stack for Emacs Lisp) implementation in Python")
+    (description
+      "EPC (RPC stack for Emacs Lisp) implementation in Python")
+    (license #f)))
