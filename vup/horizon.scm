@@ -41,7 +41,8 @@
                 ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
                 ("boost" ,boost) ("opencascade" ,opencascade-occt) ("cppzmq" ,cppzmq)
-                ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)))
+                ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
+                ("gdk-pixbuf" ,gdk-pixbuf+svg)))
       (arguments
        `(#:make-flags (list "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
          #:phases (modify-phases %standard-phases
