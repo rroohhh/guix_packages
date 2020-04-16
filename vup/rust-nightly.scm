@@ -1,5 +1,6 @@
 (define-module (vup rust-nightly))
 
+(use-modules (gnu packages))
 (use-modules (gnu packages rust))
 (use-modules (guix packages))
 (use-modules (guix build utils))
@@ -45,77 +46,35 @@
                     (alist-replace "rustc-bootstrap" (list base-rust)
                                    (package-native-inputs base-rust))))))
 
-(define-public rust-1.38
-  (let ((base-rust
-         (rust-bootstrapped-package rust "1.38.0"
-           "101dlpsfkq67p0hbwx4acqq6n90dj4bbprndizpgh1kigk566hk4")))
-    (package
-      (inherit base-rust)
-      (arguments
-       (substitute-keyword-arguments (package-arguments base-rust)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             (add-before 'configure 'configure-cargo-home
-               (lambda _
-                 (let ((cargo-home (string-append (getcwd) "/.cargo")))
-                   (mkdir-p cargo-home)
-                   (setenv "CARGO_HOME" cargo-home)
-                   #t)))
-			 (replace 'patch-command-exec-tests
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((coreutils (assoc-ref inputs "coreutils")))
-                   (substitute* "src/test/ui/command-exec.rs"
-                     ((" Command::new\\(\"echo\"\\)")
-                      (string-append "\nCommand::new(\"" coreutils "/bin/echo\")\n")))
-                   #t)))
-			 (add-after 'patch-tests 'patch-command-uid-gid-tests-ls
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((coreutils (assoc-ref inputs "coreutils")))
-                   (substitute* "src/test/ui/command-uid-gid.rs"
-                     ((" Command::new\\(\"/bin/ls\"\\)")
-                      (string-append "\nCommand::new(\"" coreutils "/bin/ls\")\n")))
-                   #t)))
-			 (add-after 'patch-tests 'patch-command-uid-gid-tests-sh
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (let ((bash (assoc-ref inputs "bash")))
-                   (substitute* "src/test/ui/command-uid-gid.rs"
-                     ((" Command::new\\(\"/bin/sh\"\\)")
-                      (string-append "\nCommand::new(\"" bash "/bin/sh\")\n")))
-                   #t))))))))))
+(define (patch-command-exec-tests-phase test-path)
+  "The command-exec.rs test moves around between releases.  We need to apply
+a Guix-specific patch to it for each release.  This function generates the phase
+that applies said patch, parametrized by the test-path.  This is done this way
+because the phase is more complex than the equivalents for other tests that
+move around."
+ `(lambda* (#:key inputs #:allow-other-keys)
+    (let ((coreutils (assoc-ref inputs "coreutils")))
+      (substitute* ,test-path
+        ;; This test suite includes some tests that the stdlib's
+        ;; `Command` execution properly handles situations where
+        ;; the environment or PATH variable are empty, but this
+        ;; fails since we don't have `echo` available in the usual
+        ;; Linux directories.
+        ;; NB: the leading space is so we don't fail a tidy check
+        ;; for trailing whitespace, and the newlines are to ensure
+        ;; we don't exceed the 100 chars tidy check as well
+        ((" Command::new\\(\"echo\"\\)")
+         (string-append "\nCommand::new(\"" coreutils "/bin/echo\")\n")))
+      #t)))
 
-
-(define-public rust-1.39
-  (let ((base-rust
-         (rust-bootstrapped-package rust-1.38 "1.39.0"
-           "0mwkc1bnil2cfyf6nglpvbn2y0zfbv44zfhsd5qg4c9rm6vgd8dl")))
-    (package
-      (inherit base-rust)
-      (arguments
-       (substitute-keyword-arguments (package-arguments base-rust)
-         ((#:phases phases)
-          `(modify-phases ,phases
-			 ;; the checksums moved from a big blob at the end to the individual packages
-             (replace 'patch-cargo-checksums
-               (lambda* _
-                 (use-modules (guix build cargo-utils))
-                 (substitute* "Cargo.lock"
-                   (("checksum = .*$")
-                    (string-append "checksum = \"" ,%cargo-reference-hash "\"\n")))
-                 (generate-all-checksums "vendor")
-                 #t)))))))))
 
 (define-public rust-1.40
-  (rust-bootstrapped-package rust-1.39 "1.40.0"
-    "1ba9llwhqm49w7sz3z0gqscj039m53ky9wxzhaj11z6yg1ah15yx"))
-
-(define-public rust-nightly
   (let ((base-rust
          (rust-bootstrapped-package rust-1.39 "1.40.0"
-           "1ba9llwhqm49w7sz3z0gqscj039m53ky9wxzhaj11z6yg1ah15yx")))
+            "1ba9llwhqm49w7sz3z0gqscj039m53ky9wxzhaj11z6yg1ah15yx")))
     (package
       (inherit base-rust)
-	  (name "rust-nightly")
-	  (source
+      (source
         (origin
           (inherit (package-source base-rust))
           (snippet '(begin
@@ -126,23 +85,23 @@
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
           `(modify-phases ,phases
-			 (delete 'remove-unsupported-tests)
-			 (add-after 'install 'fixup-install
-			   (lambda* (#:key inputs outputs #:allow-other-keys)
-				 (let* ((out (assoc-ref outputs "out"))
-						(target-system ,(or (%current-target-system)
-											(nix-system->gnu-triplet
-											 (%current-system))))
-						(out-libs (string-append out "/lib/rustlib/"
-												 target-system "/lib")))
-				   (mkdir-p out-libs)
+             (delete 'remove-unsupported-tests)
+             (add-after 'install 'fixup-install
+               (lambda* (#:key inputs outputs #:allow-other-keys)
+                 (let* ((out (assoc-ref outputs "out"))
+                        (target-system ,(or (%current-target-system)
+                                            (nix-system->gnu-triplet
+                                             (%current-system))))
+                        (out-libs (string-append out "/lib/rustlib/"
+                                                 target-system "/lib")))
+                   (mkdir-p out-libs)
 
-				   (for-each
-					 (lambda (file)
-			           (copy-file (string-append out "/lib/" file)
+                   (for-each
+                    (lambda (file)
+                      (copy-file (string-append out "/lib/" file)
                                     (string-append out "/lib/rustlib/" target-system "/lib/" file)))
                      '("librustc_driver-ea714330082e255b.so" "librustc_macros-7bc422cb42f2abdc.so" "libstd-38842ad84adf0ce6.so" "libtest-37b181cebd6810e9.so"))
-				 #t)))
+                   #t)))
              (replace 'configure
                (lambda* (#:key inputs outputs #:allow-other-keys)
                  (let* ((out (assoc-ref outputs "out"))
@@ -188,3 +147,42 @@ jemalloc = \"" jemalloc "/lib/libjemalloc_pic.a" "\"
 [dist]
 ") port)))
                    #t))))))))))
+
+(define-public rust-1.41.1
+  (let ((base-rust
+         (rust-bootstrapped-package rust-1.40 "1.41.1"
+           "0ws5x0fxv57fyllsa6025h3q6j9v3m8nb3syl4x0hgkddq0kvj9q")))
+    (package
+      (inherit base-rust)
+      (source
+        (origin
+          (inherit (package-source base-rust))
+          (patches (append (origin-patches (package-source base-rust)) (search-patches "rust_line_length.patch")))
+          (snippet '(begin
+                      (delete-file-recursively "src/llvm-project")
+                      (delete-file-recursively "vendor/jemalloc-sys/jemalloc")
+                      #t))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments base-rust)
+         ((#:phases phases)
+          `(modify-phases ,phases
+             (replace 'patch-command-exec-tests
+               ,(patch-command-exec-tests-phase
+                  "src/test/ui/command/command-exec.rs"))
+             (replace 'patch-command-uid-gid-test
+               (lambda _
+                 (substitute* "src/test/ui/command/command-uid-gid.rs"
+                   (("/bin/sh") (which "sh"))
+                   (("ignore-sgx") "ignore-sgx\n// ignore-tidy-linelength"))
+                 #t))
+             (delete 'disable-cargo-test-for-nightly-channel)
+             (delete 'fixup-install))))))))
+
+
+(define-public rust-nightly
+  (let ((base-rust
+         (rust-bootstrapped-package rust-1.41.1 "1.42.0"
+           "0x9lxs82may6c0iln0b908cxyn1cv7h03n5cmbx3j1bas4qzks6j")))
+    (package
+      (inherit base-rust)
+      (name "rust-nightly"))))
