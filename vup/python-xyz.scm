@@ -584,3 +584,45 @@
     (description
       "EPC (RPC stack for Emacs Lisp) implementation in Python")
     (license #f)))
+
+;; TODO(robin): broken
+;; (define-public python-frida
+;;   (package
+;;     (name "python-frida")
+;;     (version "12.8.20")
+;;     (source
+;;       (origin
+;;         (method url-fetch)
+;;         (uri (pypi-uri "frida" version))
+;;         (sha256
+;;           (base32
+;;             "126faax3zzdfkzjlm4q20iyaznz79jjyxh0m2m85jcxfacnhry7h"))))
+;;     (build-system python-build-system)
+;;     (home-page "https://www.frida.re")
+;;     (synopsis
+;;       "Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers")
+;;     (description
+;;       "Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers")
+;;     (license #f)))
+
+;; (define-public python-frida-tools
+;;   (package
+;;     (name "python-frida-tools")
+;;     (version "7.2.0")
+;;     (source
+;;       (origin
+;;         (method url-fetch)
+;;         (uri (pypi-uri "frida-tools" version))
+;;         (sha256
+;;           (base32
+;;             "0rnb8ycjmnf54p7ibca9rykc7wpfiv5navvy6qhqm3hw1wnbma7z"))))
+;;     (build-system python-build-system)
+;;     (propagated-inputs
+;;       `(("python-colorama" ,python-colorama)
+;;         ("python-frida" ,python-frida)
+;;         ("python-prompt-toolkit" ,python-prompt-toolkit)
+;;         ("python-pygments" ,python-pygments)))
+;;     (home-page "https://www.frida.re")
+;;     (synopsis "Frida CLI tools")
+;;     (description "Frida CLI tools")
+;;     (license #f)))
