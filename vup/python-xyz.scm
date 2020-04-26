@@ -39,14 +39,14 @@
 (define-public python-pyvcd
   (package
     (name "python-pyvcd")
-    (version "0.1.4")
+    (version "0.2.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "pyvcd" version))
        (sha256
         (base32
-         "0dv9wac5y5z9j54ypyc59csxdiy9ybpphw9ipxp1k8nfg65q9jxx"))))
+         "1aw3y841jk50bb62hkk51860a97rl5jz9n9zlil9j138rpibkmps"))))
     (build-system python-build-system)
     (propagated-inputs `(("python-six" ,python-six) ("python-setuptools-scm" ,python-setuptools-scm)))
     (home-page
@@ -333,90 +333,128 @@
                     (kernel-src-dir (string-append kernel-dir "/lib/modules/build")))
                (setenv "KERNEL_SRC_DIR" kernel-src-dir)))))))))
 
+(define (setuptools-scm-version-setter v)
+ `(lambda* (#:key inputs #:allow-other-keys)
+     (setenv "SETUPTOOLS_SCM_PRETEND_VERSION" ,v)
+     #t))
+
 (define-public python-nmigen
-  (package
-    (name "python-nmigen")
-    (version "0.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nmigen" version))
-       (sha256
-        (base32
-         "177y9pq6389wswiag4v7w2x9vjg42l8f1srkighf8vpvf2axmxn8"))))
-    (build-system python-build-system)
-    (inputs `(("yosys" ,yosys-git)
-              ("symbiyosys" ,symbiyosys)))
-    (propagated-inputs
-     `(("python-jinja2" ,python-jinja2)
-       ("python-pyvcd" ,python-pyvcd)
-       ("python-setuptools" ,python-setuptools)))
-    (home-page "")
-    (synopsis
-     "Python toolbox for building complex digital hardware")
-    (description
-     "Python toolbox for building complex digital hardware")
-    (license license:bsd-3)))
+  (let ((commit "ba79b0cdc67505ac24f0a06fbd449b952aa33247"))
+    (package
+      (name "python-nmigen")
+      (version (string-append "0.2+g" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/nmigen/nmigen")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "195lp7w721s4brj5aps2i256rhgd786ib589gmhvz9f0vii03f87"))))
+      (build-system python-build-system)
+      (inputs `(("yosys" ,yosys-git)
+                ("symbiyosys" ,symbiyosys)))
+      (propagated-inputs
+       `(("python-jinja2" ,python-jinja2)
+         ("python-pyvcd" ,python-pyvcd)
+         ("python-setuptools" ,python-setuptools)))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (add-before 'build 'set-setuptools-scm-version
+                      ,(setuptools-scm-version-setter version)))))
+      (home-page "")
+      (synopsis
+       "Python toolbox for building complex digital hardware")
+      (description
+       "Python toolbox for building complex digital hardware")
+      (license license:bsd-3))))
+
 
 (define-public python-nmigen-boards
-  (package
-    (name "python-nmigen-boards")
-    (version "0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nmigen-boards" version))
-       (sha256
-        (base32
-         "1zzq6kh1aycrxszbdcwmyhhpnivmfa4l5jvvkcf3kyk9qv5c05zf"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-nmigen" ,python-nmigen)
-       ("python-setuptools" ,python-setuptools)))
-    (home-page "")
-    (synopsis
-     "Board and connector definitions for nMigen")
-    (description
-     "Board and connector definitions for nMigen")
-    (license license:bsd-3)))
+  (let ((commit "f6b28cef8d92b3f2beaf171f16867999989e388b"))
+    (package
+      (name "python-nmigen-boards")
+      (version (string-append "0.0+g" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/nmigen/nmigen-boards")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "1izlhaqsmpwnabsnzzxpmlapggsf9sfzqfsx0k8wdpl3855jpb67"))))
+      (build-system python-build-system)
+      (propagated-inputs
+       `(("python-nmigen" ,python-nmigen)
+         ("python-setuptools" ,python-setuptools)))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (add-before 'build 'set-setuptools-scm-version
+                      ,(setuptools-scm-version-setter version)))))
+      (home-page "")
+      (synopsis
+       "Board and connector definitions for nMigen")
+      (description
+       "Board and connector definitions for nMigen")
+      (license license:bsd-3))))
 
 (define-public python-nmigen-stdio
-  (package
-    (name "python-nmigen-stdio")
-    (version "0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nmigen-stdio" version))
-       (sha256
-        (base32
-         "0xv356lpwd3cb8cv70l0jgbz775pd7hk8ad2rzp92pysiykcnq08"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-nmigen" ,python-nmigen)))
-    (home-page "")
-    (synopsis "Industry standard I/O for nMigen")
-    (description "Industry standard I/O for nMigen")
-    (license license:bsd-3)))
+  (let ((commit "b5ff8b8f8b7a77b6116607a07c461bcd21018539"))
+    (package
+      (name "python-nmigen-stdio")
+      (version (string-append "0.0+g" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/nmigen/nmigen-stdio")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "1pxj6msf1m4if5wpp85slin7syq66ksjg98i0gjmmzp04w36jhna"))))
+      (build-system python-build-system)
+      (propagated-inputs
+       `(("python-nmigen" ,python-nmigen)))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (add-before 'build 'set-setuptools-scm-version
+                      ,(setuptools-scm-version-setter version)))))
+      (home-page "")
+      (synopsis "Industry standard I/O for nMigen")
+      (description "Industry standard I/O for nMigen")
+      (license license:bsd-3))))
 
 (define-public python-nmigen-soc
-  (package
-    (name "python-nmigen-soc")
-    (version "0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nmigen-soc" version))
-       (sha256
-        (base32
-         "0bgf9kar86nd70c0dizxf3l3rcrrddyw9kg9r8cn36ir6rkj4az4"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-nmigen" ,python-nmigen)))
-    (home-page "")
-    (synopsis "System on Chip toolkit for nMigen")
-    (description "System on Chip toolkit for nMigen")
-    (license license:bsd-3)))
+  (let ((commit "425692af0554bb1d9df7a593823f1fa23a3cdb19"))
+    (package
+      (name "python-nmigen-soc")
+      (version (string-append "0.0+g" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/nmigen/nmigen-soc")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "17mpmj33kzg513lsk798bnh69snw61mqshlmfgdf6jy459s39k48"))))
+      (build-system python-build-system)
+      (propagated-inputs
+       `(("python-nmigen" ,python-nmigen)))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (add-before 'build 'set-setuptools-scm-version
+                      ,(setuptools-scm-version-setter version)))))
+      (home-page "")
+      (synopsis "System on Chip toolkit for nMigen")
+      (description "System on Chip toolkit for nMigen")
+      (license license:bsd-3))))
 
 (define-public python-varname
   (package
@@ -439,10 +477,10 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "0a7013017f9d583ef6cc8d10712f4bf11cf6e024"))
+  (let ((commit "b26d4e63629355a4c51220662dafdf81839ce1fe"))
     (package
       (name "symbiyosys")
-      (version (string-append "2020.02.20-" (string-take commit 9)))
+      (version (string-append "2020.04.26-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -452,7 +490,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "08xz8sgvs1qy7jxp8ma5yl49i6nl7k6bkhry4afdvwg3fvwis39c"))))
+           "0iiiw72nwk19nw2y6n4b9zfqh2f0k9bw648bhpkg998k0wxldv2q"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))
@@ -531,19 +569,19 @@
     (name "python-toposort")
     (version "1.5")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "toposort" version))
-        (sha256
-          (base32
-            "1papqmv5930xl3d5mx2drnwdxg7y1y3l1ij2n0vvzqwnaa2ax9fv"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "toposort" version))
+       (sha256
+        (base32
+         "1papqmv5930xl3d5mx2drnwdxg7y1y3l1ij2n0vvzqwnaa2ax9fv"))))
     (build-system python-build-system)
     (home-page
-      "https://bitbucket.org/ericvsmith/toposort")
+     "https://bitbucket.org/ericvsmith/toposort")
     (synopsis
-      "Implements a topological sort algorithm.")
+     "Implements a topological sort algorithm.")
     (description
-      "Implements a topological sort algorithm.")
+     "Implements a topological sort algorithm.")
     (license #f)))
 
 (define-public python-sexpdata
@@ -551,12 +589,12 @@
     (name "python-sexpdata")
     (version "0.0.3")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "sexpdata" version))
-        (sha256
-          (base32
-            "1q4lsjyzzqrdv64l0pv4ij9nd8gqhvxqcrpxc2xpxs652sk2gj0s"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "sexpdata" version))
+       (sha256
+        (base32
+         "1q4lsjyzzqrdv64l0pv4ij9nd8gqhvxqcrpxc2xpxs652sk2gj0s"))))
     (build-system python-build-system)
     (home-page "https://github.com/tkf/sexpdata")
     (synopsis "S-expression parser for Python")
@@ -568,21 +606,21 @@
     (name "python-epc")
     (version "0.0.5")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "epc" version))
-        (sha256
-          (base32
-            "09bx1ln1bwa00917dndlgs4k589h8qx2x080xch5m58p92kjwkd1"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "epc" version))
+       (sha256
+        (base32
+         "09bx1ln1bwa00917dndlgs4k589h8qx2x080xch5m58p92kjwkd1"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-sexpdata" ,python-sexpdata)
        ("python-nose" ,python-nose)))
     (home-page "https://github.com/tkf/python-epc")
     (synopsis
-      "EPC (RPC stack for Emacs Lisp) implementation in Python")
+     "EPC (RPC stack for Emacs Lisp) implementation in Python")
     (description
-      "EPC (RPC stack for Emacs Lisp) implementation in Python")
+     "EPC (RPC stack for Emacs Lisp) implementation in Python")
     (license #f)))
 
 ;; TODO(robin): broken
