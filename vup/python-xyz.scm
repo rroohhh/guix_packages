@@ -16,26 +16,6 @@
   #:use-module (guix build-system gnu)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public python-bitarray
-  (package
-    (name "python-bitarray")
-    (version "1.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "bitarray" version))
-       (sha256
-        (base32
-         "1810zxflkyqc7yh0d13g02ngpw6vjl0yxjrg8wa9xqfdp7w01d9y"))))
-    (build-system python-build-system)
-    (home-page
-     "https://github.com/ilanschnell/bitarray")
-    (synopsis
-     "efficient arrays of booleans -- C extension")
-    (description
-     "efficient arrays of booleans -- C extension")
-    (license #f)))
-
 (define-public python-pyvcd
   (package
     (name "python-pyvcd")
@@ -58,14 +38,14 @@
 (define-public python-fitsio
   (package
     (name "python-fitsio")
-    (version "1.0.5")
+    (version "1.1.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "fitsio" version))
        (sha256
         (base32
-         "0njd7akc9ba847mkbjks0k0bda3p1zf125bz029g8cv747cchnnv"))))
+         "1an0jy70a400y10y8n0ci3jdw6yfh2k42fqwj6kk9vfqz4a85f22"))))
     (build-system python-build-system)
     (inputs `(("cfitsio" ,cfitsio)))
     (propagated-inputs
@@ -81,27 +61,41 @@
        (modify-phases %standard-phases
          (add-before 'patch-source-shebangs 'patch-bin-sh
            (lambda _
-             (substitute* '("cfitsio3430/Makefile.in"
-                            "cfitsio3430/configure")
+             (substitute* '("cfitsio3470/Makefile.in"
+                            "cfitsio3470/configure")
                (("/bin/sh") (which "sh")))
              #t)))))))
+
+(define-public python-setuptools42
+  (package
+    (inherit python-setuptools)
+    (version "42.0.2")
+    (source
+     (origin
+       (inherit (package-source python-setuptools))
+       (uri (pypi-uri "setuptools" version ".zip"))
+       (sha256
+        (base32
+         "0h5rsh8cpq9mh6kzr5xgcmyqyl8ym5r6i9m6g770k1vw1l4p5cy5"))))))
 
 (define-public python-orthopy
   (package
     (name "python-orthopy")
-    (version "0.6.1")
+    (version "0.6.3")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "orthopy" version))
        (sha256
         (base32
-         "03k103jwncfnvjf6fpv2kfv9shff1hlws8msczm2s2h5g9x2fmcp"))))
+         "1c8j9qyzjijf75pxw4bwc3hlaikz8wyvajr512yg3cv8xwlkpvcs"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy)))
+       ("python-sympy" ,python-sympy)
+       ("python-wheel" ,python-wheel)
+       ("python-setuptools" ,python-setuptools42)))
     (home-page "https://github.com/nschloe/orthopy")
     (synopsis
      "Tools for orthogonal polynomials, Gaussian quadrature")
@@ -115,14 +109,14 @@
 (define-public python-quadpy
   (package
     (name "python-quadpy")
-    (version "0.13.2")
+    (version "0.14.8")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "quadpy" version))
        (sha256
         (base32
-         "0c69g21p7dw92bd29flxv8lj732vm82jbapv9q1xlw2z76ban7xa"))))
+         "13fpl8wpdaxan05w8s7hd2hgvnvp7lhdqh42chakxss54blgyxka"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
@@ -183,20 +177,78 @@
      "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+")
     (license #f)))
 
+(define-public python-xarray
+  (package
+    (name "python-xarray")
+    (version "0.15.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "xarray" version))
+       (sha256
+        (base32
+         "1yx8j66b7rn10m2l6gmn8yr9cn38pi5cj0x0wwpy4hdnhy6i7qv4"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-numpy" ,python-numpy)
+       ("python-pandas" ,python-pandas)
+       ("python-setuptools" ,python-setuptools42)
+       ("python-wheel" ,python-wheel)
+       ("python-setuptools-scm" ,python-setuptools-scm)))
+    (arguments
+     `(#:phases (modify-phases %standard-phases (delete 'check)))) ; no tests
+    (home-page "https://github.com/pydata/xarray")
+    (synopsis
+     "N-D labeled arrays and datasets in Python")
+    (description
+     "N-D labeled arrays and datasets in Python")
+    (license #f)))
+
+(define-public python-sparse
+  (package
+    (name "python-sparse")
+    (version "0.9.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "sparse" version))
+       (sha256
+        (base32
+         "04gfwm1y9knryx992biniqa3978n3chr38iy3y4i2b8wy52fzy3d"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-numba" ,python-numba)
+       ("python-numpy" ,python-numpy)
+       ("python-scipy" ,python-scipy)))
+    (native-inputs
+     `(("python-pytest" ,python-pytest)
+       ("python-pytest-black" ,python-pytest-black)
+       ("python-pytest-cov" ,python-pytest-cov)))
+    (home-page "https://github.com/pydata/sparse/")
+    (synopsis "Sparse n-dimensional arrays")
+    (description "Sparse n-dimensional arrays")
+    (license #f)))
+
 (define-public python-pint
   (package
     (name "python-pint")
-    (version "0.9")
+    (version "0.11")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "Pint" version))
        (sha256
         (base32
-         "1qp43xb8m9hhk1yi4ibdla0wx7b78avv65009hcq2krzsslskn1j"))))
+         "0kfgnmcs6z9ndhzvwg2xzhpwxgyyagdsdz5dns1jy40fa1q113rh"))))
     (build-system python-build-system)
     (propagated-inputs
-     `(("python-funcsigs" ,python-funcsigs)))
+     `(("python-funcsigs" ,python-funcsigs)
+       ("python-setuptools-scm" ,python-setuptools-scm)
+       ("python-matplotlib" ,python-matplotlib)
+       ("python-numpy" ,python-numpy)
+       ("python-sparse" ,python-sparse)
+       ("python-xarray" ,python-xarray)
+       ("python-pytest" ,python-pytest)))
     (home-page "https://github.com/hgrecco/pint")
     (synopsis "Physical quantities module")
     (description "Physical quantities module")
@@ -302,17 +354,17 @@
 (define-public python-chipsec
   (package
     (name "python-chipsec")
-    (version "1.4.7")
+    (version "1.4.9")
     (source
      (origin
        (method git-fetch)
        (uri (git-reference
              (url "https://github.com/chipsec/chipsec")
-             (commit "1.4.7")))
+             (commit version)))
        (file-name (git-file-name name version))
        (sha256
         (base32
-         "11qi4m4hqkylf1wd7f921r0p7xg5prpmfkmb7l9nn7sb95zz0sjr"))))
+         "1p6w8294w5z2f4jwc22mqaggv5qajvmf9iifv7fl7wdz3wsvskrk"))))
     (build-system python-build-system)
     (inputs
      `(("linux" ,linux-nonfree)
@@ -334,7 +386,7 @@
                (setenv "KERNEL_SRC_DIR" kernel-src-dir)))))))))
 
 (define (setuptools-scm-version-setter v)
- `(lambda* (#:key inputs #:allow-other-keys)
+  `(lambda* (#:key inputs #:allow-other-keys)
      (setenv "SETUPTOOLS_SCM_PRETEND_VERSION" ,v)
      #t))
 
@@ -456,18 +508,40 @@
       (description "System on Chip toolkit for nMigen")
       (license license:bsd-3))))
 
+(define-public python-executing
+  (package
+    (name "python-executing")
+    (version "0.4.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "executing" version))
+        (sha256
+          (base32
+            "1f00yzljlyd4j3iajnhqvjm2n1vkkcwg4cinhvzj9fiyc0rafcm2"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/alexmojaki/executing")
+    (synopsis
+      "Get the currently executing AST node of a frame, and other information")
+    (description
+      "Get the currently executing AST node of a frame, and other information")
+    (license license:expat)))
+
 (define-public python-varname
   (package
     (name "python-varname")
-    (version "0.0.3")
+    (version "0.1.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "python-varname" version))
        (sha256
         (base32
-         "044wz39rbd60qy9f27v179q98c1sbjcba2rf71g9m475ls3m5vqh"))))
+         "12glk17k11apva7n92knqplhvfbvmsjgg1ydcrlsgxr2p0nkx8pd"))))
     (build-system python-build-system)
+    (propagated-inputs
+     `(("python-executing" ,python-executing)))
     (home-page
      "https://github.com/pwwang/python-varname")
     (synopsis
@@ -517,14 +591,14 @@
 (define-public python-skyfield
   (package
     (name "python-skyfield")
-    (version "1.17")
+    (version "1.20")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "skyfield" version))
        (sha256
         (base32
-         "06f3smnzjnirwb06jpxk16vd041kaq9x7ab49ski31vppzlcaddh"))))
+         "0lm4j6zdavvw0wgfv5g2rdk77n3dh2b096z44halfcjcf4k4dg2x"))))
     (build-system python-build-system)
     (arguments
      `(#:phases (modify-phases %standard-phases
@@ -538,14 +612,14 @@
 (define-public python-astropy
   (package
     (name "python-astropy")
-    (version "4.0")
+    (version "4.0.1.post1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "astropy" version))
        (sha256
         (base32
-         "06vpq95jyxd8fkp5q0nhd6b9nzl1ng59rbb3qndf0kd8pbh00hj0"))))
+         "1da4xj793ldck29aajyb514wpz330cml26f3gdp45jj531n4lc2w"))))
     (build-system python-build-system)
     (arguments
      `(#:phases (modify-phases %standard-phases
