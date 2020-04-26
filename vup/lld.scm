@@ -2,23 +2,30 @@
 (use-modules (gnu packages llvm))
 (use-modules (guix packages))
 (use-modules (guix download))
+(use-modules (guix utils))
 (use-modules (guix build-system cmake))
 (use-modules ((guix licenses) #:prefix license:))
 
-(define-public lld-8
+(define (llvm-download-uri component version)
+  (if (version>=? version "9.0.1")
+      (string-append "https://github.com/llvm/llvm-project/releases/download"
+                     "/llvmorg-" version "/" component "-" version ".src.tar.xz")
+      (string-append "https://releases.llvm.org/" version "/" component "-"
+                     version ".src.tar.xz")))
+
+(define-public lld-10
   (package
     (name "lld")
-    (version "8.0.0")
+    (version "10.0.0")
     (source
      (origin
       (method url-fetch)
-      (uri (string-append "https://llvm.org/releases/"
-                          version "/lld-" version ".src.tar.xz"))
+      (uri (llvm-download-uri "lld" version))
       (sha256
        (base32
-        "0dvf38pbm7jy88g66mz7ikkdfhm2qpj0iyzh62hzycifjbnciblw"))))
+        "026pwcbczcg0j5c9h7hxxrn3ki81ia9m9sfn0sy0bvzffv2xg85r"))))
     (build-system cmake-build-system)
-	(inputs `(("llvm" ,llvm)))
+	(inputs `(("llvm-10" ,llvm-10)))
 	(arguments
 	 `(#:phases (modify-phases %standard-phases
 							   (delete 'check))))
