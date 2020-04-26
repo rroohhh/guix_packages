@@ -94,8 +94,9 @@
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
        ("python-sympy" ,python-sympy)
-       ("python-wheel" ,python-wheel)
-       ("python-setuptools" ,python-setuptools42)))
+       ("python-wheel" ,python-wheel)))
+    (native-inputs
+       `(("python-setuptools" ,python-setuptools42)))
     (home-page "https://github.com/nschloe/orthopy")
     (synopsis
      "Tools for orthogonal polynomials, Gaussian quadrature")
@@ -192,9 +193,10 @@
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-pandas" ,python-pandas)
-       ("python-setuptools" ,python-setuptools42)
        ("python-wheel" ,python-wheel)
        ("python-setuptools-scm" ,python-setuptools-scm)))
+    (native-inputs
+       `(("python-setuptools" ,python-setuptools42)))
     (arguments
      `(#:phases (modify-phases %standard-phases (delete 'check)))) ; no tests
     (home-page "https://github.com/pydata/xarray")
