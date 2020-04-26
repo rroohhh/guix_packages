@@ -124,6 +124,8 @@
        ("python-orthopy" ,python-orthopy)
        ("python-scipy" ,python-scipy)
        ("python-sympy" ,python-sympy)))
+    (native-inputs
+       `(("python-setuptools" ,python-setuptools42)))
     (home-page "https://github.com/nschloe/quadpy")
     (synopsis
      "Numerical integration, quadrature for various domains")
