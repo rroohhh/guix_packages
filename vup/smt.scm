@@ -10,7 +10,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public libpoly
-  (let ((version "0.1.7"))
+  (let ((version "0.1.8"))
     (package
     	(name "libpoly")
     	(version version)
@@ -22,7 +22,7 @@
     	  (file-name (git-file-name name version))
     	  (sha256
     	   (base32
-    		"0i5ar4lhs88glk0rvkmag656ii434i6i1q5dspx6d0kyg78fii64"))))
+    		"1n3gijksnl2ybznq4lkwm2428f82423sxq18gnb2g1kiwqlzdaa3"))))
 		(inputs `(("python" ,python-2)
 				  ("gmp" ,gmp)))
 		(build-system cmake-build-system)
