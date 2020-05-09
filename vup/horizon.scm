@@ -21,10 +21,10 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public horizon
-  (let ((commit "407d6aca28a83f51063db6dcfa5df1f1e90bdd97"))
+  (let ((commit "266fe7af05ba217a2ef755cf488e5996fc63f457"))
     (package
       (name "horizon")
-      (version (string-append "1.0.0+" (string-take commit 7)))
+      (version (string-append "1.1.1+" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -34,13 +34,13 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1mlvq51i8w4n87d5gc9y04lkx8vmfkngghcy07clhbx50kx4sgp6"))))
+                  "1lcifnca8z0wl24dfblq9149i95a6brfczzn9pk8gsj6z0l3xa9l"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
                 ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
-                ("boost" ,boost) ("opencascade" ,opencascade-occt) ("cppzmq" ,cppzmq)
+                ("boost" ,boost) ("opencascade" ,opencascade-oce) ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
                 ("gdk-pixbuf" ,gdk-pixbuf+svg)))
       (arguments
@@ -51,6 +51,7 @@
                     (add-after 'unpack 'patch-makefile
                       (lambda* (#:key inputs #:allow-other-keys)
                         (substitute* "Makefile"
+                          (("-I\\$\\{CASROOT\\}/include/opencascade") "-I${CASROOT}/include/oce")
                           (("/usr/bin/install") (string-append (assoc-ref inputs "coreutils") "/bin/install"))
                           (("LDFLAGS \\+= -fuse-ld=gold") "# LDFLAGS += -fuse-ld=gold"))
                         #t))
