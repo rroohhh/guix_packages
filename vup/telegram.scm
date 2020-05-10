@@ -25,45 +25,6 @@
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages qt))
 
-
-(define-public cmake-3.16
-  (package
-    (inherit cmake)
-    (version "3.16.4")
-    (source (origin
-              (inherit (package-source cmake))
-              (uri (string-append "https://www.cmake.org/files/v"
-                                  (version-major+minor version)
-                                  "/cmake-" version ".tar.gz"))
-              (sha256
-               (base32
-                "0b5c77lqzfk5l7mnnih5c78i36d3skbkw20jjnph79lx9l8qrk4v"))))
-    (arguments
-     (substitute-keyword-arguments (package-arguments cmake)
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (delete 'check) ; something is broken, but who cares?
-           (replace 'patch-bin-sh
-             (lambda _
-               ;; Replace "/bin/sh" by the right path in... a lot of
-               ;; files.
-               (substitute*
-                   '("Modules/CompilerId/Xcode-3.pbxproj.in"
-                                        ;                      "Modules/CPack.RuntimeScript.in"
-                     "Source/cmGlobalXCodeGenerator.cxx"
-                     "Source/cmLocalUnixMakefileGenerator3.cxx"
-                     "Source/cmExecProgramCommand.cxx"
-                     "Utilities/Release/release_cmake.cmake"
-                     "Utilities/cmlibarchive/libarchive/archive_write_set_format_shar.c"
-                     "Tests/CMakeLists.txt"
-                     "Tests/RunCMake/File_Generate/RunCMakeTest.cmake")
-                 (("/bin/sh") (which "sh")))
-               #t))
-           ))))))
-                                        ;              (patches
-                                        ;               (append (search-patches "cmake-curl-certificates.patch")
-                                        ;                       (origin-patches (package-source cmake))))))
-
 (define-public tl-expected
   (let ((commit "1d9c5d8c0da84b8ddc54bd3d90d632eec95c1f13"))
     (package
@@ -227,8 +188,7 @@
       (native-inputs `(("gcc" ,gcc-9)))
       (build-system cmake-build-system)
       (arguments
-       `(#:cmake ,cmake-3.16
-         #:phases (modify-phases %standard-phases
+       `(#:phases (modify-phases %standard-phases
                     (delete 'check)
                     (add-after 'install 'wrap-executable
                       (lambda* (#:key inputs outputs #:allow-other-keys)
