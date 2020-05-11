@@ -4,6 +4,7 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix git-download)
   #:use-module (guix build-system cmake)
+  #:use-module (gnu packages)
   #:use-module (gnu packages audio)
   #:use-module (gnu packages libreoffice)
   #:use-module (gnu packages pulseaudio)
@@ -50,7 +51,7 @@
       (license license:cc0))))
 
 (define-public microsoft-gsl
-  (let ((version "2.1.0"))
+  (let ((version "3.0.1"))
     (package
       (name "GSL")
       (version version)
@@ -62,9 +63,13 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "09f08lxqm00152bx9yrizlgabzpzxlpbv06h00z4w78yxywgxlgx"))))
+                  "1msr3rsnqbmp6vg86wyhny5cjqy291hd9nkyx91512ir3n77j4j0"))))
       (build-system cmake-build-system)
-      (inputs `(("catch2" ,catch-framework2)))
+      (arguments
+       `(#:configure-flags `("-DGSL_TEST=OFF")
+         #:phases (modify-phases %standard-phases
+                    (delete 'check))))
+      (inputs `(("gtest" ,googletest)))
       (synopsis "C++ Core Guideline support library")
       (description "The Guideline Support Library (GSL) contains functions and types that are suggested for
  use by the C++ Core Guidelines maintained by the Standard C++ Foundation.
@@ -149,7 +154,7 @@
                   "0rpvxsgjzhqm5xcffdsyws7cf3awv98p1y1zmkdsnq80h4v046lv")))))))
 
 (define-public telegram-desktop
-  (let ((version "2.1.0"))
+  (let ((version "2.1.4"))
     (package
       (name "telegram-desktop")
       (version version)
@@ -160,9 +165,11 @@
                       (commit (string-append "v" version))
                       (recursive? #t)))
                 (file-name (git-file-name name version))
+                (patches (search-patches "random_fuckup.patch"))
+                ;; (patches `("random_fuckup.patch"))
                 (sha256
                  (base32
-                  "116vbi1x9sr85p2r7q611mnbz18kcwqm4kasvn0zp2yyy6b4wqcx"))))
+                  "1w87jmb19l0lhdmcn9rz5j747q09wh59cld46sjbc4g27amd3ifx"))))
       (inputs `(("qtbase" ,qtbase)
                 ("qtimageformats" ,qtimageformats)
                 ("hunspell" ,hunspell)
@@ -207,3 +214,5 @@
       (description "Telegram Desktop messaging app")
       (home-page "https://desktop.telegram.org/")
       (license license:gpl3))))
+
+telegram-desktop

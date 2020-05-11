@@ -1,0 +1,488 @@
+diff --git a/Telegram/SourceFiles/boxes/background_preview_box.cpp b/Telegram/SourceFiles/boxes/background_preview_box.cpp
+index 475c040..d83e8ae 100644
+--- a/Telegram/SourceFiles/boxes/background_preview_box.cpp
++++ b/Telegram/SourceFiles/boxes/background_preview_box.cpp
+@@ -207,7 +207,7 @@ void ServiceCheck::Generator::paintFrame(
+ 	const auto frames = framesForStyle(st);
+ 	auto &image = frames->image;
+ 	const auto count = int(frames->ready.size());
+-	const auto index = int(std::round(toggled * (count - 1)));
++	const auto index = int(round(toggled * (count - 1)));
+ 	Assert(index >= 0 && index < count);
+ 	if (!frames->ready[index]) {
+ 		frames->ready[index] = true;
+diff --git a/Telegram/SourceFiles/boxes/edit_caption_box.cpp b/Telegram/SourceFiles/boxes/edit_caption_box.cpp
+index 948a115..02f19ed 100644
+--- a/Telegram/SourceFiles/boxes/edit_caption_box.cpp
++++ b/Telegram/SourceFiles/boxes/edit_caption_box.cpp
+@@ -193,10 +193,10 @@ EditCaptionBox::EditCaptionBox(
+ 			} else {
+ 				thumbWidth = st::sendMediaPreviewSize;
+ 			}
+-			const auto maxThumbHeight = std::min(int(std::round(1.5 * thumbWidth)), limitH);
+-			thumbHeight = int(std::round(th * float64(thumbWidth) / tw));
++			const auto maxThumbHeight = std::min(int(round(1.5 * thumbWidth)), limitH);
++			thumbHeight = int(round(th * float64(thumbWidth) / tw));
+ 			if (thumbHeight > maxThumbHeight) {
+-				thumbWidth = int(std::round(thumbWidth * float64(maxThumbHeight) / thumbHeight));
++				thumbWidth = int(round(thumbWidth * float64(maxThumbHeight) / thumbHeight));
+ 				thumbHeight = maxThumbHeight;
+ 				if (thumbWidth < 10) {
+ 					thumbWidth = 10;
+diff --git a/Telegram/SourceFiles/boxes/send_files_box.cpp b/Telegram/SourceFiles/boxes/send_files_box.cpp
+index c1e8bfe..19ae4b3 100644
+--- a/Telegram/SourceFiles/boxes/send_files_box.cpp
++++ b/Telegram/SourceFiles/boxes/send_files_box.cpp
+@@ -540,7 +540,7 @@ void AlbumThumb::drawSimpleFrame(Painter &p, QRect to, QSize size) const {
+ 	const auto scaleWidth = to.width() / float64(width);
+ 	const auto scaleHeight = to.height() / float64(height);
+ 	const auto Round = [](float64 value) {
+-		return int(std::round(value));
++		return int(round(value));
+ 	};
+ 	const auto [from, fillBlack] = [&] {
+ 		if (previewWidth < width && previewHeight < height) {
+@@ -729,7 +729,7 @@ void AlbumThumb::suggestMove(float64 delta, Fn<void()> callback) {
+ }
+ 
+ QRect AlbumThumb::countRealGeometry() const {
+-	const auto addLeft = int(std::round(
++	const auto addLeft = int(round(
+ 		_suggestedMoveAnimation.value(_suggestedMove) * _lastShrinkValue));
+ 	const auto current = _layout.geometry;
+ 	const auto realTopLeft = current.topLeft()
+@@ -1433,7 +1433,7 @@ void SendFilesBox::AlbumPreview::updateSize() {
+ 	const auto newHeight = [&] {
+ 		switch (_sendWay) {
+ 		case SendFilesWay::Album:
+-			return int(std::round(_thumbsHeightAnimation.value(
++			return int(round(_thumbsHeightAnimation.value(
+ 				_thumbsHeight)));
+ 		case SendFilesWay::Photos: return _photosHeight;
+ 		case SendFilesWay::Files: return _filesHeight;
+diff --git a/Telegram/SourceFiles/chat_helpers/stickers_emoji_pack.cpp b/Telegram/SourceFiles/chat_helpers/stickers_emoji_pack.cpp
+index b583c61..d5d0955 100644
+--- a/Telegram/SourceFiles/chat_helpers/stickers_emoji_pack.cpp
++++ b/Telegram/SourceFiles/chat_helpers/stickers_emoji_pack.cpp
+@@ -362,7 +362,7 @@ QImage EmojiImageLoader::prepare(EmojiPtr emoji) {
+ 			{ -1, 1 },
+ 			{ 1, 1 },
+ 		} };
+-		const auto corrected = int(std::round(delta / sqrt(2.)));
++		const auto corrected = int(round(delta / sqrt(2.)));
+ 		for (const auto &shift : diagonal) {
+ 			for (auto i = 0; i != corrected; ++i) {
+ 				p.drawImage(QPoint(delta, delta) + shift * (i + 1), tinted);
+diff --git a/Telegram/SourceFiles/core/update_checker.cpp b/Telegram/SourceFiles/core/update_checker.cpp
+index 160571e..0366388 100644
+--- a/Telegram/SourceFiles/core/update_checker.cpp
++++ b/Telegram/SourceFiles/core/update_checker.cpp
+@@ -547,7 +547,7 @@ bool ParseCommonMap(
+ 				}
+ 				return string.toULongLong();
+ 			} else if ((*version).isDouble()) {
+-				return uint64(std::round((*version).toDouble()));
++				return uint64(round((*version).toDouble()));
+ 			}
+ 			return 0ULL;
+ 		}();
+diff --git a/Telegram/SourceFiles/data/data_types.cpp b/Telegram/SourceFiles/data/data_types.cpp
+index 413f642..7361b84 100644
+--- a/Telegram/SourceFiles/data/data_types.cpp
++++ b/Telegram/SourceFiles/data/data_types.cpp
+@@ -104,8 +104,8 @@ Storage::Cache::Key GeoPointCacheKey(const GeoPointLocation &location) {
+ 		| (uint32(location.height) & 0xFFFFU);
+ 	return Storage::Cache::Key{
+ 		Data::kGeoPointCacheTag | (uint64(zoomscale) << 32) | widthheight,
+-		(uint64(std::round(std::abs(location.lat + 360.) * 1000000)) << 32)
+-		| uint64(std::round(std::abs(location.lon + 360.) * 1000000))
++		(uint64(round(std::abs(location.lat + 360.) * 1000000)) << 32)
++		| uint64(round(std::abs(location.lon + 360.) * 1000000))
+ 	};
+ }
+ 
+diff --git a/Telegram/SourceFiles/history/view/history_view_list_widget.cpp b/Telegram/SourceFiles/history/view/history_view_list_widget.cpp
+index 4b652fe..aee61cb 100644
+--- a/Telegram/SourceFiles/history/view/history_view_list_widget.cpp
++++ b/Telegram/SourceFiles/history/view/history_view_list_widget.cpp
+@@ -412,7 +412,7 @@ void ListWidget::scrollToAnimationCallback(
+ 	if (!attachToView) {
+ 		_scrollToAnimation.stop();
+ 	} else {
+-		const auto current = int(std::round(_scrollToAnimation.value(
++		const auto current = int(round(_scrollToAnimation.value(
+ 			relativeTo)));
+ 		_delegate->listScrollTo(itemTop(attachToView) + current);
+ 	}
+diff --git a/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp b/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp
+index 13ab8e0..ad86526 100644
+--- a/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp
++++ b/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp
+@@ -113,7 +113,7 @@ QSize GroupedMedia::countCurrentSize(int newWidth) {
+ 	const auto initialSpacing = st::historyGroupSkip;
+ 	const auto factor = newWidth / float64(maxWidth());
+ 	const auto scale = [&](int value) {
+-		return int(std::round(value * factor));
++		return int(round(value * factor));
+ 	};
+ 	const auto spacing = scale(initialSpacing);
+ 	for (auto &part : _parts) {
+diff --git a/Telegram/SourceFiles/history/view/media/history_view_poll.cpp b/Telegram/SourceFiles/history/view/media/history_view_poll.cpp
+index 292c366..2f28ed6 100644
+--- a/Telegram/SourceFiles/history/view/media/history_view_poll.cpp
++++ b/Telegram/SourceFiles/history/view/media/history_view_poll.cpp
+@@ -923,7 +923,7 @@ void Poll::paintCloseByTimer(
+ 		const auto part = std::max(
+ 			left / float64(radial),
+ 			1. / FullArcLength);
+-		const auto length = int(std::round(FullArcLength * part));
++		const auto length = int(round(FullArcLength * part));
+ 		auto pen = regular->p;
+ 		pen.setWidth(st::historyPollRadio.thickness);
+ 		pen.setCapStyle(Qt::RoundCap);
+@@ -1009,7 +1009,7 @@ int Poll::paintAnswer(
+ 		}
+ 		if (opacity > 0.) {
+ 			const auto percent = QString::number(
+-				int(std::round(animation->percent.current()))) + '%';
++				int(round(animation->percent.current()))) + '%';
+ 			const auto percentWidth = st::historyPollPercentFont->width(
+ 				percent);
+ 			p.setOpacity(opacity);
+diff --git a/Telegram/SourceFiles/main/main_settings.cpp b/Telegram/SourceFiles/main/main_settings.cpp
+index b9f1f07..66fa607 100644
+--- a/Telegram/SourceFiles/main/main_settings.cpp
++++ b/Telegram/SourceFiles/main/main_settings.cpp
+@@ -25,7 +25,7 @@ constexpr auto kVersion = 1;
+ constexpr auto kMaxSavedPlaybackPositions = 16;
+ 
+ [[nodiscard]] qint32 SerializePlaybackSpeed(float64 speed) {
+-	return int(std::round(std::clamp(speed * 4., 2., 8.))) - 2;
++	return int(round(std::clamp(speed * 4., 2., 8.))) - 2;
+ }
+ 
+ float64 DeserializePlaybackSpeed(qint32 speed) {
+diff --git a/Telegram/SourceFiles/media/audio/media_audio.cpp b/Telegram/SourceFiles/media/audio/media_audio.cpp
+index 9356bfc..4cc0274 100644
+--- a/Telegram/SourceFiles/media/audio/media_audio.cpp
++++ b/Telegram/SourceFiles/media/audio/media_audio.cpp
+@@ -49,7 +49,7 @@ int CoarseTuneForSpeed(float64 speed) {
+ 
+ 	constexpr auto kTuneSteps = 12;
+ 	const auto tuneRatio = std::log(speed) / std::log(2.);
+-	return -int(std::round(kTuneSteps * tuneRatio));
++	return -int(round(kTuneSteps * tuneRatio));
+ }
+ 
+ } // namespace
+diff --git a/Telegram/SourceFiles/media/player/media_player_instance.cpp b/Telegram/SourceFiles/media/player/media_player_instance.cpp
+index 214f125..7f719a4 100644
+--- a/Telegram/SourceFiles/media/player/media_player_instance.cpp
++++ b/Telegram/SourceFiles/media/player/media_player_instance.cpp
+@@ -572,7 +572,7 @@ void Instance::finishSeeking(AudioMsgId::Type type, float64 progress) {
+ 			const auto &info = streamed->instance.info();
+ 			const auto duration = info.audio.state.duration;
+ 			if (duration != kTimeUnknown) {
+-				const auto position = crl::time(std::round(
++				const auto position = crl::time(round(
+ 					std::clamp(progress, 0., 1.) * duration));
+ 				streamed->instance.play(streamingOptions(
+ 					streamed->id,
+diff --git a/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp b/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp
+index 61e6687..28681ae 100644
+--- a/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp
++++ b/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp
+@@ -591,7 +591,7 @@ TimePoint VideoTrackObject::trackTime() const {
+ 	}
+ 	const auto adjust = (result.worldTime - _syncTimePoint.worldTime);
+ 	result.trackTime = _syncTimePoint.trackTime
+-		+ crl::time(std::round(adjust * _options.speed));
++		+ crl::time(round(adjust * _options.speed));
+ 	return result;
+ }
+ 
+@@ -715,7 +715,7 @@ auto VideoTrack::Shared::presentFrame(
+ 		const auto trackLeft = position - time.trackTime;
+ 		frame->display = time.worldTime
+ 			+ addedWorldTimeDelay
+-			+ crl::time(std::round(trackLeft / playbackSpeed));
++			+ crl::time(round(trackLeft / playbackSpeed));
+ 
+ 		// Release this frame to the main thread for rendering.
+ 		_counter.store(
+diff --git a/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp b/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp
+index 4f6a6ab..3b3bb32 100644
+--- a/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp
++++ b/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp
+@@ -29,7 +29,7 @@ namespace {
+ constexpr auto kThumbDuration = crl::time(150);
+ 
+ int Round(float64 value) {
+-	return int(std::round(value));
++	return int(round(value));
+ }
+ 
+ using Context = GroupThumbs::Context;
+diff --git a/Telegram/SourceFiles/media/view/media_view_pip.cpp b/Telegram/SourceFiles/media/view/media_view_pip.cpp
+index 639f47f..454f546 100644
+--- a/Telegram/SourceFiles/media/view/media_view_pip.cpp
++++ b/Telegram/SourceFiles/media/view/media_view_pip.cpp
+@@ -1212,7 +1212,7 @@ void Pip::paintPlayback(QPainter &p) const {
+ 		activeValue(_playback));
+ 	const auto left = _playback.icon.x();
+ 	const auto top = _playback.icon.y() + _playback.icon.height() - height;
+-	const auto done = int(std::round(width * progress));
++	const auto done = int(round(width * progress));
+ 	PainterHighQualityEnabler hq(p);
+ 	p.setPen(Qt::NoPen);
+ 	if (done > 0) {
+diff --git a/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp b/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp
+index 3b57c63..79bc517 100644
+--- a/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp
++++ b/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp
+@@ -288,7 +288,7 @@ void PlaybackControls::setLoadingProgress(int ready, int total) {
+ 			_loadingPercent = -1;
+ 		}
+ 		const auto progress = total ? (ready / float64(total)) : 0.;
+-		const auto percent = int(std::round(progress * 100));
++		const auto percent = int(round(progress * 100));
+ 		if (_loadingPercent != percent) {
+ 			_loadingPercent = percent;
+ 			_downloadProgress->setText(QString::number(percent) + '%');
+diff --git a/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp b/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp
+index b263089..716076b 100644
+--- a/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp
++++ b/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp
+@@ -110,7 +110,7 @@ std::vector<DnsEntry> ParseDnsResponse(
+ 		const auto object = elem.toObject();
+ 		if (typeRestriction) {
+ 			const auto typeIt = object.find("type");
+-			const auto type = int(std::round((*typeIt).toDouble()));
++			const auto type = int(round((*typeIt).toDouble()));
+ 			if (!(*typeIt).isDouble()) {
+ 				LOG(("Config Error: Not a number in type field "
+ 					"in Answer array in dns response JSON."));
+@@ -132,7 +132,7 @@ std::vector<DnsEntry> ParseDnsResponse(
+ 
+ 		const auto ttlIt = object.find("TTL");
+ 		const auto ttl = (ttlIt != object.constEnd())
+-			? crl::time(std::round((*ttlIt).toDouble()))
++			? crl::time(round((*ttlIt).toDouble()))
+ 			: crl::time(0);
+ 		result.push_back({ (*dataIt).toString(), ttl });
+ 	}
+diff --git a/Telegram/SourceFiles/mtproto/session_private.cpp b/Telegram/SourceFiles/mtproto/session_private.cpp
+index 1b61590..208bef1 100644
+--- a/Telegram/SourceFiles/mtproto/session_private.cpp
++++ b/Telegram/SourceFiles/mtproto/session_private.cpp
+@@ -495,7 +495,7 @@ MTPVector<MTPJSONObjectValue> SessionPrivate::prepareInitParams() {
+ 		sliced -= 24 * 3600;
+ 	}
+ 	const auto sign = (sliced < 0) ? -1 : 1;
+-	const auto rounded = std::round(std::abs(sliced) / 900.) * 900 * sign;
++	const auto rounded = round(std::abs(sliced) / 900.) * 900 * sign;
+ 	return MTP_vector<MTPJSONObjectValue>(
+ 		1,
+ 		MTP_jsonObjectValue(
+diff --git a/Telegram/SourceFiles/settings/settings_chat.cpp b/Telegram/SourceFiles/settings/settings_chat.cpp
+index 3477ca2..27ac7d1 100644
+--- a/Telegram/SourceFiles/settings/settings_chat.cpp
++++ b/Telegram/SourceFiles/settings/settings_chat.cpp
+@@ -356,7 +356,7 @@ void ColorsPalette::updateInnerGeometry() {
+ 	const auto y = st::settingsSectionSkip * 2;
+ 	auto x = float64(padding.left());
+ 	for (const auto &button : _buttons) {
+-		button->moveToLeft(int(std::round(x)), y);
++		button->moveToLeft(int(round(x)), y);
+ 		x += size + skip;
+ 	}
+ 	inner->resize(inner->width(), y + size);
+@@ -1129,7 +1129,7 @@ void SetupDefaultThemes(not_null<Ui::VerticalLayout*> container) {
+ 		auto index = 0;
+ 		for (const auto button : buttons) {
+ 			button->resizeToWidth(single);
+-			button->moveToLeft(int(std::round(left)), 0);
++			button->moveToLeft(int(round(left)), 0);
+ 			left += button->width() + skip;
+ 		}
+ 	}, block->lifetime());
+diff --git a/Telegram/SourceFiles/storage/localimageloader.cpp b/Telegram/SourceFiles/storage/localimageloader.cpp
+index 28732ed..9898b33 100644
+--- a/Telegram/SourceFiles/storage/localimageloader.cpp
++++ b/Telegram/SourceFiles/storage/localimageloader.cpp
+@@ -58,11 +58,11 @@ PreparedFileThumbnail PrepareFileThumbnail(QImage &&original) {
+ 	const auto scaledWidth = [&] {
+ 		return (width > height)
+ 			? kThumbnailSize
+-			: int(std::round(kThumbnailSize * width / float64(height)));
++			: int(round(kThumbnailSize * width / float64(height)));
+ 	};
+ 	const auto scaledHeight = [&] {
+ 		return (width > height)
+-			? int(std::round(kThumbnailSize * height / float64(width)))
++			? int(round(kThumbnailSize * height / float64(width)))
+ 			: kThumbnailSize;
+ 	};
+ 	result.image = scaled
+diff --git a/Telegram/SourceFiles/storage/storage_cloud_blob.cpp b/Telegram/SourceFiles/storage/storage_cloud_blob.cpp
+index 300dffd..54b8d0b 100644
+--- a/Telegram/SourceFiles/storage/storage_cloud_blob.cpp
++++ b/Telegram/SourceFiles/storage/storage_cloud_blob.cpp
+@@ -85,7 +85,7 @@ QString StateDescription(const BlobState &state, tr::phrase<> activeText) {
+ 		return tr::lng_emoji_set_loading(
+ 			tr::now,
+ 			lt_percent,
+-			QString::number(int(std::round(percent))) + '%',
++			QString::number(int(round(percent))) + '%',
+ 			lt_progress,
+ 			formatDownloadText(data.already, data.size));
+ 	}, [](const Failed &data) {
+diff --git a/Telegram/SourceFiles/ui/effects/round_checkbox.cpp b/Telegram/SourceFiles/ui/effects/round_checkbox.cpp
+index f018132..ac671cc 100644
+--- a/Telegram/SourceFiles/ui/effects/round_checkbox.cpp
++++ b/Telegram/SourceFiles/ui/effects/round_checkbox.cpp
+@@ -178,7 +178,7 @@ QPixmap CheckCaches::frame(
+ 	auto &frames = framesForStyle(st, displayInactive);
+ 
+ 	const auto frameCount = int(frames.list.size());
+-	const auto frameIndex = int(std::round(progress * (frameCount - 1)));
++	const auto frameIndex = int(round(progress * (frameCount - 1)));
+ 	Assert(frameIndex >= 0 && frameIndex < frameCount);
+ 
+ 	if (!frames.list[frameIndex]) {
+diff --git a/Telegram/SourceFiles/ui/empty_userpic.cpp b/Telegram/SourceFiles/ui/empty_userpic.cpp
+index 11a703c..2b7a0bd 100644
+--- a/Telegram/SourceFiles/ui/empty_userpic.cpp
++++ b/Telegram/SourceFiles/ui/empty_userpic.cpp
+@@ -36,11 +36,11 @@ void PaintSavedMessagesInner(
+ 	// X XX          XX X   |      |
+ 	// XX              XX  ---    ---
+ 
+-	const auto thinkness = std::round(size * 0.055);
++	const auto thinkness = round(size * 0.055);
+ 	const auto increment = int(thinkness) % 2 + (size % 2);
+-	const auto width = std::round(size * 0.15) * 2 + increment;
+-	const auto height = std::round(size * 0.19) * 2 + increment;
+-	const auto add = std::round(size * 0.064);
++	const auto width = round(size * 0.15) * 2 + increment;
++	const auto height = round(size * 0.19) * 2 + increment;
++	const auto add = round(size * 0.064);
+ 
+ 	const auto left = x + (size - width) / 2;
+ 	const auto top = y + (size - height) / 2;
+diff --git a/Telegram/SourceFiles/ui/grouped_layout.cpp b/Telegram/SourceFiles/ui/grouped_layout.cpp
+index 7b98af8..611afd3 100644
+--- a/Telegram/SourceFiles/ui/grouped_layout.cpp
++++ b/Telegram/SourceFiles/ui/grouped_layout.cpp
+@@ -11,7 +11,7 @@ namespace Ui {
+ namespace {
+ 
+ int Round(float64 value) {
+-	return int(std::round(value));
++	return int(round(value));
+ }
+ 
+ class Layouter {
+diff --git a/Telegram/SourceFiles/ui/image/image_location.h b/Telegram/SourceFiles/ui/image/image_location.h
+index 5a904f9..c936514 100644
+--- a/Telegram/SourceFiles/ui/image/image_location.h
++++ b/Telegram/SourceFiles/ui/image/image_location.h
+@@ -396,8 +396,8 @@ inline InMemoryKey inMemoryKey(const WebFileLocation &location) {
+ 
+ inline InMemoryKey inMemoryKey(const GeoPointLocation &location) {
+ 	return InMemoryKey(
+-		(uint64(std::round(std::abs(location.lat + 360.) * 1000000)) << 32)
+-		| uint64(std::round(std::abs(location.lon + 360.) * 1000000)),
++		(uint64(round(std::abs(location.lat + 360.) * 1000000)) << 32)
++		| uint64(round(std::abs(location.lon + 360.) * 1000000)),
+ 		(uint64(location.width) << 32) | uint64(location.height));
+ }
+ 
+diff --git a/Telegram/SourceFiles/ui/widgets/continuous_sliders.h b/Telegram/SourceFiles/ui/widgets/continuous_sliders.h
+index 80c7e41..2da89e0 100644
+--- a/Telegram/SourceFiles/ui/widgets/continuous_sliders.h
++++ b/Telegram/SourceFiles/ui/widgets/continuous_sliders.h
+@@ -167,14 +167,14 @@ public:
+ 			}
+ 		}
+ 		setAdjustCallback([=](float64 value) {
+-			return std::round(value * sectionsCount) / sectionsCount;
++			return round(value * sectionsCount) / sectionsCount;
+ 		});
+ 		setChangeProgressCallback([
+ 			=,
+ 			convert = std::forward<Convert>(convert),
+ 			callback = std::forward<Callback>(callback)
+ 		](float64 value) {
+-			const auto index = int(std::round(value * sectionsCount));
++			const auto index = int(round(value * sectionsCount));
+ 			callback(convert(index));
+ 		});
+ 	}
+diff --git a/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp b/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp
+index f827cab..3f18a89 100644
+--- a/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp
++++ b/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp
+@@ -722,7 +722,7 @@ int CloudList::resizeGetHeight(int newWidth) {
+ 	for (const auto &element : _elements) {
+ 		const auto button = element.button.get();
+ 		button->resizeToWidth(single);
+-		button->moveToLeft(int(std::round(x)), y);
++		button->moveToLeft(int(round(x)), y);
+ 		accumulate_max(rowHeight, button->height());
+ 		x += single + skip;
+ 		if (++index == kShowPerRow) {
+diff --git a/Telegram/lib_base/base/flat_map_tests.cpp b/Telegram/lib_base/base/flat_map_tests.cpp
+index 3b07174..807193e 100644
+--- a/Telegram/lib_base/base/flat_map_tests.cpp
++++ b/Telegram/lib_base/base/flat_map_tests.cpp
+@@ -98,7 +98,7 @@ TEST_CASE("flat_maps structured bindings", "[flat_map]") {
+ 
+ 	SECTION("structred binded range-based for loop") {
+ 		for (const auto &[key, value] : v) {
+-			REQUIRE(key == int(std::round(*value)));
++			REQUIRE(key == int(round(*value)));
+ 		}
+ 	}
+ 
+diff --git a/Telegram/lib_ui/ui/effects/radial_animation.cpp b/Telegram/lib_ui/ui/effects/radial_animation.cpp
+index 287f9b2..b8cc662 100644
+--- a/Telegram/lib_ui/ui/effects/radial_animation.cpp
++++ b/Telegram/lib_ui/ui/effects/radial_animation.cpp
+@@ -225,8 +225,8 @@ RadialState InfiniteRadialAnimation::computeState() {
+ 		const auto shown = 1.;
+ 		return { 1., 0, kFullArcLength };
+ 	}
+-	const auto min = int(std::round(kFullArcLength * _st.arcMin));
+-	const auto max = int(std::round(kFullArcLength * _st.arcMax));
++	const auto min = int(round(kFullArcLength * _st.arcMin));
++	const auto max = int(round(kFullArcLength * _st.arcMax));
+ 	if (now <= _workStarted) {
+ 		// zero .. _workStarted
+ 		const auto zero = _workStarted - _st.sineDuration;
+diff --git a/Telegram/lib_ui/ui/style/style_core_scale.h b/Telegram/lib_ui/ui/style/style_core_scale.h
+index e25dcf0..ea91327 100644
+--- a/Telegram/lib_ui/ui/style/style_core_scale.h
++++ b/Telegram/lib_ui/ui/style/style_core_scale.h
+@@ -34,7 +34,7 @@ template <typename T>
+ [[nodiscard]] inline T ConvertScale(T value, int scale) {
+ 	return (value < 0.)
+ 		? (-ConvertScale(-value, scale))
+-		: T(std::round((double(value) * scale / 100.) - 0.01));
++		: T(round((double(value) * scale / 100.) - 0.01));
+ }
+ 
+ template <typename T>
+diff --git a/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp b/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp
+index 7ddc773..3629650 100644
+--- a/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp
++++ b/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp
+@@ -260,7 +260,7 @@ void VerticalLayoutReorder::updateShift(
+ 		? indexHint
+ 		: indexOf(widget);
+ 	auto &entry = _entries[index];
+-	entry.shift = std::round(entry.shiftAnimation.value(entry.finalShift))
++	entry.shift = round(entry.shiftAnimation.value(entry.finalShift))
+ 		+ entry.deltaShift;
+ 	if (entry.deltaShift && !entry.shiftAnimation.animating()) {
+ 		entry.finalShift += entry.deltaShift;
