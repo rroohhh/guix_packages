@@ -214,5 +214,3 @@
       (description "Telegram Desktop messaging app")
       (home-page "https://desktop.telegram.org/")
       (license license:gpl3))))
-
-telegram-desktop
