@@ -69,52 +69,6 @@
                  (base32
                   "05ckmmvgymr7vhrpnqsiafwm8z5rhc3h91v506lzi6jpjzcs23hj")))))))
 
-(define-public boost-python3
-  (package
-    (inherit boost)
-    (native-inputs
-     `(("perl" ,perl)
-       ("python" ,python)
-       ("tcsh" ,tcsh)))
-    (arguments
-     (substitute-keyword-arguments (package-arguments boost)
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (replace 'configure
-             (lambda* (#:key inputs outputs #:allow-other-keys)
-               (let ((icu (assoc-ref inputs "icu4c"))
-                     (python (assoc-ref inputs "python"))
-                     (out (assoc-ref outputs "out")))
-                 (substitute* '("libs/config/configure"
-                                "libs/spirit/classic/phoenix/test/runtest.sh"
-                                "tools/build/src/engine/execunix.c"
-                                "tools/build/src/engine/Jambase"
-                                "tools/build/src/engine/jambase.c")
-                   (("/bin/sh") (which "sh")))
-
-                 (setenv "SHELL" (which "sh"))
-                 (setenv "CONFIG_SHELL" (which "sh"))
-                 (setenv "CPATH" (string-append (getenv "CPATH") ":" python "/include/python3.7m")) ;  very shit but what can i do
-
-                 (invoke "./bootstrap.sh"
-                         (string-append "--prefix=" out)
-                         ;; Auto-detection looks for ICU only in traditional
-                         ;; install locations.
-                         (string-append "--with-icu=" icu)
-                         "--with-toolset=gcc"
-                         (string-append "--with-python=" python "/bin/python3")))))
-           (replace 'provide-libboost_python
-             (lambda* (#:key outputs #:allow-other-keys)
-               (let ((out (assoc-ref outputs "out")))
-                 ;; Boost can build support for both Python 2 and Python 3 since
-                 ;; version 1.67.0, and suffixes each library with the Python
-                 ;; version.  Many consumers only check for libboost_python
-                 ;; however, so we provide it here as suggested in
-                 ;; <https://github.com/boostorg/python/issues/203>.
-                 (with-directory-excursion (string-append out "/lib")
-                   (symlink "libboost_python37.so" "libboost_python.so"))
-                 #t)))))))))
-
 (define-public trellis
   (let ((commit "d4760738c653338114d62204ace87a57c8f774e0"))
     (package
@@ -131,7 +85,7 @@
                  (base32
                   "1nya4axblppzmmf1p3agln1q4nrl22n0pj0bybqyixyg5iwv1f9m"))))
       (build-system cmake-build-system)
-      (inputs `(("python" ,python) ("boost" ,boost-python3)))
+      (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
        `(#:configure-flags (list (string-append "-DCURRENT_GIT_VERSION=" ,version))
          #:out-of-source? #f
@@ -167,7 +121,7 @@ open Verilog to bitstream toolchain for these devices.")
                   "1h3whykj63q7hp2kf46p0v6wr9dayiz5wairwhd9za6739lycngh"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
-                ("boost" ,boost-python3)
+                ("boost" ,boost)
                 ("qtbase" ,qtbase)
                 ("trellis" ,trellis)
                 ("icestorm" ,icestorm)
