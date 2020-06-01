@@ -1,11 +1,16 @@
 (define-module (vup python-xyz)
   #:use-module (guix utils)
   #:use-module (gnu packages assembly)
+  #:use-module (gnu packages xml)
+  #:use-module (gnu packages pdf)
+  #:use-module (gnu packages time)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
   #:use-module (gnu packages check)
+  #:use-module (gnu packages version-control)
   #:use-module (vup fpga)
   #:use-module (vup smt)
   #:use-module (vup linux)
@@ -743,3 +748,155 @@
 ;;     (synopsis "Frida CLI tools")
 ;;     (description "Frida CLI tools")
 ;;     (license #f)))
+
+
+
+(define-public python-nmigen-yosys
+  (package
+    (name "python-nmigen-yosys")
+    (version "0.9.post4248.dev7")
+    (source
+     (origin
+        (method git-fetch)
+        (uri (git-reference
+            (url "https://github.com/nmigen/nmigen-yosys")
+            (commit "be1f1b3fdeaf5611b48c69381bb1b3d6f35f9d48")))
+        ;; (patches (search-patches "random_fuckup.patch"))
+        (patches '("nmigen-yosys-nogit.patch"))
+        (file-name (git-file-name name version))
+        (sha256
+        (base32
+        "0nyf3wk7yznl63jb02pmj0v91rr6xv25hsqs9rkhjhiz4j8h11pk"))))
+    (build-system python-build-system)
+    (propagated-inputs `(("python-setuptools-scm" ,python-setuptools-scm) ("git" ,git)
+                         ("python-wheel" ,python-wheel)))
+    (arguments
+     `(#:phases (modify-phases %standard-phases
+                  (add-before 'build 'set-setuptools-scm-version
+                    ,(setuptools-scm-version-setter version)))))
+    (home-page "https://github.com/nmigen/nmigen-yosys")
+    (synopsis
+     "Specialized WebAssembly build of Yosys used by nMigen")
+    (description
+     "Specialized WebAssembly build of Yosys used by nMigen")
+    (license #f)))
+
+(define-public python-pytest-helpers-namespace
+  (package
+    (name "python-pytest-helpers-namespace")
+    (version "2019.1.8")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest-helpers-namespace" version))
+        (sha256
+          (base32
+            "1kkifxcnv2s2136p0zg9h15f3lq1i7xgppzncq0hqhcjkyhj7zsf"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-pytest" ,python-pytest)))
+    (home-page
+      "https://github.com/saltstack/pytest-helpers-namespace")
+    (synopsis "PyTest Helpers Namespace")
+    (description "PyTest Helpers Namespace")
+    (license #f)))
+
+(define-public python-pytest-xdist-1.28.0
+  (package
+    (inherit python-pytest-xdist)
+    (version "1.28.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest-xdist" version))
+        (sha256
+          (base32
+            "0v2jpdk2gdybay453v3xrb2k59bk4kqs71asi9yda7z8jd94hfpq"))))))
+
+(define-public python-pytest-5.3.4
+  (package
+    (inherit python-pytest)
+    (version "5.3.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest" version))
+        (sha256
+          (base32
+            "005n7718iv0sm4w7yr347lqihc5svj2jsbpqasg706jdwn5jw4hx"))))))
+
+(define-public python-xmp-toolkit
+  (package
+    (name "python-xmp-toolkit")
+    (version "2.0.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "python-xmp-toolkit" version))
+        (sha256
+          (base32
+            "0f4s86hji6idyfg9007jncl366gasjjmldbwbknldzgrdya15ngq"))))
+    (build-system python-build-system)
+    (inputs
+     `(("exempi" ,exempi)))
+    (propagated-inputs
+      `(("python-pytz" ,python-pytz)))
+    (arguments
+     '(#:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'patch-exempi-location
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((exempi (assoc-ref inputs "exempi")))
+               (substitute* '("libxmp/exempi.py")
+                 (("ctypes.util.find_library\\('exempi'\\)") (string-append "\"" exempi "/lib/libexempi.so\""))))
+             #t))
+         (delete 'check)))) ; fails and I don't care
+    (home-page
+      "https://github.com/python-xmp-toolkit/python-xmp-toolkit")
+    (synopsis
+      "Python XMP Toolkit for working with metadata.")
+    (description
+      "Python XMP Toolkit for working with metadata.")
+    (license #f)))
+
+(define-public python-pikepdf
+  (package
+    (name "python-pikepdf")
+    (version "1.14.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pikepdf" version))
+        (sha256
+          (base32
+            "1xbr5lxgnz33q7q32l6a77cngsy70wzrffgdf5rxhhnsn1qiqdsv"))))
+    (build-system python-build-system)
+    (inputs
+     `(("pybind11" ,pybind11)
+       ("qpdf" ,qpdf)))
+    (propagated-inputs
+     `(("python-lxml" ,python-lxml)
+       ("python-setuptools-scm-git-archive" ,python-setuptools-scm-git-archive)))
+       ;; ("attrs" ,python-attrs)
+       ;; ("python-pytest" ,python-pytest-5.3.4)
+       ;; ("python-pytest-helpers-namespace" ,python-pytest-helpers-namespace)
+       ;; ("python-pytest-timeout" ,python-pytest-timeout)
+       ;; ("python-pytest-xdist" ,python-pytest-xdist-1.28.0)
+       ;; ("python-pytest-runner" ,python-pytest-runner)
+       ;; ("python-pytest-forked" ,python-pytest-forked)
+       ;; ("python-pillow" ,python-pillow)
+       ;; ("python-xmp-toolkit" ,python-xmp-toolkit)
+       ;; ("python-hypothesis" ,python-hypothesis)
+    (arguments
+     '(#:phases
+       (modify-phases %standard-phases
+         (add-before 'build 'set-HOME
+           (lambda _
+             (setenv "HOME" "/tmp")))
+         (delete 'check)))) ; pytest version conflict
+    (home-page "https://github.com/pikepdf/pikepdf")
+    (synopsis
+      "Read and write PDFs with Python, powered by qpdf")
+    (description
+      "Read and write PDFs with Python, powered by qpdf")
+    (license #f)))
