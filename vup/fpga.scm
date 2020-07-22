@@ -18,7 +18,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "ed90ce20df9c7c4d6e1db5d3f786f9b52e06bab1")
+  (let ((commit "341db25668f3054c87aa3372c794e180f629af5d")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -26,16 +26,16 @@
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
-                      (url "https://github.com/berkeley-abc/abc")
+                      (url "https://github.com/yosyshq/abc")
                       (commit commit)))
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "01sw67pkrb6wzflkxbkxzwsnli3nvp0yxwp3j1ngb3c0j86ri437")))))))
+                  "14cgv34vz5ljkcms6nrv19vqws2hs8bgjgffk5q03cbxnm2jxv5s")))))))
 
 
 (define-public yosys-git
-  (let ((commit "868b6b1b0dfa7ca1f10392678d7c3c29db37c60d")
+  (let ((commit "a87e338381507b372bb4ad6fad6ad959e0139649")
         (version "0.9"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
@@ -48,13 +48,13 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "0p3dp2jb669m17vcjqsrcv9g3y9vxhhfa1j1v46yvmdalh5vc4zm"))
+                   "12ls3dqma8aa8ka026sh5vik5hpaj68i3lfdrc1ia6nqp8srmgfk"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "cd2610e0fa1c6a90e8e4e4cfe06db1b474e752bb")
+  (let ((commit "d12308775684cf43ab923227235b4ad43060015e")
         (revision "2"))
     (package
       (inherit guix:icestorm)
@@ -67,23 +67,23 @@
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "05ckmmvgymr7vhrpnqsiafwm8z5rhc3h91v506lzi6jpjzcs23hj")))))))
+                  "18ykv6np8sp7rb7c1cm3ha3qnj280gpkyn476faahb15jh0nbjmw")))))))
 
 (define-public trellis
-  (let ((commit "d4760738c653338114d62204ace87a57c8f774e0"))
+  (let ((commit "fef7e5fd16354c2911673635dd78e2dae3a775c0"))
     (package
       (name "trellis")
       (version (string-append "1.0-71-g" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
-                      (url "https://github.com/symbiflow/prjtrellis")
+                      (url "https://github.com/yosyshq/prjtrellis")
                       (commit commit)
                       (recursive? #t))) ; for prjtrellis-db
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1nya4axblppzmmf1p3agln1q4nrl22n0pj0bybqyixyg5iwv1f9m"))))
+                  "1p44p7zhzf18pzl07hgw0iz045109m2s16nkv91qyd4rx83s3jmr"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -106,10 +106,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "5c6b2cbafef7435bd697cedf30436bf16e70dc15"))
+  (let ((commit "44007eab6f6a7f20c257bb109bbc8f66a5fde12d"))
     (package
       (name "nextpnr")
-      (version (string-append "2020.04.26" (string-take commit 9)))
+      (version (string-append "2020.07.16" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -118,7 +118,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1h3whykj63q7hp2kf46p0v6wr9dayiz5wairwhd9za6739lycngh"))))
+                  "0pgdpgyk65l703hhshp6mmzh23wzcjgndd1q5i5kx8vbgkgyg0bg"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
@@ -132,9 +132,8 @@ open Verilog to bitstream toolchain for these devices.")
                             "-DBUILD_TESTS=ON"
                             "-DUSE_OPENMP=ON"
                             "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
-                            (string-append "-DICEBOX_ROOT=" (assoc-ref %build-inputs "icestorm") "/share/icebox")
+                            (string-append "-DICESTORM_INSTALL_PREFIX=" (assoc-ref %build-inputs "icestorm"))
                             (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis")))))
-                                        ;                           (string-append "-DPYTRELLIS_LIBDIR=" (assoc-ref %build-inputs "trellis") "/lib/trellis"))))
       (synopsis "nextpnr -- a portable FPGA place and route tool")
       (description "nextpnr aims to be a vendor neutral, timing driven, FOSS FPGA place and route tool.")
       (home-page "https://github.com/yosyshq/nextpnr")

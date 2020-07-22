@@ -124,15 +124,21 @@
 
                                         ; add pkg-config support
 (define-public libtgvoip-tdesktop
-  (let ((commit "522550a1e975b17e9048d7a2ab2d5b97cfc2f5d4")
-        (version "2.4.4"))
+  (let* ((commit "8682c5c22e9c3a28ee3aacfd1d529db07ea914bf")
+         (version (string-append "2.4.4+" (string-take commit 9))))
     (package
       (inherit libtgvoip)
       (version (string-append version "-" (string-take commit 9)))
+      (inputs
+       `(("pulseaudio" ,pulseaudio)
+         ("openssl" ,openssl)
+         ("alsa",alsa-lib)
+         ("opus" ,opus)))
       (native-inputs
        `(("autoconf" ,autoconf)
          ("automake" ,automake)
          ("libtool" ,libtool)
+         ("gcc" ,gcc-9)
          ("pkg-config" ,pkg-config)))
       (arguments
        `(#:phases
@@ -142,6 +148,11 @@
                (delete-file "configure")
                (invoke "autoreconf" "-vfi")
                #t)))))
+      ;; (add-after 'unpack 'set-c++17
+      ;;     (lambda _
+      ;;       (setenv "CFLAGS" "-std=c++17")
+      ;;       (setenv "CXXFLAGS" "-std=c++17")
+      ;;       #t)))))
       (source (origin
                 (inherit (package-source libtgvoip))
                 (uri (git-reference
@@ -149,12 +160,21 @@
                       (commit commit)))
                 (file-name (git-file-name (package-name libtgvoip) version))
                 (patches `())
+                (modules '((guix build utils)))
+                (snippet
+                 '(begin
+                    (substitute* "Makefile.am"
+                      (("gnu\\+\\+0x") "gnu++17"))
+
+                    (substitute* '("json11.cpp" "webrtc_dsp/api/audio/echo_canceller3_config.cc")
+                      (("std::isfinite") "isfinite"))
+                    #t))
                 (sha256
                  (base32
-                  "0rpvxsgjzhqm5xcffdsyws7cf3awv98p1y1zmkdsnq80h4v046lv")))))))
+                  "13br0dsnmgjamsql9hrj3hgdi9a6psbwjb17g03r841c4w1pjbr4")))))))
 
 (define-public telegram-desktop
-  (let ((version "2.1.4"))
+  (let ((version "2.1.20"))
     (package
       (name "telegram-desktop")
       (version version)
@@ -165,13 +185,23 @@
                       (commit (string-append "v" version))
                       (recursive? #t)))
                 (file-name (git-file-name name version))
-                (patches (search-patches "random_fuckup.patch"))
-                ;; (patches `("random_fuckup.patch"))
+                (modules '((guix build utils)))
+                (snippet
+                 '(begin
+                    (substitute* "cmake/external/qt/package.cmake"
+                      (("Core Gui Widgets Network") "Core Gui Widgets Network XkbCommonSupport"))
+                    (substitute* "cmake/external/qt/CMakeLists.txt"
+                      (("Qt5::Network") "Qt5::Network\nQt5::XkbCommonSupport")
+                      (("\\$\\{Qt5Core_PRIVATE_INCLUDE_DIRS\\}") "${Qt5Core_PRIVATE_INCLUDE_DIRS}\n${Qt5XkbCommonSupport_PRIVATE_INCLUDE_DIRS}"))
+                    #t))
+                (patches (search-patches "random_fuckup_new.patch"))
+                ;; (patches `("random_fuckup_new.patch"))
                 (sha256
                  (base32
-                  "1w87jmb19l0lhdmcn9rz5j747q09wh59cld46sjbc4g27amd3ifx"))))
+                  "07vb7hlfamkin8x7z5gd7jldp10pz2fq60gai37iic6gyc9gbj7y"))))
       (inputs `(("qtbase" ,qtbase)
                 ("qtimageformats" ,qtimageformats)
+                ("qtwayland" ,qtwayland)
                 ("hunspell" ,hunspell)
                 ("gtk3" ,gtk+)
                 ("libdbusmenu-qt" ,libdbusmenu-qt)

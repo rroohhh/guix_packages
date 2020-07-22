@@ -1,0 +1,504 @@
+diff -Naur a/Telegram/lib_base/base/flat_map_tests.cpp b/Telegram/lib_base/base/flat_map_tests.cpp
+--- a/Telegram/lib_base/base/flat_map_tests.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/lib_base/base/flat_map_tests.cpp	2020-07-21 23:03:32.053585609 +0200
+@@ -98,7 +98,7 @@
+ 
+ 	SECTION("structred binded range-based for loop") {
+ 		for (const auto &[key, value] : v) {
+-			REQUIRE(key == int(std::round(*value)));
++			REQUIRE(key == int(round(*value)));
+ 		}
+ 	}
+ 
+diff -Naur a/Telegram/lib_ui/ui/effects/radial_animation.cpp b/Telegram/lib_ui/ui/effects/radial_animation.cpp
+--- a/Telegram/lib_ui/ui/effects/radial_animation.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/lib_ui/ui/effects/radial_animation.cpp	2020-07-21 23:03:32.077585538 +0200
+@@ -225,8 +225,8 @@
+ 		const auto shown = 1.;
+ 		return { 1., 0, kFullArcLength };
+ 	}
+-	const auto min = int(std::round(kFullArcLength * _st.arcMin));
+-	const auto max = int(std::round(kFullArcLength * _st.arcMax));
++	const auto min = int(round(kFullArcLength * _st.arcMin));
++	const auto max = int(round(kFullArcLength * _st.arcMax));
+ 	if (now <= _workStarted) {
+ 		// zero .. _workStarted
+ 		const auto zero = _workStarted - _st.sineDuration;
+@@ -318,8 +318,8 @@
+ 	//	st.arcMax - st.arcMin,
+ 	//	std::min(backCurrent, crl::time(st.sineDuration))
+ 	//	/ float64(st.sineDuration));
+-	//const auto front = linear + std::round((st.arcMin + frontProgress + frontPeriods * (st.arcMax - st.arcMin)) * kFullArcLength);
+-	//const auto from = linear + std::round((backProgress + backPeriods * (st.arcMax - st.arcMin)) * kFullArcLength);
++	//const auto front = linear + round((st.arcMin + frontProgress + frontPeriods * (st.arcMax - st.arcMin)) * kFullArcLength);
++	//const auto from = linear + round((backProgress + backPeriods * (st.arcMax - st.arcMin)) * kFullArcLength);
+ 	//const auto length = (front - from);
+ 
+ 	//return {
+diff -Naur a/Telegram/lib_ui/ui/style/style_core_scale.h b/Telegram/lib_ui/ui/style/style_core_scale.h
+--- a/Telegram/lib_ui/ui/style/style_core_scale.h	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/lib_ui/ui/style/style_core_scale.h	2020-07-21 23:03:32.081585526 +0200
+@@ -34,7 +34,7 @@
+ [[nodiscard]] inline T ConvertScale(T value, int scale) {
+ 	return (value < 0.)
+ 		? (-ConvertScale(-value, scale))
+-		: T(std::round((double(value) * scale / 100.) - 0.01));
++		: T(round((double(value) * scale / 100.) - 0.01));
+ }
+ 
+ template <typename T>
+diff -Naur a/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp b/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp
+--- a/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/lib_ui/ui/wrap/vertical_layout_reorder.cpp	2020-07-21 23:03:32.089585502 +0200
+@@ -260,7 +260,7 @@
+ 		? indexHint
+ 		: indexOf(widget);
+ 	auto &entry = _entries[index];
+-	entry.shift = std::round(entry.shiftAnimation.value(entry.finalShift))
++	entry.shift = round(entry.shiftAnimation.value(entry.finalShift))
+ 		+ entry.deltaShift;
+ 	if (entry.deltaShift && !entry.shiftAnimation.animating()) {
+ 		entry.finalShift += entry.deltaShift;
+diff -Naur a/Telegram/SourceFiles/boxes/background_preview_box.cpp b/Telegram/SourceFiles/boxes/background_preview_box.cpp
+--- a/Telegram/SourceFiles/boxes/background_preview_box.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/boxes/background_preview_box.cpp	2020-07-21 23:03:31.873586142 +0200
+@@ -210,7 +210,7 @@
+ 	const auto frames = framesForStyle(st);
+ 	auto &image = frames->image;
+ 	const auto count = int(frames->ready.size());
+-	const auto index = int(std::round(toggled * (count - 1)));
++	const auto index = int(round(toggled * (count - 1)));
+ 	Assert(index >= 0 && index < count);
+ 	if (!frames->ready[index]) {
+ 		frames->ready[index] = true;
+diff -Naur a/Telegram/SourceFiles/boxes/edit_caption_box.cpp b/Telegram/SourceFiles/boxes/edit_caption_box.cpp
+--- a/Telegram/SourceFiles/boxes/edit_caption_box.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/boxes/edit_caption_box.cpp	2020-07-21 23:03:31.869586154 +0200
+@@ -245,10 +245,10 @@
+ 			} else {
+ 				thumbWidth = st::sendMediaPreviewSize;
+ 			}
+-			const auto maxThumbHeight = std::min(int(std::round(1.5 * thumbWidth)), limitH);
+-			thumbHeight = int(std::round(th * float64(thumbWidth) / tw));
++			const auto maxThumbHeight = std::min(int(round(1.5 * thumbWidth)), limitH);
++			thumbHeight = int(round(th * float64(thumbWidth) / tw));
+ 			if (thumbHeight > maxThumbHeight) {
+-				thumbWidth = int(std::round(thumbWidth * float64(maxThumbHeight) / thumbHeight));
++				thumbWidth = int(round(thumbWidth * float64(maxThumbHeight) / thumbHeight));
+ 				thumbHeight = maxThumbHeight;
+ 				if (thumbWidth < 10) {
+ 					thumbWidth = 10;
+diff -Naur a/Telegram/SourceFiles/boxes/send_files_box.cpp b/Telegram/SourceFiles/boxes/send_files_box.cpp
+--- a/Telegram/SourceFiles/boxes/send_files_box.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/boxes/send_files_box.cpp	2020-07-21 23:03:31.853586202 +0200
+@@ -542,7 +542,7 @@
+ 	const auto scaleWidth = to.width() / float64(width);
+ 	const auto scaleHeight = to.height() / float64(height);
+ 	const auto Round = [](float64 value) {
+-		return int(std::round(value));
++		return int(round(value));
+ 	};
+ 	const auto [from, fillBlack] = [&] {
+ 		if (previewWidth < width && previewHeight < height) {
+@@ -731,7 +731,7 @@
+ }
+ 
+ QRect AlbumThumb::countRealGeometry() const {
+-	const auto addLeft = int(std::round(
++	const auto addLeft = int(round(
+ 		_suggestedMoveAnimation.value(_suggestedMove) * _lastShrinkValue));
+ 	const auto current = _layout.geometry;
+ 	const auto realTopLeft = current.topLeft()
+@@ -1434,7 +1434,7 @@
+ 	const auto newHeight = [&] {
+ 		switch (_sendWay) {
+ 		case SendFilesWay::Album:
+-			return int(std::round(_thumbsHeightAnimation.value(
++			return int(round(_thumbsHeightAnimation.value(
+ 				_thumbsHeight)));
+ 		case SendFilesWay::Photos: return _photosHeight;
+ 		case SendFilesWay::Files: return _filesHeight;
+diff -Naur a/Telegram/SourceFiles/chat_helpers/stickers_emoji_image_loader.cpp b/Telegram/SourceFiles/chat_helpers/stickers_emoji_image_loader.cpp
+--- a/Telegram/SourceFiles/chat_helpers/stickers_emoji_image_loader.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/chat_helpers/stickers_emoji_image_loader.cpp	2020-07-21 23:03:31.893586083 +0200
+@@ -68,7 +68,7 @@
+ 			{ -1, 1 },
+ 			{ 1, 1 },
+ 		} };
+-		const auto corrected = int(std::round(delta / sqrt(2.)));
++		const auto corrected = int(round(delta / sqrt(2.)));
+ 		for (const auto &shift : diagonal) {
+ 			for (auto i = 0; i != corrected; ++i) {
+ 				p.drawImage(QPoint(delta, delta) + shift * (i + 1), tinted);
+diff -Naur a/Telegram/SourceFiles/core/core_settings.h b/Telegram/SourceFiles/core/core_settings.h
+--- a/Telegram/SourceFiles/core/core_settings.h	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/core/core_settings.h	2020-07-21 23:03:31.893586083 +0200
+@@ -420,7 +420,7 @@
+ 	[[nodiscard]] static bool ThirdColumnByDefault();
+ 	[[nodiscard]] float64 DefaultDialogsWidthRatio();
+ 	[[nodiscard]] static qint32 SerializePlaybackSpeed(float64 speed) {
+-		return int(std::round(std::clamp(speed * 4., 2., 8.))) - 2;
++		return int(round(std::clamp(speed * 4., 2., 8.))) - 2;
+ 	}
+ 	[[nodiscard]] static float64 DeserializePlaybackSpeed(qint32 speed) {
+ 		return (std::clamp(speed, 0, 6) + 2) / 4.;
+diff -Naur a/Telegram/SourceFiles/core/update_checker.cpp b/Telegram/SourceFiles/core/update_checker.cpp
+--- a/Telegram/SourceFiles/core/update_checker.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/core/update_checker.cpp	2020-07-21 23:03:31.885586107 +0200
+@@ -549,7 +549,7 @@
+ 				}
+ 				return string.toULongLong();
+ 			} else if ((*version).isDouble()) {
+-				return uint64(std::round((*version).toDouble()));
++				return uint64(round((*version).toDouble()));
+ 			}
+ 			return 0ULL;
+ 		}();
+diff -Naur a/Telegram/SourceFiles/data/data_types.cpp b/Telegram/SourceFiles/data/data_types.cpp
+--- a/Telegram/SourceFiles/data/data_types.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/data/data_types.cpp	2020-07-21 23:03:31.881586118 +0200
+@@ -86,8 +86,8 @@
+ 		| (uint32(location.height) & 0xFFFFU);
+ 	return Storage::Cache::Key{
+ 		Data::kGeoPointCacheTag | (uint64(zoomscale) << 32) | widthheight,
+-		(uint64(std::round(std::abs(location.lat + 360.) * 1000000)) << 32)
+-		| uint64(std::round(std::abs(location.lon + 360.) * 1000000))
++		(uint64(round(std::abs(location.lat + 360.) * 1000000)) << 32)
++		| uint64(round(std::abs(location.lon + 360.) * 1000000))
+ 	};
+ }
+ 
+diff -Naur a/Telegram/SourceFiles/history/view/history_view_list_widget.cpp b/Telegram/SourceFiles/history/view/history_view_list_widget.cpp
+--- a/Telegram/SourceFiles/history/view/history_view_list_widget.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/history/view/history_view_list_widget.cpp	2020-07-21 23:03:31.913586024 +0200
+@@ -417,7 +417,7 @@
+ 	if (!attachToView) {
+ 		_scrollToAnimation.stop();
+ 	} else {
+-		const auto current = int(std::round(_scrollToAnimation.value(
++		const auto current = int(round(_scrollToAnimation.value(
+ 			relativeTo)));
+ 		_delegate->listScrollTo(itemTop(attachToView) + current);
+ 	}
+diff -Naur a/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp b/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp
+--- a/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/history/view/media/history_view_media_grouped.cpp	2020-07-21 23:03:31.909586036 +0200
+@@ -118,7 +118,7 @@
+ 	const auto initialSpacing = st::historyGroupSkip;
+ 	const auto factor = newWidth / float64(maxWidth());
+ 	const auto scale = [&](int value) {
+-		return int(std::round(value * factor));
++		return int(round(value * factor));
+ 	};
+ 	const auto spacing = scale(initialSpacing);
+ 	for (auto &part : _parts) {
+diff -Naur a/Telegram/SourceFiles/history/view/media/history_view_poll.cpp b/Telegram/SourceFiles/history/view/media/history_view_poll.cpp
+--- a/Telegram/SourceFiles/history/view/media/history_view_poll.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/history/view/media/history_view_poll.cpp	2020-07-21 23:03:31.905586047 +0200
+@@ -940,7 +940,7 @@
+ 		const auto part = std::max(
+ 			left / float64(radial),
+ 			1. / FullArcLength);
+-		const auto length = int(std::round(FullArcLength * part));
++		const auto length = int(round(FullArcLength * part));
+ 		auto pen = regular->p;
+ 		pen.setWidth(st::historyPollRadio.thickness);
+ 		pen.setCapStyle(Qt::RoundCap);
+@@ -1026,7 +1026,7 @@
+ 		}
+ 		if (opacity > 0.) {
+ 			const auto percent = QString::number(
+-				int(std::round(animation->percent.current()))) + '%';
++				int(round(animation->percent.current()))) + '%';
+ 			const auto percentWidth = st::historyPollPercentFont->width(
+ 				percent);
+ 			p.setOpacity(opacity);
+diff -Naur a/Telegram/SourceFiles/media/audio/media_audio.cpp b/Telegram/SourceFiles/media/audio/media_audio.cpp
+--- a/Telegram/SourceFiles/media/audio/media_audio.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/audio/media_audio.cpp	2020-07-21 23:03:31.929585976 +0200
+@@ -48,7 +48,7 @@
+ 
+ 	constexpr auto kTuneSteps = 12;
+ 	const auto tuneRatio = std::log(speed) / std::log(2.);
+-	return -int(std::round(kTuneSteps * tuneRatio));
++	return -int(round(kTuneSteps * tuneRatio));
+ }
+ 
+ } // namespace
+diff -Naur a/Telegram/SourceFiles/media/player/media_player_instance.cpp b/Telegram/SourceFiles/media/player/media_player_instance.cpp
+--- a/Telegram/SourceFiles/media/player/media_player_instance.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/player/media_player_instance.cpp	2020-07-21 23:03:31.953585905 +0200
+@@ -619,7 +619,7 @@
+ 			const auto &info = streamed->instance.info();
+ 			const auto duration = info.audio.state.duration;
+ 			if (duration != kTimeUnknown) {
+-				const auto position = crl::time(std::round(
++				const auto position = crl::time(round(
+ 					std::clamp(progress, 0., 1.) * duration));
+ 				streamed->instance.play(streamingOptions(
+ 					streamed->id,
+diff -Naur a/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp b/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp
+--- a/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/streaming/media_streaming_video_track.cpp	2020-07-21 23:03:31.945585929 +0200
+@@ -591,7 +591,7 @@
+ 	}
+ 	const auto adjust = (result.worldTime - _syncTimePoint.worldTime);
+ 	result.trackTime = _syncTimePoint.trackTime
+-		+ crl::time(std::round(adjust * _options.speed));
++		+ crl::time(round(adjust * _options.speed));
+ 	return result;
+ }
+ 
+@@ -715,7 +715,7 @@
+ 		const auto trackLeft = position - time.trackTime;
+ 		frame->display = time.worldTime
+ 			+ addedWorldTimeDelay
+-			+ crl::time(std::round(trackLeft / playbackSpeed));
++			+ crl::time(round(trackLeft / playbackSpeed));
+ 
+ 		// Release this frame to the main thread for rendering.
+ 		_counter.store(
+diff -Naur a/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp b/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp
+--- a/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/view/media_view_group_thumbs.cpp	2020-07-21 23:03:31.973585846 +0200
+@@ -31,7 +31,7 @@
+ constexpr auto kThumbDuration = crl::time(150);
+ 
+ int Round(float64 value) {
+-	return int(std::round(value));
++	return int(round(value));
+ }
+ 
+ using Context = GroupThumbs::Context;
+diff -Naur a/Telegram/SourceFiles/media/view/media_view_pip.cpp b/Telegram/SourceFiles/media/view/media_view_pip.cpp
+--- a/Telegram/SourceFiles/media/view/media_view_pip.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/view/media_view_pip.cpp	2020-07-21 23:03:31.965585870 +0200
+@@ -1279,7 +1279,7 @@
+ 		activeValue(_playback));
+ 	const auto left = _playback.icon.x();
+ 	const auto top = _playback.icon.y() + _playback.icon.height() - height;
+-	const auto done = int(std::round(width * progress));
++	const auto done = int(round(width * progress));
+ 	PainterHighQualityEnabler hq(p);
+ 	p.setPen(Qt::NoPen);
+ 	if (done > 0) {
+diff -Naur a/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp b/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp
+--- a/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/media/view/media_view_playback_controls.cpp	2020-07-21 23:03:31.961585881 +0200
+@@ -288,7 +288,7 @@
+ 			_loadingPercent = -1;
+ 		}
+ 		const auto progress = total ? (ready / float64(total)) : 0.;
+-		const auto percent = int(std::round(progress * 100));
++		const auto percent = int(round(progress * 100));
+ 		if (_loadingPercent != percent) {
+ 			_loadingPercent = percent;
+ 			_downloadProgress->setText(QString::number(percent) + '%');
+diff -Naur a/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp b/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp
+--- a/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/mtproto/details/mtproto_domain_resolver.cpp	2020-07-21 23:03:31.925585988 +0200
+@@ -110,7 +110,7 @@
+ 		const auto object = elem.toObject();
+ 		if (typeRestriction) {
+ 			const auto typeIt = object.find("type");
+-			const auto type = int(std::round((*typeIt).toDouble()));
++			const auto type = int(round((*typeIt).toDouble()));
+ 			if (!(*typeIt).isDouble()) {
+ 				LOG(("Config Error: Not a number in type field "
+ 					"in Answer array in dns response JSON."));
+@@ -132,7 +132,7 @@
+ 
+ 		const auto ttlIt = object.find("TTL");
+ 		const auto ttl = (ttlIt != object.constEnd())
+-			? crl::time(std::round((*ttlIt).toDouble()))
++			? crl::time(round((*ttlIt).toDouble()))
+ 			: crl::time(0);
+ 		result.push_back({ (*dataIt).toString(), ttl });
+ 	}
+diff -Naur a/Telegram/SourceFiles/mtproto/session_private.cpp b/Telegram/SourceFiles/mtproto/session_private.cpp
+--- a/Telegram/SourceFiles/mtproto/session_private.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/mtproto/session_private.cpp	2020-07-21 23:03:31.937585952 +0200
+@@ -498,7 +498,7 @@
+ 		sliced -= 24 * 3600;
+ 	}
+ 	const auto sign = (sliced < 0) ? -1 : 1;
+-	const auto rounded = std::round(std::abs(sliced) / 900.) * 900 * sign;
++	const auto rounded = round(std::abs(sliced) / 900.) * 900 * sign;
+ 	return MTP_vector<MTPJSONObjectValue>(
+ 		1,
+ 		MTP_jsonObjectValue(
+diff -Naur a/Telegram/SourceFiles/platform/mac/touchbar/items/mac_pinned_chats_item.mm b/Telegram/SourceFiles/platform/mac/touchbar/items/mac_pinned_chats_item.mm
+--- a/Telegram/SourceFiles/platform/mac/touchbar/items/mac_pinned_chats_item.mm	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/platform/mac/touchbar/items/mac_pinned_chats_item.mm	2020-07-21 23:03:31.957585894 +0200
+@@ -228,7 +228,7 @@
+ 			: indexOf(peer);
+ 		const auto &entry = _pins[index];
+ 		entry->shift = entry->deltaShift
+-			+ std::round(entry->shiftAnimation.value(entry->finalShift));
++			+ round(entry->shiftAnimation.value(entry->finalShift));
+ 		if (entry->deltaShift && !entry->shiftAnimation.animating()) {
+ 			entry->finalShift += entry->deltaShift;
+ 			entry->deltaShift = 0;
+diff -Naur a/Telegram/SourceFiles/settings/settings_chat.cpp b/Telegram/SourceFiles/settings/settings_chat.cpp
+--- a/Telegram/SourceFiles/settings/settings_chat.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/settings/settings_chat.cpp	2020-07-21 23:03:31.981585823 +0200
+@@ -357,7 +357,7 @@
+ 	const auto y = st::settingsSectionSkip * 2;
+ 	auto x = float64(padding.left());
+ 	for (const auto &button : _buttons) {
+-		button->moveToLeft(int(std::round(x)), y);
++		button->moveToLeft(int(round(x)), y);
+ 		x += size + skip;
+ 	}
+ 	inner->resize(inner->width(), y + size);
+@@ -1121,7 +1121,7 @@
+ 		auto index = 0;
+ 		for (const auto button : buttons) {
+ 			button->resizeToWidth(single);
+-			button->moveToLeft(int(std::round(left)), 0);
++			button->moveToLeft(int(round(left)), 0);
+ 			left += button->width() + skip;
+ 		}
+ 	}, block->lifetime());
+diff -Naur a/Telegram/SourceFiles/storage/localimageloader.cpp b/Telegram/SourceFiles/storage/localimageloader.cpp
+--- a/Telegram/SourceFiles/storage/localimageloader.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/storage/localimageloader.cpp	2020-07-21 23:03:31.993585787 +0200
+@@ -61,11 +61,11 @@
+ 	const auto scaledWidth = [&] {
+ 		return (width > height)
+ 			? kThumbnailSize
+-			: int(std::round(kThumbnailSize * width / float64(height)));
++			: int(round(kThumbnailSize * width / float64(height)));
+ 	};
+ 	const auto scaledHeight = [&] {
+ 		return (width > height)
+-			? int(std::round(kThumbnailSize * height / float64(width)))
++			? int(round(kThumbnailSize * height / float64(width)))
+ 			: kThumbnailSize;
+ 	};
+ 	result.image = scaled
+diff -Naur a/Telegram/SourceFiles/storage/storage_cloud_blob.cpp b/Telegram/SourceFiles/storage/storage_cloud_blob.cpp
+--- a/Telegram/SourceFiles/storage/storage_cloud_blob.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/storage/storage_cloud_blob.cpp	2020-07-21 23:03:31.985585810 +0200
+@@ -85,7 +85,7 @@
+ 		return tr::lng_emoji_set_loading(
+ 			tr::now,
+ 			lt_percent,
+-			QString::number(int(std::round(percent))) + '%',
++			QString::number(int(round(percent))) + '%',
+ 			lt_progress,
+ 			formatDownloadText(data.already, data.size));
+ 	}, [](const Failed &data) {
+diff -Naur a/Telegram/SourceFiles/ui/effects/round_checkbox.cpp b/Telegram/SourceFiles/ui/effects/round_checkbox.cpp
+--- a/Telegram/SourceFiles/ui/effects/round_checkbox.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/ui/effects/round_checkbox.cpp	2020-07-21 23:03:32.009585739 +0200
+@@ -178,7 +178,7 @@
+ 	auto &frames = framesForStyle(st, displayInactive);
+ 
+ 	const auto frameCount = int(frames.list.size());
+-	const auto frameIndex = int(std::round(progress * (frameCount - 1)));
++	const auto frameIndex = int(round(progress * (frameCount - 1)));
+ 	Assert(frameIndex >= 0 && frameIndex < frameCount);
+ 
+ 	if (!frames.list[frameIndex]) {
+diff -Naur a/Telegram/SourceFiles/ui/empty_userpic.cpp b/Telegram/SourceFiles/ui/empty_userpic.cpp
+--- a/Telegram/SourceFiles/ui/empty_userpic.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/ui/empty_userpic.cpp	2020-07-21 23:03:32.041585644 +0200
+@@ -36,11 +36,11 @@
+ 	// X XX          XX X   |      |
+ 	// XX              XX  ---    ---
+ 
+-	const auto thinkness = std::round(size * 0.055);
++	const auto thinkness = round(size * 0.055);
+ 	const auto increment = int(thinkness) % 2 + (size % 2);
+-	const auto width = std::round(size * 0.15) * 2 + increment;
+-	const auto height = std::round(size * 0.19) * 2 + increment;
+-	const auto add = std::round(size * 0.064);
++	const auto width = round(size * 0.15) * 2 + increment;
++	const auto height = round(size * 0.19) * 2 + increment;
++	const auto add = round(size * 0.064);
+ 
+ 	const auto left = x + (size - width) / 2;
+ 	const auto top = y + (size - height) / 2;
+diff -Naur a/Telegram/SourceFiles/ui/grouped_layout.cpp b/Telegram/SourceFiles/ui/grouped_layout.cpp
+--- a/Telegram/SourceFiles/ui/grouped_layout.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/ui/grouped_layout.cpp	2020-07-21 23:03:32.025585692 +0200
+@@ -11,7 +11,7 @@
+ namespace {
+ 
+ int Round(float64 value) {
+-	return int(std::round(value));
++	return int(round(value));
+ }
+ 
+ class Layouter {
+diff -Naur a/Telegram/SourceFiles/ui/image/image_location.cpp b/Telegram/SourceFiles/ui/image/image_location.cpp
+--- a/Telegram/SourceFiles/ui/image/image_location.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/ui/image/image_location.cpp	2020-07-21 23:03:32.005585751 +0200
+@@ -585,8 +585,8 @@
+ 
+ InMemoryKey inMemoryKey(const GeoPointLocation &location) {
+ 	return InMemoryKey(
+-		(uint64(std::round(std::abs(location.lat + 360.) * 1000000)) << 32)
+-		| uint64(std::round(std::abs(location.lon + 360.) * 1000000)),
++		(uint64(round(std::abs(location.lat + 360.) * 1000000)) << 32)
++		| uint64(round(std::abs(location.lon + 360.) * 1000000)),
+ 		(uint64(location.width) << 32) | uint64(location.height));
+ }
+ 
+diff -Naur a/Telegram/SourceFiles/ui/widgets/continuous_sliders.h b/Telegram/SourceFiles/ui/widgets/continuous_sliders.h
+--- a/Telegram/SourceFiles/ui/widgets/continuous_sliders.h	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/ui/widgets/continuous_sliders.h	2020-07-21 23:03:32.021585704 +0200
+@@ -167,14 +167,14 @@
+ 			}
+ 		}
+ 		setAdjustCallback([=](float64 value) {
+-			return std::round(value * sectionsCount) / sectionsCount;
++			return round(value * sectionsCount) / sectionsCount;
+ 		});
+ 		setChangeProgressCallback([
+ 			=,
+ 			convert = std::forward<Convert>(convert),
+ 			callback = std::forward<Callback>(callback)
+ 		](float64 value) {
+-			const auto index = int(std::round(value * sectionsCount));
++			const auto index = int(round(value * sectionsCount));
+ 			callback(convert(index));
+ 		});
+ 	}
+diff -Naur a/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp b/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp
+--- a/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/SourceFiles/window/themes/window_themes_cloud_list.cpp	2020-07-21 23:03:31.997585775 +0200
+@@ -725,7 +725,7 @@
+ 	for (const auto &element : _elements) {
+ 		const auto button = element.button.get();
+ 		button->resizeToWidth(single);
+-		button->moveToLeft(int(std::round(x)), y);
++		button->moveToLeft(int(round(x)), y);
+ 		accumulate_max(rowHeight, button->height());
+ 		x += single + skip;
+ 		if (++index == kShowPerRow) {
+diff -Naur a/Telegram/ThirdParty/range-v3/include/range/v3/iterator/diffmax_t.hpp b/Telegram/ThirdParty/range-v3/include/range/v3/iterator/diffmax_t.hpp
+--- a/Telegram/ThirdParty/range-v3/include/range/v3/iterator/diffmax_t.hpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/ThirdParty/range-v3/include/range/v3/iterator/diffmax_t.hpp	2020-07-21 23:03:32.045585633 +0200
+@@ -363,7 +363,7 @@
+         static constexpr bool has_signaling_NaN = false;
+         static constexpr bool has_denorm = false;
+         static constexpr bool has_denorm_loss = false;
+-        static constexpr std::float_round_style round_style = std::round_toward_zero;
++        static constexpr std::float_round_style round_style = round_toward_zero;
+         static constexpr bool is_iec559 = false;
+         static constexpr bool is_bounded = true;
+         static constexpr bool is_modulo = false;
+diff -Naur a/Telegram/ThirdParty/rlottie/src/lottie/lottieparser.cpp b/Telegram/ThirdParty/rlottie/src/lottie/lottieparser.cpp
+--- a/Telegram/ThirdParty/rlottie/src/lottie/lottieparser.cpp	1970-01-01 01:00:01.000000000 +0100
++++ b/Telegram/ThirdParty/rlottie/src/lottie/lottieparser.cpp	2020-07-21 23:03:32.049585621 +0200
+@@ -805,7 +805,7 @@
+     }
+     const auto convert = [](float value) {
+         return std::uint32_t(
+-            std::round(std::min(std::max(value, 0.f), 1.f) * 255.));
++            round(std::min(std::max(value, 0.f), 1.f) * 255.));
+     };
+     const auto part = [](std::uint32_t value, int shift) {
+         return float((value >> shift) & 0xFFU) / 255.f;

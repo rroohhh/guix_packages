@@ -5,8 +5,11 @@
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages time)
   #:use-module (gnu packages freedesktop)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages glib)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages python-compression)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
   #:use-module (gnu packages check)
@@ -24,16 +27,17 @@
 (define-public python-pyvcd
   (package
     (name "python-pyvcd")
-    (version "0.2.1")
+    (version "0.2.3")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "pyvcd" version))
        (sha256
         (base32
-         "1aw3y841jk50bb62hkk51860a97rl5jz9n9zlil9j138rpibkmps"))))
+         "1pk7sqff4xhz3pycim6cvlria39mn331zm4xylri10iy2hhp7zf0"))))
     (build-system python-build-system)
-    (propagated-inputs `(("python-six" ,python-six) ("python-setuptools-scm" ,python-setuptools-scm)))
+    (inputs `(("python-setuptools-scm" ,python-setuptools-scm)))
+    (propagated-inputs `(("python-six" ,python-six)))
     (home-page
      "http://pyvcd.readthedocs.io/en/latest/")
     (synopsis "Python VCD file support.")
@@ -43,14 +47,14 @@
 (define-public python-fitsio
   (package
     (name "python-fitsio")
-    (version "1.1.1")
+    (version "1.1.2")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "fitsio" version))
        (sha256
         (base32
-         "1an0jy70a400y10y8n0ci3jdw6yfh2k42fqwj6kk9vfqz4a85f22"))))
+         "0bq0hmyza56q5hz5w11disk1mv87fi71bxx1qk35zgwcpfyqkri0"))))
     (build-system python-build-system)
     (inputs `(("cfitsio" ,cfitsio)))
     (propagated-inputs
@@ -98,10 +102,10 @@
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy)
-       ("python-wheel" ,python-wheel)))
+       ("python-sympy" ,python-sympy)))
     (native-inputs
-       `(("python-setuptools" ,python-setuptools42)))
+     `(("python-setuptools" ,python-setuptools42)
+       ("python-wheel" ,python-wheel)))
     (home-page "https://github.com/nschloe/orthopy")
     (synopsis
      "Tools for orthogonal polynomials, Gaussian quadrature")
@@ -130,7 +134,7 @@
        ("python-scipy" ,python-scipy)
        ("python-sympy" ,python-sympy)))
     (native-inputs
-       `(("python-setuptools" ,python-setuptools42)))
+     `(("python-setuptools" ,python-setuptools42)))
     (home-page "https://github.com/nschloe/quadpy")
     (synopsis
      "Numerical integration, quadrature for various domains")
@@ -188,22 +192,22 @@
 (define-public python-xarray
   (package
     (name "python-xarray")
-    (version "0.15.1")
+    (version "0.16.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "xarray" version))
        (sha256
         (base32
-         "1yx8j66b7rn10m2l6gmn8yr9cn38pi5cj0x0wwpy4hdnhy6i7qv4"))))
+         "1js3xr3fl9bwid8hl3w2pnigqzjd2rvkncald5x1x5fg7wjy8pb6"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
-       ("python-pandas" ,python-pandas)
-       ("python-wheel" ,python-wheel)
-       ("python-setuptools-scm" ,python-setuptools-scm)))
+       ("python-pandas" ,python-pandas)))
     (native-inputs
-       `(("python-setuptools" ,python-setuptools42)))
+     `(("python-setuptools" ,python-setuptools42)
+       ("python-setuptools-scm" ,python-setuptools-scm)
+       ("python-wheel" ,python-wheel)))
     (arguments
      `(#:phases (modify-phases %standard-phases (delete 'check)))) ; no tests
     (home-page "https://github.com/pydata/xarray")
@@ -216,7 +220,7 @@
 (define-public python-sparse
   (package
     (name "python-sparse")
-    (version "0.9.1")
+    (version "0.10.0")
     (source
      (origin
        (method url-fetch)
@@ -241,23 +245,29 @@
 (define-public python-pint
   (package
     (name "python-pint")
-    (version "0.11")
+    (version "0.14")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "Pint" version))
        (sha256
         (base32
-         "0kfgnmcs6z9ndhzvwg2xzhpwxgyyagdsdz5dns1jy40fa1q113rh"))))
+         "0wkzb7g20wzpqr3xaqpq96dlfv6irw202icsz81ys8npp7mm194s"))))
     (build-system python-build-system)
-    (propagated-inputs
-     `(("python-funcsigs" ,python-funcsigs)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-matplotlib" ,python-matplotlib)
-       ("python-numpy" ,python-numpy)
-       ("python-sparse" ,python-sparse)
-       ("python-xarray" ,python-xarray)
-       ("python-pytest" ,python-pytest)))
+    (native-inputs
+     `(("python-setuptools-scm" ,python-setuptools-scm)))
+    (arguments
+     `(#:phases
+      (modify-phases %standard-phases
+        (delete `check))))
+    ;; (propagated-inputs
+    ;;  `(("python-funcsigs" ,python-funcsigs)
+    ;;    ("python-setuptools-scm" ,python-setuptools-scm)
+    ;;    ("python-matplotlib" ,python-matplotlib)
+    ;;    ("python-numpy" ,python-numpy)
+    ;;    ("python-sparse" ,python-sparse)
+    ;;    ("python-xarray" ,python-xarray)
+    ;;    ("python-pytest" ,python-pytest)))
     (home-page "https://github.com/hgrecco/pint")
     (synopsis "Physical quantities module")
     (description "Physical quantities module")
@@ -363,7 +373,7 @@
 (define-public python-chipsec
   (package
     (name "python-chipsec")
-    (version "1.4.9")
+    (version "1.5.1")
     (source
      (origin
        (method git-fetch)
@@ -373,7 +383,7 @@
        (file-name (git-file-name name version))
        (sha256
         (base32
-         "1p6w8294w5z2f4jwc22mqaggv5qajvmf9iifv7fl7wdz3wsvskrk"))))
+         "1rxr9i08a22m15slvlkrhnki30jixi2ds096kmmc2nqzfr9yibmb"))))
     (build-system python-build-system)
     (inputs
      `(("linux" ,linux-nonfree)
@@ -401,7 +411,7 @@
      #t))
 
 (define-public python-nmigen
-  (let ((commit "ba79b0cdc67505ac24f0a06fbd449b952aa33247"))
+  (let ((commit "5ccc2122ce42f5581957bbec998ff308d5b88b29"))
     (package
       (name "python-nmigen")
       (version (string-append "0.2+g" (string-take commit 9)))
@@ -412,21 +422,32 @@
                (url "https://github.com/nmigen/nmigen")
                (commit commit)))
          (file-name (git-file-name name version))
+         (modules '((guix build utils)))
+         (snippet
+          '(begin
+             (substitute* "setup.py"
+               (("if git.exact:")
+                "if git is not None and git.exact:")) ; we have no git folde
+             #t))
          (sha256
           (base32
-           "195lp7w721s4brj5aps2i256rhgd786ib589gmhvz9f0vii03f87"))))
+           "18zzahymxy868wyb59y015w5fh14g1clf6dqy8kjznlq15rr352z"))))
       (build-system python-build-system)
       (inputs `(("yosys" ,yosys-git)
-                ("symbiyosys" ,symbiyosys)))
+                ("symbiyosys" ,symbiyosys)
+                ("python-setuptools-scm" ,python-setuptools-scm)
+                ("python-wheel" ,python-wheel)
+                ("python-setuptools" ,python-setuptools)))
       (propagated-inputs
        `(("python-jinja2" ,python-jinja2)
          ("python-pyvcd" ,python-pyvcd)
-         ("python-setuptools" ,python-setuptools)))
+         ("python-importlib-resources" ,python-importlib-resources)
+         ("python-pyvcd" ,python-pyvcd)))
       (arguments
        `(#:phases (modify-phases %standard-phases
                     (add-before 'build 'set-setuptools-scm-version
                       ,(setuptools-scm-version-setter version)))))
-      (home-page "")
+      (home-page "https://nmigen.info/nmigen/")
       (synopsis
        "Python toolbox for building complex digital hardware")
       (description
@@ -435,7 +456,7 @@
 
 
 (define-public python-nmigen-boards
-  (let ((commit "f6b28cef8d92b3f2beaf171f16867999989e388b"))
+  (let ((commit "194b760de249674df55d925732e20cf43dda8a25"))
     (package
       (name "python-nmigen-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -448,16 +469,19 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1izlhaqsmpwnabsnzzxpmlapggsf9sfzqfsx0k8wdpl3855jpb67"))))
+           "1diy4g22l7h7i9bi82izn625d8pw6rjg0k1yfzx6fjz8qlc9v86h"))))
       (build-system python-build-system)
+      (inputs
+       `(("python-setuptools" ,python-setuptools)
+         ("python-setuptools-scm" ,python-setuptools-scm)
+         ("python-wheel" ,python-wheel)))
       (propagated-inputs
-       `(("python-nmigen" ,python-nmigen)
-         ("python-setuptools" ,python-setuptools)))
+       `(("python-nmigen" ,python-nmigen)))
       (arguments
        `(#:phases (modify-phases %standard-phases
                     (add-before 'build 'set-setuptools-scm-version
                       ,(setuptools-scm-version-setter version)))))
-      (home-page "")
+      (home-page "https://nmigen.info/nmigen/")
       (synopsis
        "Board and connector definitions for nMigen")
       (description
@@ -465,7 +489,7 @@
       (license license:bsd-3))))
 
 (define-public python-nmigen-stdio
-  (let ((commit "b5ff8b8f8b7a77b6116607a07c461bcd21018539"))
+  (let ((commit "eb30b0264d9462ee373a0c29ac48aa5e93172942"))
     (package
       (name "python-nmigen-stdio")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -478,21 +502,24 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1pxj6msf1m4if5wpp85slin7syq66ksjg98i0gjmmzp04w36jhna"))))
+           "1qixvdh2jm5xf7yv5ghijvzyyiavq8v96iq33w9yzdid8wcj82yq"))))
       (build-system python-build-system)
+      (inputs
+       `(("python-setuptools-scm" ,python-setuptools-scm)
+         ("python-wheel" ,python-wheel)))
       (propagated-inputs
        `(("python-nmigen" ,python-nmigen)))
       (arguments
        `(#:phases (modify-phases %standard-phases
                     (add-before 'build 'set-setuptools-scm-version
                       ,(setuptools-scm-version-setter version)))))
-      (home-page "")
+      (home-page "https://nmigen.info/nmigen/")
       (synopsis "Industry standard I/O for nMigen")
       (description "Industry standard I/O for nMigen")
       (license license:bsd-3))))
 
 (define-public python-nmigen-soc
-  (let ((commit "425692af0554bb1d9df7a593823f1fa23a3cdb19"))
+  (let ((commit "c754caf2e34c084ef0e8c1b8ff1e9b5654163c71"))
     (package
       (name "python-nmigen-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -505,15 +532,18 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "17mpmj33kzg513lsk798bnh69snw61mqshlmfgdf6jy459s39k48"))))
+           "17ll5w24riqqgsq2izri7chr84gavf7948ndln4c81dcs5wgbmcg"))))
       (build-system python-build-system)
+      (inputs
+       `(("python-setuptools-scm" ,python-setuptools-scm)
+         ("python-wheel" ,python-wheel)))
       (propagated-inputs
        `(("python-nmigen" ,python-nmigen)))
       (arguments
        `(#:phases (modify-phases %standard-phases
                     (add-before 'build 'set-setuptools-scm-version
                       ,(setuptools-scm-version-setter version)))))
-      (home-page "")
+      (home-page "https://nmigen.info/nmigen/")
       (synopsis "System on Chip toolkit for nMigen")
       (description "System on Chip toolkit for nMigen")
       (license license:bsd-3))))
@@ -523,19 +553,19 @@
     (name "python-executing")
     (version "0.4.3")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "executing" version))
-        (sha256
-          (base32
-            "1f00yzljlyd4j3iajnhqvjm2n1vkkcwg4cinhvzj9fiyc0rafcm2"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "executing" version))
+       (sha256
+        (base32
+         "1f00yzljlyd4j3iajnhqvjm2n1vkkcwg4cinhvzj9fiyc0rafcm2"))))
     (build-system python-build-system)
     (home-page
-      "https://github.com/alexmojaki/executing")
+     "https://github.com/alexmojaki/executing")
     (synopsis
-      "Get the currently executing AST node of a frame, and other information")
+     "Get the currently executing AST node of a frame, and other information")
     (description
-      "Get the currently executing AST node of a frame, and other information")
+     "Get the currently executing AST node of a frame, and other information")
     (license license:expat)))
 
 (define-public python-varname
@@ -561,10 +591,10 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "b26d4e63629355a4c51220662dafdf81839ce1fe"))
+  (let ((commit "494f84b0ab9e04d12c8461fdf0f699e52c51c22d"))
     (package
       (name "symbiyosys")
-      (version (string-append "2020.04.26-" (string-take commit 9)))
+      (version (string-append "2020.07.17-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -574,7 +604,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0iiiw72nwk19nw2y6n4b9zfqh2f0k9bw648bhpkg998k0wxldv2q"))))
+           "11s009i42qfy0gxxf1r2k5gzzdk99m1xriy8n969gdla6420y161"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))
@@ -591,7 +621,7 @@
                         #t))
                     (delete 'configure) ; no configure
                     (delete 'build)     ; no compilation
-                    (delete 'check))))  ; no tests
+                    (delete 'check))))  ; no tests (make test instead of make check)
       (build-system gnu-build-system)
       (home-page "https://github.com/YosysHQ/SymbiYosys")
       (synopsis "SymbiYosys (sby) -- Front-end for Yosys-based formal verification flows")
@@ -601,14 +631,14 @@
 (define-public python-skyfield
   (package
     (name "python-skyfield")
-    (version "1.20")
+    (version "1.24")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "skyfield" version))
        (sha256
         (base32
-         "0lm4j6zdavvw0wgfv5g2rdk77n3dh2b096z44halfcjcf4k4dg2x"))))
+         "0gjm9jqj5ayvlcmd46iyrhr56pvpl8d28gnw6cqbm2dvbpf5rkln"))))
     (build-system python-build-system)
     (arguments
      `(#:phases (modify-phases %standard-phases
@@ -749,54 +779,22 @@
 ;;     (description "Frida CLI tools")
 ;;     (license #f)))
 
-
-
-(define-public python-nmigen-yosys
-  (package
-    (name "python-nmigen-yosys")
-    (version "0.9.post4248.dev7")
-    (source
-     (origin
-        (method git-fetch)
-        (uri (git-reference
-            (url "https://github.com/nmigen/nmigen-yosys")
-            (commit "be1f1b3fdeaf5611b48c69381bb1b3d6f35f9d48")))
-        ;; (patches (search-patches "random_fuckup.patch"))
-        (patches '("nmigen-yosys-nogit.patch"))
-        (file-name (git-file-name name version))
-        (sha256
-        (base32
-        "0nyf3wk7yznl63jb02pmj0v91rr6xv25hsqs9rkhjhiz4j8h11pk"))))
-    (build-system python-build-system)
-    (propagated-inputs `(("python-setuptools-scm" ,python-setuptools-scm) ("git" ,git)
-                         ("python-wheel" ,python-wheel)))
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (add-before 'build 'set-setuptools-scm-version
-                    ,(setuptools-scm-version-setter version)))))
-    (home-page "https://github.com/nmigen/nmigen-yosys")
-    (synopsis
-     "Specialized WebAssembly build of Yosys used by nMigen")
-    (description
-     "Specialized WebAssembly build of Yosys used by nMigen")
-    (license #f)))
-
 (define-public python-pytest-helpers-namespace
   (package
     (name "python-pytest-helpers-namespace")
     (version "2019.1.8")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pytest-helpers-namespace" version))
-        (sha256
-          (base32
-            "1kkifxcnv2s2136p0zg9h15f3lq1i7xgppzncq0hqhcjkyhj7zsf"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pytest-helpers-namespace" version))
+       (sha256
+        (base32
+         "1kkifxcnv2s2136p0zg9h15f3lq1i7xgppzncq0hqhcjkyhj7zsf"))))
     (build-system python-build-system)
     (propagated-inputs
-      `(("python-pytest" ,python-pytest)))
+     `(("python-pytest" ,python-pytest)))
     (home-page
-      "https://github.com/saltstack/pytest-helpers-namespace")
+     "https://github.com/saltstack/pytest-helpers-namespace")
     (synopsis "PyTest Helpers Namespace")
     (description "PyTest Helpers Namespace")
     (license #f)))
@@ -806,41 +804,41 @@
     (inherit python-pytest-xdist)
     (version "1.28.0")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pytest-xdist" version))
-        (sha256
-          (base32
-            "0v2jpdk2gdybay453v3xrb2k59bk4kqs71asi9yda7z8jd94hfpq"))))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pytest-xdist" version))
+       (sha256
+        (base32
+         "0v2jpdk2gdybay453v3xrb2k59bk4kqs71asi9yda7z8jd94hfpq"))))))
 
 (define-public python-pytest-5.3.4
   (package
     (inherit python-pytest)
     (version "5.3.4")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pytest" version))
-        (sha256
-          (base32
-            "005n7718iv0sm4w7yr347lqihc5svj2jsbpqasg706jdwn5jw4hx"))))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pytest" version))
+       (sha256
+        (base32
+         "005n7718iv0sm4w7yr347lqihc5svj2jsbpqasg706jdwn5jw4hx"))))))
 
 (define-public python-xmp-toolkit
   (package
     (name "python-xmp-toolkit")
     (version "2.0.1")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "python-xmp-toolkit" version))
-        (sha256
-          (base32
-            "0f4s86hji6idyfg9007jncl366gasjjmldbwbknldzgrdya15ngq"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "python-xmp-toolkit" version))
+       (sha256
+        (base32
+         "0f4s86hji6idyfg9007jncl366gasjjmldbwbknldzgrdya15ngq"))))
     (build-system python-build-system)
     (inputs
      `(("exempi" ,exempi)))
     (propagated-inputs
-      `(("python-pytz" ,python-pytz)))
+     `(("python-pytz" ,python-pytz)))
     (arguments
      '(#:phases
        (modify-phases %standard-phases
@@ -852,41 +850,42 @@
              #t))
          (delete 'check)))) ; fails and I don't care
     (home-page
-      "https://github.com/python-xmp-toolkit/python-xmp-toolkit")
+     "https://github.com/python-xmp-toolkit/python-xmp-toolkit")
     (synopsis
-      "Python XMP Toolkit for working with metadata.")
+     "Python XMP Toolkit for working with metadata.")
     (description
-      "Python XMP Toolkit for working with metadata.")
+     "Python XMP Toolkit for working with metadata.")
     (license #f)))
 
 (define-public python-pikepdf
   (package
     (name "python-pikepdf")
-    (version "1.14.0")
+    (version "1.17.2")
     (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pikepdf" version))
-        (sha256
-          (base32
-            "1xbr5lxgnz33q7q32l6a77cngsy70wzrffgdf5rxhhnsn1qiqdsv"))))
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pikepdf" version))
+       (sha256
+        (base32
+         "152cva29vpzwd9ksfwmp3whg57km0nfj8vf7s6nxaxxk8r5h0rgv"))))
     (build-system python-build-system)
+    (native-inputs
+     `(("python-setuptools-scm-git-archive" ,python-setuptools-scm-git-archive)))
     (inputs
      `(("pybind11" ,pybind11)
        ("qpdf" ,qpdf)))
     (propagated-inputs
-     `(("python-lxml" ,python-lxml)
-       ("python-setuptools-scm-git-archive" ,python-setuptools-scm-git-archive)))
-       ;; ("attrs" ,python-attrs)
-       ;; ("python-pytest" ,python-pytest-5.3.4)
-       ;; ("python-pytest-helpers-namespace" ,python-pytest-helpers-namespace)
-       ;; ("python-pytest-timeout" ,python-pytest-timeout)
-       ;; ("python-pytest-xdist" ,python-pytest-xdist-1.28.0)
-       ;; ("python-pytest-runner" ,python-pytest-runner)
-       ;; ("python-pytest-forked" ,python-pytest-forked)
-       ;; ("python-pillow" ,python-pillow)
-       ;; ("python-xmp-toolkit" ,python-xmp-toolkit)
-       ;; ("python-hypothesis" ,python-hypothesis)
+     `(("python-lxml" ,python-lxml)))
+    ;; ("attrs" ,python-attrs)
+    ;; ("python-pytest" ,python-pytest-5.3.4)
+    ;; ("python-pytest-helpers-namespace" ,python-pytest-helpers-namespace)
+    ;; ("python-pytest-timeout" ,python-pytest-timeout)
+    ;; ("python-pytest-xdist" ,python-pytest-xdist-1.28.0)
+    ;; ("python-pytest-runner" ,python-pytest-runner)
+    ;; ("python-pytest-forked" ,python-pytest-forked)
+    ;; ("python-pillow" ,python-pillow)
+    ;; ("python-xmp-toolkit" ,python-xmp-toolkit)
+    ;; ("python-hypothesis" ,python-hypothesis)
     (arguments
      '(#:phases
        (modify-phases %standard-phases
@@ -896,7 +895,121 @@
          (delete 'check)))) ; pytest version conflict
     (home-page "https://github.com/pikepdf/pikepdf")
     (synopsis
-      "Read and write PDFs with Python, powered by qpdf")
+     "Read and write PDFs with Python, powered by qpdf")
     (description
-      "Read and write PDFs with Python, powered by qpdf")
+     "Read and write PDFs with Python, powered by qpdf")
+    (license #f)))
+
+(define-public python-bluepy
+  (package
+    (name "python-bluepy")
+    (version "1.3.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/edwios/bluepy")
+             (commit "10f1cee90afb416f139949b86b491e4cfa98c886")))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "0zgrpnjvi51xd0q2zb3pxpqsni2r59cvpl3f3i6xdi0lqk3drp8f"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/IanHarvey/bluepy")
+    (inputs `(("glib" ,glib)
+              ("pkg-config" ,pkg-config)))
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-before 'build 'set-HOME
+           (lambda _
+             (begin
+               (map (lambda (f) (chmod f #o666)) (find-files "." ".*"))
+               #t)))
+         (add-after 'unpack 'set-cc
+           (lambda* (#:key inputs #:allow-other-keys)
+             (setenv "CC" "gcc")))
+         (delete 'check)))) ; broken for some reason
+    (synopsis
+     "Python module for interfacing with BLE devices through Bluez")
+    (description
+     "Python module for interfacing with BLE devices through Bluez")
+    (license #f)))
+
+(define-public python-pymodbus
+  (package
+    (name "python-pymodbus")
+    (version "2.3.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pymodbus" version))
+       (sha256
+        (base32
+         "0i64jr426rqx1di07z7ixjwi8j79majbl1501zlzi79zvjfd8ncf"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-pyserial" ,python-pyserial)
+       ("python-six" ,python-six)))
+    (arguments
+     `(#:phases (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page
+     "https://github.com/riptideio/pymodbus/")
+    (synopsis
+     "A fully featured modbus protocol stack in python")
+    (description
+     "A fully featured modbus protocol stack in python")
+    (license #f)))
+
+(define-public python-solaredge-modbus
+  (package
+    (name "python-solaredge-modbus")
+    (version "0.5.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "solaredge_modbus" version))
+       (sha256
+        (base32
+         "0z8rsapnzvmgph45rx5qczbp7kwqlmk025z7g736rn83jniwsi1f"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-pymodbus" ,python-pymodbus)))
+    (home-page
+     "https://github.com/nmakel/solaredge_modbus")
+    (synopsis "SolarEdge Modbus parser library")
+    (description "SolarEdge Modbus parser library")
+    (license license:expat)))
+
+(define-public python-importlib-resources
+  (package
+    (name "python-importlib-resources")
+    (version "3.0.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri "https://files.pythonhosted.org/packages/46/0b/7973c432eae095b60db1a37d6bf2c693cb4290b4d38d92f1bafe503c853d/importlib_resources-3.0.0.tar.gz") ; (pypi-uri "importlib-resources" version))
+       (sha256
+        (base32
+         "1hq626mx5jl9zfl0wdrjkxsnh8qd98fqv322n68b9251xjk4bxqr"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-setuptools-scm" ,python-setuptools-scm)))
+    (propagated-inputs
+     `(("python-contextlib2" ,python-contextlib2)
+       ("python-pathlib2" ,python-pathlib2)
+       ("python-singledispatch" ,python-singledispatch)
+       ("python-toml" ,python-toml)
+       ("python-zipp" ,python-zipp)))
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (delete 'check))))
+    ;; (delete 'check))
+    (home-page
+     "http://importlib-resources.readthedocs.io/")
+    (synopsis "Read resources from Python packages")
+    (description
+     "Read resources from Python packages")
     (license #f)))
