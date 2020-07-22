@@ -134,7 +134,8 @@
        ("python-scipy" ,python-scipy)
        ("python-sympy" ,python-sympy)))
     (native-inputs
-     `(("python-setuptools" ,python-setuptools42)))
+     `(("python-setuptools" ,python-setuptools42)
+       ("python-wheel" ,python-wheel)))
     (home-page "https://github.com/nschloe/quadpy")
     (synopsis
      "Numerical integration, quadrature for various domains")
