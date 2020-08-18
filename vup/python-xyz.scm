@@ -412,10 +412,10 @@
      #t))
 
 (define-public python-nmigen
-  (let ((commit "5ccc2122ce42f5581957bbec998ff308d5b88b29"))
+  (let ((commit "e46118dac0df315694b0fc6b9367d285a8fc12dd"))
     (package
       (name "python-nmigen")
-      (version (string-append "0.2+g" (string-take commit 9)))
+      (version (string-append "0.3+g" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -432,7 +432,7 @@
              #t))
          (sha256
           (base32
-           "18zzahymxy868wyb59y015w5fh14g1clf6dqy8kjznlq15rr352z"))))
+           "0rp6c99zwi2as9hfj2x7zbm0cgggckqrg49v2nr33jg39sfl0cvr"))))
       (build-system python-build-system)
       (inputs `(("yosys" ,yosys-git)
                 ("symbiyosys" ,symbiyosys)
@@ -457,7 +457,7 @@
 
 
 (define-public python-nmigen-boards
-  (let ((commit "194b760de249674df55d925732e20cf43dda8a25"))
+  (let ((commit "d20fb96e358994eb06295b3b64ee1efe13d86004"))
     (package
       (name "python-nmigen-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -470,7 +470,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1diy4g22l7h7i9bi82izn625d8pw6rjg0k1yfzx6fjz8qlc9v86h"))))
+           "0jxpi82zxxr9d91m11818k6ib2pc4jz0paf4sgwl27plw559bd73"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools" ,python-setuptools)
@@ -490,7 +490,7 @@
       (license license:bsd-3))))
 
 (define-public python-nmigen-stdio
-  (let ((commit "eb30b0264d9462ee373a0c29ac48aa5e93172942"))
+  (let ((commit "01eb8fd32046d7b4726a7df2cc8e811409ba453c"))
     (package
       (name "python-nmigen-stdio")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -503,7 +503,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1qixvdh2jm5xf7yv5ghijvzyyiavq8v96iq33w9yzdid8wcj82yq"))))
+           "1fwav66vd4lccdc438prwvpp7drs556j2gjx5d6li07zmp8v1z7b"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools-scm" ,python-setuptools-scm)
@@ -520,7 +520,7 @@
       (license license:bsd-3))))
 
 (define-public python-nmigen-soc
-  (let ((commit "c754caf2e34c084ef0e8c1b8ff1e9b5654163c71"))
+  (let ((commit "b4058808a2fcfb56e64eef5ebfe028d3a659e038"))
     (package
       (name "python-nmigen-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -533,7 +533,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "17ll5w24riqqgsq2izri7chr84gavf7948ndln4c81dcs5wgbmcg"))))
+           "046kxvf9ird2q1lfz69hcx7mibjzdk16hlvvdjzs02v4ynzmx8j5"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools-scm" ,python-setuptools-scm)
@@ -592,7 +592,7 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "494f84b0ab9e04d12c8461fdf0f699e52c51c22d"))
+  (let ((commit "b172357161ea16a0734be6782b0744cf6b7108b6"))
     (package
       (name "symbiyosys")
       (version (string-append "2020.07.17-" (string-take commit 9)))
@@ -605,7 +605,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "11s009i42qfy0gxxf1r2k5gzzdk99m1xriy8n969gdla6420y161"))))
+           "1yz7w2zr4531zvlisxdnfb9qyrx8p9xzmh4ya3drvh1zx8g68wh3"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))

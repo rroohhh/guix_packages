@@ -21,10 +21,10 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public horizon
-  (let ((commit "bebd57a8bfc9570931c66a602ae5494d9d853d69"))
+  (let ((commit "b96146f9e04d398a866a7016f3929d1f387cf5ce"))
     (package
       (name "horizon")
-      (version (string-append "1.1.1+" (string-take commit 7)))
+      (version (string-append "1.2.1+" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -34,7 +34,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "151gm1wh3qmb33bsqbzygf60y8m08q7avv08c4hx4yilcw30l1l3"))))
+                  "1l3rfl3xj7mqd9s6gv207blrh35sc87yzhdzg4qi186363kwwyx5"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
@@ -44,16 +44,14 @@
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
                 ("gdk-pixbuf" ,gdk-pixbuf+svg)))
       (arguments
-       `(#:make-flags (list "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
+       `(#:make-flags (list "GOLD=" "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
          #:phases (modify-phases %standard-phases
                     (delete 'configure)
                     (delete 'check) ; no tests?
                     (add-after 'unpack 'patch-makefile
                       (lambda* (#:key inputs #:allow-other-keys)
                         (substitute* "Makefile"
-                          (("-I\\$\\{CASROOT\\}/include/opencascade") "-I${CASROOT}/include/oce")
-                          (("/usr/bin/install") (string-append (assoc-ref inputs "coreutils") "/bin/install"))
-                          (("LDFLAGS \\+= -fuse-ld=gold") "# LDFLAGS += -fuse-ld=gold"))
+                          (("/usr/bin/install") (string-append (assoc-ref inputs "coreutils") "/bin/install")))
                         #t))
                     (add-before 'build 'set-casroot
                       (lambda* (#:key inputs #:allow-other-keys)

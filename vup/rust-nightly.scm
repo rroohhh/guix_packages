@@ -34,15 +34,68 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.45 "1.45.0"
-           "0z6dh0yd3fcm3qh960wi4s6fa6pxz9mh77psycsqfkkx5kqra15s")))
+         (rust-bootstrapped-package rust-1.45 "1.45.2"
+           "0273a1g3f59plyi1n0azf21qjzwml1yqdnj5z472crz37qggr8xp")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
+      (outputs '("out" "doc"))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
           `(modify-phases ,phases
+             ;; (delete 'check) ;; TODO(robin): remove again, just delete for testing
+             (add-after 'configure 'enable-extended
+               (lambda* (#:key outputs #:allow-other-keys)
+                 (substitute* "config.toml"
+                   (("submodules = false")
+                    "submodules = false
+extended = true
+tools = [\"cargo\", \"rls\", \"clippy\", \"rustfmt\", \"analysis\", \"src\"]"))
+                 #t))
+             ;; (add-after 'build 'build-more-tools
+             ;;   (lambda _
+             ;;     (invoke "./x.py" "build" "src/tools/clippy")
+             ;;     (invoke "./x.py" "build" "src/tools/rustfmt")
+             ;;     ;; (invoke "./x.py" "build" "src/tools/rust-analyzer") ; not yet
+             ;;     ))
+             (replace 'install
+               (lambda* (#:key outputs #:allow-other-keys)
+                 (invoke "./x.py" "install")
+                 ;; (invoke "./x.py" "install" "cargo")
+                 ;; (invoke "./x.py" "install" "clippy")
+                 ;; (invoke "./x.py" "install" "rustfmt")
+                 ))
+             (delete 'delete-install-logs)
+             ;; (add-after 'install 'delete-install-logs
+             ;;   (lambda* (#:key outputs #:allow-other-keys)
+             ;;     (define (delete-manifest-file out-path file)
+             ;;       (delete-file (string-append out-path "/lib/rustlib/" file)))
+             ;;     (let ((out (assoc-ref outputs "out")))
+             ;;       (for-each
+             ;;         (lambda (file) (delete-manifest-file out file))
+             ;;         '("install.log"
+             ;;           "manifest-rust-docs"
+             ;;           "manifest-rust-std-x86_64-unknown-linux-gnu"
+             ;;           "manifest-rustc"))
+             ;;       #t)))
+             (replace 'mkdir-prefix-paths
+               (lambda* (#:key outputs #:allow-other-keys)
+                 ;; As result of https://github.com/rust-lang/rust/issues/36989
+                 ;; `prefix' directory should exist before `install' call
+                 (mkdir-p (assoc-ref outputs "out"))
+                 #t))
+             ;; TODO(robin): make this work
+             ;; (add-after 'install 'install-tools
+             ;;   (lambda* (#:key outputs #:allow-other-keys)
+             ;;     ;; TODO(robin): move to own output
+             ;;     ;; (substitute* "config.toml"
+             ;;     ;;   ;; replace prefix to specific output
+             ;;     ;;   (("prefix = \"[^\"]*\"")
+             ;;     ;;    (string-append "prefix = \"" (assoc-ref outputs "tools") "\"")))
+             ;;     ;; (mkdir-p (assoc-ref outputs "tools"))
+             ;;     ;; (invoke "./x.py" "install" "rust-analyzer") ; not yet
+             ;;     ))
              (add-after 'configure 'switch-to-nightly
                (lambda _
                  (substitute* "config.toml"

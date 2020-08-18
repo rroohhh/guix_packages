@@ -165,16 +165,13 @@
                  '(begin
                     (substitute* "Makefile.am"
                       (("gnu\\+\\+0x") "gnu++17"))
-
-                    (substitute* '("json11.cpp" "webrtc_dsp/api/audio/echo_canceller3_config.cc")
-                      (("std::isfinite") "isfinite"))
                     #t))
                 (sha256
                  (base32
                   "13br0dsnmgjamsql9hrj3hgdi9a6psbwjb17g03r841c4w1pjbr4")))))))
 
 (define-public telegram-desktop
-  (let ((version "2.1.20"))
+  (let ((version "2.2.0"))
     (package
       (name "telegram-desktop")
       (version version)
@@ -186,19 +183,19 @@
                       (recursive? #t)))
                 (file-name (git-file-name name version))
                 (modules '((guix build utils)))
-                (snippet
-                 '(begin
-                    (substitute* "cmake/external/qt/package.cmake"
-                      (("Core Gui Widgets Network") "Core Gui Widgets Network XkbCommonSupport"))
-                    (substitute* "cmake/external/qt/CMakeLists.txt"
-                      (("Qt5::Network") "Qt5::Network\nQt5::XkbCommonSupport")
-                      (("\\$\\{Qt5Core_PRIVATE_INCLUDE_DIRS\\}") "${Qt5Core_PRIVATE_INCLUDE_DIRS}\n${Qt5XkbCommonSupport_PRIVATE_INCLUDE_DIRS}"))
-                    #t))
-                (patches (search-patches "random_fuckup_new.patch"))
+                ;; (snippet
+                ;;  '(begin
+                ;;     (substitute* "cmake/external/qt/package.cmake"
+                ;;       (("Core Gui Widgets Network") "Core Gui Widgets Network XkbCommonSupport"))
+                ;;     (substitute* "cmake/external/qt/CMakeLists.txt"
+                ;;       (("Qt5::Network") "Qt5::Network\nQt5::XkbCommonSupport")
+                ;;       (("\\$\\{Qt5Core_PRIVATE_INCLUDE_DIRS\\}") "${Qt5Core_PRIVATE_INCLUDE_DIRS}\n${Qt5XkbCommonSupport_PRIVATE_INCLUDE_DIRS}"))
+                ;;     #t))
+                ;; (patches (search-patches "random_fuckup_new.patch"))
                 ;; (patches `("random_fuckup_new.patch"))
                 (sha256
                  (base32
-                  "07vb7hlfamkin8x7z5gd7jldp10pz2fq60gai37iic6gyc9gbj7y"))))
+                  "1qayqggghvlh6bs6bki62wmxqhljd9n8j95svczaq22dnqwvhh67"))))
       (inputs `(("qtbase" ,qtbase)
                 ("qtimageformats" ,qtimageformats)
                 ("qtwayland" ,qtwayland)

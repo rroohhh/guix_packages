@@ -35,8 +35,8 @@
 
 
 (define-public yosys-git
-  (let ((commit "a87e338381507b372bb4ad6fad6ad959e0139649")
-        (version "0.9"))
+  (let ((commit "3cb3978ff4f8c917908d03eca6f07c57da52c0dc")
+        (version "0.9+3477"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
        (inherit guix:yosys)
@@ -48,7 +48,7 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "12ls3dqma8aa8ka026sh5vik5hpaj68i3lfdrc1ia6nqp8srmgfk"))
+                   "16hyk4sg0yx2cr13spmn75s8vwc432vj8z28m6la5w4sbi1x5a4y"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
@@ -70,7 +70,7 @@
                   "18ykv6np8sp7rb7c1cm3ha3qnj280gpkyn476faahb15jh0nbjmw")))))))
 
 (define-public trellis
-  (let ((commit "fef7e5fd16354c2911673635dd78e2dae3a775c0"))
+  (let ((commit "8c0a6382e11b160ed88d17af8493c12a897617ed"))
     (package
       (name "trellis")
       (version (string-append "1.0-71-g" (string-take commit 7)))
@@ -83,7 +83,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1p44p7zhzf18pzl07hgw0iz045109m2s16nkv91qyd4rx83s3jmr"))))
+                  "0qwq8xykqi0qn0l6lz7kk5wgn52zjl5as5qfghwrrafd6ysmjbil"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -106,7 +106,7 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "44007eab6f6a7f20c257bb109bbc8f66a5fde12d"))
+  (let ((commit "be607c10a860c1043dc7554463a8e788759809d8"))
     (package
       (name "nextpnr")
       (version (string-append "2020.07.16" (string-take commit 9)))
@@ -118,7 +118,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0pgdpgyk65l703hhshp6mmzh23wzcjgndd1q5i5kx8vbgkgyg0bg"))))
+                  "1y3rdqq4q2yvqn1vhnsy5m8lfc2lcjxj2b7iya4mv0fpl94vhx10"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
