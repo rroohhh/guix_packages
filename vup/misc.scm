@@ -2,9 +2,15 @@
   #:use-module (guix packages)
   #:use-module (guix licenses)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
-  #:use-module (gnu packages pkg-config))
+  #:use-module (guix build-system maven)
+  #:use-module (guix build-system ant)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages libusb)
+  #:use-module (gnu packages xml)
+  #:use-module (gnu packages boost))
 
 (define-public mbuffer
   (let* ((version "20200505"))
@@ -64,3 +70,92 @@
       (synopsis "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
       (description "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
       (license gpl3))))
+
+(define-public antpm
+  (let* ((version "1.20"))
+    (package
+      (name "antpm")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/ralovich/antpm/archive/v" version ".tar.gz"))
+         (sha256
+          (base32 "1rwp707fcg5w5qfhmadbjrbia8arjfz8knb7pvcycxl6f4hz3sn8"))))
+      (build-system cmake-build-system)
+      (inputs `(("libusb" ,libusb) ("boost" ,boost) ("libxml2" ,libxml2)))
+      (arguments '(#:configure-flags `("-DUSE_BOOST_STATIC_LINK=False")
+                   #:phases
+                   (modify-phases %standard-phases
+                     (add-before 'configure 'cd-to-src
+                         (lambda _
+                           (chdir "src")
+                           #t))
+                     (delete 'check)))) ;; no tests
+      (home-page "https://github.com/ralovich/antpm")
+      (synopsis "ANT+minus (ANT / ANT+ / ANT-FS)")
+      (description "ANT+minus (ANT / ANT+ / ANT-FS)")
+      (license gpl3))))
+
+;; (define-public tycho-maven-plugin
+;;   (package
+;;     (name "tycho-maven-plugin")
+;;     (version "1.4.0")
+;;     (source (origin
+;;               (method url-fetch)
+;;               (uri (string-append "https://repo1.maven.org/maven2/"
+;;                                   "org/eclipse/tycho/tycho-maven-plugin/"
+;;                                   version "/tycho-maven-plugin-"
+;;                                   version "-sources.jar"))
+;;               (sha256
+;;                (base32
+;;                 "0dzi96qckq4m9ncxz0qnyjnsw1r4fihpn58adm28diisnbf0sy54"))))
+;;     (build-system ant-build-system)
+;;     (arguments
+;;      `(#:jar-name "tycho-maven-plugin.jar"
+;;        #:source-dir "tycho-maven-plugin/src/main/java"
+;;        #:tests? #f
+;;        #:phases
+;;        (modify-phases %standard-phases
+;;          (replace 'install
+;;            (install-from-pom "tycho-maven-plugin/pom.xml")))))
+;;     ;; (propagated-inputs
+;;     ;;  `(("maven-artifact" ,maven-artifact)
+;;     ;;    ("maven-plugin-tools-parent-pom" ,maven-plugin-tools-parent-pom)))
+;;     ;; (native-inputs
+;;     ;;  `(("unzip" ,unzip)))
+;;     (home-page "")
+;;     (synopsis "")
+;;     (description "")
+;;     (license #f)))
+
+;; (define-public mytourbook
+;;   (let* ((version "20.8.0_2020-08-04_1351"))
+;;     (package
+;;       (name "mytourbook")
+;;       (version version)
+;;       (source
+;;        (origin
+;;          (method url-fetch)
+;;          (uri (string-append "https://github.com/wolfgang-ch/mytourbook/archive/" version ".tar.gz"))
+;;          (file-name (git-file-name name version))
+;;          (sha256
+;;           (base32 "1dxqg16md2ic6ak80c9d3ahmi7iyh58afcfk8g7s753yjjqsbvrb"))))
+;;       (build-system maven-build-system)
+;;       (native-inputs `(("tycho-maven-plugin" ,tycho-maven-plugin)))
+;;       ;; (inputs `(("libusb" ,libusb) ("boost" ,boost) ("libxml2" ,libxml2)))
+;;       ;; (arguments '(#:configure-flags `("-DUSE_BOOST_STATIC_LINK=False")
+;;       ;;              #:phases
+;;       ;;              (modify-phases %standard-phases
+;;       ;;                (add-before 'configure 'cd-to-src
+;;       ;;                    (lambda _
+;;       ;;                      (chdir "src")
+;;       ;;                      #t))
+;;       ;;                (delete 'check)))) ;; no tests
+;;       (home-page "http://mytourbook.sourceforge.net/")
+;;       (synopsis "Free software to visualize and analyze tours which are recorded by a GPS device, bike- or exercise computer and ergometer.")
+;;       (description "Free software to visualize and analyze tours which are recorded by a GPS device, bike- or exercise computer and ergometer.")
+;;       (license gpl2))))
+
+
+;; mytourbook

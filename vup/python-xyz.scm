@@ -14,6 +14,7 @@
   #:use-module (gnu packages astronomy)
   #:use-module (gnu packages check)
   #:use-module (gnu packages version-control)
+  #:use-module (gnu packages libusb)
   #:use-module (vup fpga)
   #:use-module (vup smt)
   #:use-module (vup linux)
@@ -1014,3 +1015,60 @@
     (description
      "Read resources from Python packages")
     (license #f)))
+
+(define-public python-openant
+  (let* ((version "0.4"))
+    (package
+      (name "python-openant")
+      (version version)
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/Tigge/openant")
+               (commit (string-append "v" version))))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "1a0lw1a7p1hjbivdqz6rbz3gl485hx91kapl450czsn53z9399xd"))))
+      (build-system python-build-system)
+      (propagated-inputs `(("python-pyusb" ,python-pyusb)))
+      (arguments
+       '(#:phases
+         (modify-phases %standard-phases
+           (add-before 'build 'patch-install
+             (lambda _
+               (substitute* '("setup.py")
+                 (("install_udev_rules\\(True\\)") "install_udev_rules(False)"))
+               #t)))))
+      (home-page "https://github.com/Tigge/openant")
+      (synopsis
+       "ANT and ANT-FS Python Library")
+      (description
+       "ANT and ANT-FS Python Library")
+      (license #f))))
+
+(define-public python-antfs-cli
+  (let* ((version "0.4")
+         (commit "1fc1ee4fd05f786cd02294e9d7fc3a079a61bc10"))
+    (package
+      (name "python-antfs-cli")
+      (version (string-append version "+" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/Tigge/antfs-cli")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "118ml5f3p1f92d2xgr4ywsadyyrhhsh6gyypwp8l08hc92i102y4"))))
+      (build-system python-build-system)
+      (propagated-inputs `(("python-openant" ,python-openant)))
+      (home-page "https://github.com/Tigge/antfs-cli")
+      (synopsis
+       "Extracts FIT files from ANT-FS based sport watches such as Garmin Forerunner 60, 405CX, 310XT, 610 and 910XT.")
+      (description
+       "Extracts FIT files from ANT-FS based sport watches such as Garmin Forerunner 60, 405CX, 310XT, 610 and 910XT.")
+      (license #f))))
