@@ -2,5 +2,5 @@
  (version 0)
  (dependencies
   (channel
-   (name "flat")
+   (name flat)
    (url "https://github.com/flatwhatson/guix-channel"))))
