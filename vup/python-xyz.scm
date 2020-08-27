@@ -1019,20 +1019,22 @@
 
 ;; TODO(robin): figure out how to install the udev rules
 (define-public python-openant
-  (let* ((version "0.4"))
+  (let* ((commit "ae9e7366fb78b2c39467e1a028b34cfb0c64ffd7")
+         (version (string-append "0.4+" (string-take commit 9))))
     (package
       (name "python-openant")
       (version version)
+      (outputs `("out" "udev"))
       (source
        (origin
          (method git-fetch)
          (uri (git-reference
                (url "https://github.com/Tigge/openant")
-               (commit (string-append "v" version))))
+               (commit commit)))
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1a0lw1a7p1hjbivdqz6rbz3gl485hx91kapl450czsn53z9399xd"))))
+           "0lmcwrv0c9id081radsr4s5lyqay0mspyr7vc5d9a6q3p26wi6aw"))))
       (build-system python-build-system)
       (propagated-inputs `(("python-pyusb" ,python-pyusb)))
       (arguments
@@ -1042,7 +1044,12 @@
              (lambda _
                (substitute* '("setup.py")
                  (("install_udev_rules\\(True\\)") "install_udev_rules(False)"))
-               #t)))))
+               #t))
+           (add-after 'install 'install-udev-files
+             (lambda _
+               (let ((udev-output (assoc-ref %outputs "udev")))
+                 (install-file "resources/42-ant-usb-sticks.rules"
+                               (string-append udev-output "/lib/udev/rules.d"))))))))
       (home-page "https://github.com/Tigge/openant")
       (synopsis
        "ANT and ANT-FS Python Library")

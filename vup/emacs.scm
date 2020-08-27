@@ -184,5 +184,3 @@
    #:git-repo "https://github.com/flatwhatson/emacs.git"
    #:git-commit "98066351d6ecc8726fd69b57ba05fd99836af43a"
    #:checksum "1kzaqc7795664hgyqq3m7i75g43dvmn573yv05hfnhgnqw7rwqzh"))
-
-emacs-pgtk-native-comp-no-xwidgets
