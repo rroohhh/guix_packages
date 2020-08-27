@@ -1016,6 +1016,8 @@
      "Read resources from Python packages")
     (license #f)))
 
+
+;; TODO(robin): figure out how to install the udev rules
 (define-public python-openant
   (let* ((version "0.4"))
     (package
