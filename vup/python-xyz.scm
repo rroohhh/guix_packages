@@ -23,6 +23,7 @@
   #:use-module (guix git-download)
   #:use-module (guix build-system python)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system trivial)
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public python-pyvcd
@@ -1017,14 +1018,12 @@
     (license #f)))
 
 
-;; TODO(robin): figure out how to install the udev rules
 (define-public python-openant
   (let* ((commit "ae9e7366fb78b2c39467e1a028b34cfb0c64ffd7")
          (version (string-append "0.4+" (string-take commit 9))))
     (package
       (name "python-openant")
       (version version)
-      (outputs `("out" "udev"))
       (source
        (origin
          (method git-fetch)
@@ -1044,18 +1043,28 @@
              (lambda _
                (substitute* '("setup.py")
                  (("install_udev_rules\\(True\\)") "install_udev_rules(False)"))
-               #t))
-           (add-after 'install 'install-udev-files
-             (lambda _
-               (let ((udev-output (assoc-ref %outputs "udev")))
-                 (install-file "resources/42-ant-usb-sticks.rules"
-                               (string-append udev-output "/lib/udev/rules.d"))))))))
+               #t)))))
       (home-page "https://github.com/Tigge/openant")
       (synopsis
        "ANT and ANT-FS Python Library")
       (description
        "ANT and ANT-FS Python Library")
       (license #f))))
+
+(define-public python-openant/udev
+  (package
+    (inherit python-openant)
+    (name "python-openant-udev")
+    (build-system trivial-build-system)
+    (propagated-inputs '())
+    (native-inputs `(("source" ,(package-source python-openant))))
+    (arguments
+     '(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (install-file (string-append (assoc-ref %build-inputs "source") "/resources/42-ant-usb-sticks.rules")
+                       (string-append %output "/lib/udev/rules.d")))))))
 
 (define-public python-antfs-cli
   (let* ((version "0.4")
