@@ -178,7 +178,7 @@
   (emacs-from-git
    (emacs-with-pgtk
      (emacs-with-native-comp emacs-next gcc-10))
-   #:pkg-name "emacs-pgtk-native-comp"
+   #:pkg-name "emacs-pgtk-native-comp-no-xwidgets"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
