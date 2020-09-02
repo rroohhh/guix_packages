@@ -21,7 +21,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public horizon
-  (let ((commit "b96146f9e04d398a866a7016f3929d1f387cf5ce"))
+  (let ((commit "59687dc69a07569f4abce954acc21dd0540d175b"))
     (package
       (name "horizon")
       (version (string-append "1.2.1+" (string-take commit 7)))
@@ -34,7 +34,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1l3rfl3xj7mqd9s6gv207blrh35sc87yzhdzg4qi186363kwwyx5"))))
+                  "1r3y3hcvh8ifv4r87wsa2imdk5fwbzjdzz8ryy0zpgcpwcqvgdvn"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
