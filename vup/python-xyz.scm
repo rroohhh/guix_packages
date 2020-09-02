@@ -1090,3 +1090,21 @@
       (description
        "Extracts FIT files from ANT-FS based sport watches such as Garmin Forerunner 60, 405CX, 310XT, 610 and 910XT.")
       (license #f))))
+
+(define-public python-flameprof
+  (package
+    (name "python-flameprof")
+    (version "0.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "flameprof" version))
+        (sha256
+          (base32
+            "18vmg22j1m22xz486kak4y7175nvv520z970y4jadfybj10nvj6v"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/baverman/flameprof/")
+    (synopsis "cProfile flamegraph generator")
+    (description "cProfile flamegraph generator")
+    (license license:expat)))
