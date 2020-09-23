@@ -1108,3 +1108,30 @@
     (synopsis "cProfile flamegraph generator")
     (description "cProfile flamegraph generator")
     (license license:expat)))
+
+
+(define-public python-shapely-fixed
+  (package
+    (inherit python-shapely)
+    (name "python-shapely-fixed")
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (delete 'check) ; broken
+         (add-after 'unpack 'patch-geos-path
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let ((geos (assoc-ref inputs "geos"))
+                   (glibc (assoc-ref inputs ,(if (%current-target-system)
+                                                 "cross-libc" "libc"))))
+               (for-each
+                (lambda (file)
+                  (substitute* file
+                    (("_lgeos = load_dll\\('geos_c', fallbacks=.*\\)")
+                     (string-append "_lgeos = load_dll('geos_c', fallbacks=['"
+                                    geos "/lib/libgeos_c.so'])"))
+                    (("free = load_dll\\('c'\\)\\.free")
+                     (string-append "free = load_dll('c', fallbacks=['"
+                                    glibc "/lib/libc.so.6']).free"))))
+                '("shapely/geos.py" "shapely/_buildcfg.py"))
+               )
+             #t)))))))
