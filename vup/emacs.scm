@@ -182,5 +182,5 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "98066351d6ecc8726fd69b57ba05fd99836af43a"
-   #:checksum "1kzaqc7795664hgyqq3m7i75g43dvmn573yv05hfnhgnqw7rwqzh"))
+   #:git-commit "890a5bf910d5d0c4df44706976c360103cdbe8aa"
+   #:checksum "1v177137yhgmz8d0i5h97isi1isym4a22wkhb0fsjp5g3bi18v3p"))
