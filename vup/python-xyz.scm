@@ -9,6 +9,7 @@
   #:use-module (gnu packages glib)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-compression)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
@@ -1135,3 +1136,52 @@
                 '("shapely/geos.py" "shapely/_buildcfg.py"))
                )
              #t)))))))
+
+(define-public python-flask-cors
+  (package
+    (name "python-flask-cors")
+    (version "3.0.9")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "Flask-Cors" version))
+        (sha256
+          (base32
+            "1f36hkaxc92zn12f88fkzwifdvlvsnmlp1dv3p5inpcc500c3kvb"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-flask" ,python-flask)
+        ("python-six" ,python-six)))
+    (home-page
+      "https://github.com/corydolphin/flask-cors")
+    (synopsis
+      "A Flask extension adding a decorator for CORS support")
+    (description
+      "A Flask extension adding a decorator for CORS support")
+    (license license:expat)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+(define-public python-descartes
+  (package
+    (name "python-descartes")
+    (version "1.1.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "descartes" version))
+        (sha256
+          (base32
+            "0nq36w9ylvfwmwn5qd9c8fsp2jzsqpmy4xcr6pzxcpmg8qhm0nhk"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-matplotlib" ,python-matplotlib)
+       ("python-shapely" ,python-shapely-fixed)))
+    (home-page
+      "http://bitbucket.org/sgillies/descartes/")
+    (synopsis
+      "Use geometric objects as matplotlib paths and patches")
+    (description
+      "Use geometric objects as matplotlib paths and patches")
+    (license license:bsd-3)))
