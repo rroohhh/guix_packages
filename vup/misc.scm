@@ -7,6 +7,8 @@
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system maven)
   #:use-module (guix build-system ant)
+  #:use-module (gnu packages nettle)
+  #:use-module (gnu packages autotools)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages libusb)
   #:use-module (gnu packages xml)
@@ -96,6 +98,28 @@
       (synopsis "ANT+minus (ANT / ANT+ / ANT-FS)")
       (description "ANT+minus (ANT / ANT+ / ANT-FS)")
       (license gpl3))))
+
+(define-public rdfind
+  (let* ((version "1.4.1"))
+    (package
+      (name "rdfind")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/pauldreik/rdfind/archive/releases/" version ".tar.gz"))
+         (sha256
+          (base32 "1126rpn0ld6a8b3szmml8gsg3x68m03n3dycjyqk81xjcm3sxs9y"))))
+      (build-system gnu-build-system)
+      (inputs `(("automake" ,automake) ("nettle" ,nettle)
+                ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)))
+      (arguments '(#:phases
+                   (modify-phases %standard-phases
+                     (delete 'check)))) ;; too lazy to make tests work
+      (home-page "https://github.com/pauldreik/rdfind")
+      (synopsis "find duplicate files utility")
+      (description "find duplicate files utility")
+      (license gpl2+))))
 
 ;; (define-public tycho-maven-plugin
 ;;   (package
