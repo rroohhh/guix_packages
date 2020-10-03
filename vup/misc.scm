@@ -8,6 +8,8 @@
   #:use-module (guix build-system maven)
   #:use-module (guix build-system ant)
   #:use-module (gnu packages nettle)
+  #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages xorg)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages libusb)
@@ -119,6 +121,25 @@
       (home-page "https://github.com/pauldreik/rdfind")
       (synopsis "find duplicate files utility")
       (description "find duplicate files utility")
+      (license gpl2+))))
+
+(define-public xrestop
+  (let* ((version "0.4"))
+    (package
+      (name "xrestop")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "http://downloads.yoctoproject.org/releases/xrestop/xrestop-" version ".tar.gz"))
+         (sha256
+          (base32 "0mz27jpij8am1s32i63mdm58znfijcpfhdqq1npbmvgclyagrhk7"))))
+      (build-system gnu-build-system)
+      (inputs `(("libxres" ,libxres) ("libx11" ,libx11) ("libxext" ,libxext)
+                ("ncurses" ,ncurses)))
+      (home-page "http://freedesktop.org/wiki/Software/xrestop")
+      (synopsis "Uses the X-Resource extension to provide 'top' like statistics")
+      (description "Uses the X-Resource extension to provide 'top' like statistics")
       (license gpl2+))))
 
 ;; (define-public tycho-maven-plugin
