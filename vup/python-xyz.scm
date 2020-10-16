@@ -5,11 +5,14 @@
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages time)
   #:use-module (gnu packages freedesktop)
+  #:use-module (gnu packages cmake)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages glib)
+  #:use-module (gnu packages libevent)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-web)
+  #:use-module (gnu packages python-check)
   #:use-module (gnu packages python-compression)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
@@ -1185,3 +1188,615 @@
     (description
       "Use geometric objects as matplotlib paths and patches")
     (license license:bsd-3)))
+
+
+
+(define-public python-loky
+  (package
+    (name "python-loky")
+    (version "2.9.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "loky" version))
+        (sha256
+          (base32
+            "1gy594v2nsyc6v62qyxizvsgh6a938hi4zmg1zdw4avc9djg16sa"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cloudpickle" ,python-cloudpickle)))
+    (home-page "https://github.com/joblib/loky/")
+    (synopsis
+      "A robust implementation of concurrent.futures.ProcessPoolExecutor")
+    (description
+      "A robust implementation of concurrent.futures.ProcessPoolExecutor")
+    (license license:bsd-3)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+
+
+
+(define-public python-pybind11
+  (package
+    (name "python-pybind11")
+    (version "2.5.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pybind11" version))
+        (sha256
+          (base32
+            "1balzcacb6i296rfq0p1vwvdz4jqxk5ilvw2cda924h1i1x4wnpa"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/pybind/pybind11")
+    (synopsis
+      "Seamless operability between C++11 and Python")
+    (description
+      "Seamless operability between C++11 and Python")
+    (license license:bsd-3)))
+
+(define-public python-ninja
+  (package
+    (name "python-ninja")
+    (version "1.10.0.post2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ninja" version))
+        (sha256
+          (base32
+            "1y0jv150arz1rhrzi5z7sss80rgrksi33ig8hb5z1gm92csxf7v2"))))
+    (build-system python-build-system)
+    (inputs `(("skbuild" ,python-scikit-build)))
+    (home-page "http://ninja-build.org/")
+    (synopsis
+      "Ninja is a small build system with a focus on speed")
+    (description
+      "Ninja is a small build system with a focus on speed")
+    (license license:asl2.0)))
+
+(define-public python-cmake
+  (package
+    (name "python-cmake")
+    (version "3.18.2.post1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "cmake" version))
+        (sha256
+          (base32
+            "08h83c7ha29c10bd730s6jj0a4nrwjk7r4w8bsb61m6ndsg3rnp8"))))
+    (build-system python-build-system)
+    (inputs `(("skbuild" ,python-scikit-build)
+              ("cmake" ,cmake)
+              ("libuv" ,libuv)))
+    (home-page "http://cmake.org/")
+    (synopsis
+      "CMake is an open-source, cross-platform family of tools designed to build, test and package software")
+    (description
+      "CMake is an open-source, cross-platform family of tools designed to build, test and package software")
+    (license license:asl2.0)))
+
+(define-public python-scikit-build
+  (package
+    (name "python-scikit-build")
+    (version "0.11.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "scikit-build" version))
+        (sha256
+          (base32
+            "0p4smkl2rbpl00m5va5qa8hp2hqb3284p2cs6k8zlmi4kgbdyh6s"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-distro" ,python-distro)
+        ("python-packaging" ,python-packaging)
+        ("python-setuptools" ,python-setuptools)
+        ("python-wheel" ,python-wheel)))
+    (home-page
+      "https://github.com/scikit-build/scikit-build")
+    (synopsis
+      "Improved build system generator for Python C/C++/Fortran/Cython extensions")
+    (description
+      "Improved build system generator for Python C/C++/Fortran/Cython extensions")
+    (license license:expat)))
+
+(define-public python-xdoctest
+  (package
+    (name "python-xdoctest")
+    (version "0.15.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "xdoctest" version))
+        (sha256
+          (base32
+            "0wf37s03lk6vwki4m5qy21cnrjcq7jqss6pcxdkb2s9v816ih2kz"))))
+    (build-system python-build-system)
+    (propagated-inputs `(("python-six" ,python-six)))
+    (native-inputs
+      `(; ("python-cmake" ,python-cmake)
+        ("python-codecov" ,python-codecov)
+        ("python-ipykernel" ,python-ipykernel)
+        ("python-ipython" ,python-ipython)
+        ("python-jupyter-client" ,python-jupyter-client)
+        ("python-nbconvert" ,python-nbconvert)
+        ("python-nbformat" ,python-nbformat)
+        ; ("python-ninja" ,python-ninja)
+        ("python-pybind11" ,python-pybind11)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-scikit-build" ,python-scikit-build)))
+    (home-page
+      "https://github.com/Erotemic/xdoctest")
+    (synopsis
+      "A rewrite of the builtin doctest module")
+    (description
+      "A rewrite of the builtin doctest module")
+    (license #f)))
+
+
+
+(define-public python-setuptools-scm-3.5
+  (package
+    (inherit python-setuptools-scm)
+    (version "3.5.0")
+    (source
+     (origin
+       (inherit (package-source python-setuptools))
+       (uri "https://files.pythonhosted.org/packages/b2/f7/60a645aae001a2e06cf4b8db2fba9d9f36b8fd378f10647e3e218b61b74b/setuptools_scm-3.5.0.tar.gz") ; (pypi-uri "setuptools-scm" version ".zip"))
+       (sha256
+        (base32
+         "11qs1jvfgflx1msv39jgc6bj9d9a300ra35fwypkr44jayh23psv"))))))
+
+(define-public python-pytest-mypy
+  (package
+    (name "python-pytest-mypy")
+    (version "0.7.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest-mypy" version))
+        (sha256
+          (base32
+            "0gb7hn4yraji94873rzvxb1y59i334i1yhclljrrigv65fd7srjs"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-filelock" ,python-filelock)
+        ("python-mypy" ,python-mypy)
+        ("python-pytest" ,python-pytest)))
+    (native-inputs
+     `(("python-setuptools-scm" ,python-setuptools-scm-3.5)))
+    (home-page
+      "https://github.com/dbader/pytest-mypy")
+    (synopsis
+      "Mypy static type checker plugin for Pytest")
+    (description
+      "Mypy static type checker plugin for Pytest")
+    (license license:expat)))
+
+(define-public python-path
+  (package
+    (name "python-path")
+    (version "15.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "path" version))
+        (sha256
+          (base32
+            "14nsvz46b3srcbjhh59ik8mxdxf0rwj9am0mpkvxp8xf5xis06jj"))))
+    (build-system python-build-system)
+    (native-inputs
+      `(("python-appdirs" ,python-appdirs)
+        ("python-packaging" ,python-packaging)
+        ("python-pygments" ,python-pygments)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-black" ,python-pytest-black)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pytest-flake8" ,python-pytest-flake8)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-mypy" ,python-pytest-mypy)))
+    (home-page "https://github.com/jaraco/path")
+    (synopsis "A module wrapper for os.path")
+    (description "A module wrapper for os.path")
+    (license #f)))
+
+(define-public python-path.py
+  (package
+    (name "python-path.py")
+    (version "12.5.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "path.py" version))
+        (sha256
+          (base32
+            "1a198l1zz2rh21l16ap46pq02d4ljzyy151xf02x1blp4j5mx24d"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-path" ,python-path)))
+    (native-inputs
+      `(("python-appdirs" ,python-appdirs)
+        ("python-packaging" ,python-packaging)
+        ("python-pygments" ,python-pygments)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-black-multipy"
+         ,python-pytest-black-multipy)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page "https://github.com/jaraco/path")
+    (synopsis "A module wrapper for os.path")
+    (description "A module wrapper for os.path")
+    (license #f)))
+
+(define-public python-jaraco.structures
+  (package
+    (name "python-jaraco.structures")
+    (version "2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.structures" version))
+        (sha256
+          (base32
+            "0wcmywzagybxvwl5d6ix7d655swi8sa41hcgb7zz723my7r9mapm"))))
+    (build-system python-build-system)
+    (inputs `(("python-setuptools-scm" ,python-setuptools-scm)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.structures")
+    (synopsis "Data structures by jaraco")
+    (description "Data structures by jaraco")
+    (license #f)))
+
+(define-public python-jaraco.collections
+  (package
+    (name "python-jaraco.collections")
+    (version "3.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.collections" version))
+        (sha256
+          (base32
+            "08a7appg3yaz7kkj8ijpan90mmv3z8w54fa9fishnag7ybs0wmxy"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-jaraco.classes" ,python-jaraco.classes)
+        ("python-jaraco.text" ,python-jaraco.text)
+        ("python-six" ,python-six)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-black-multipy"
+         ,python-pytest-black-multipy)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.collections")
+    (synopsis
+      "Collection objects similar to those in stdlib by jaraco")
+    (description
+      "Collection objects similar to those in stdlib by jaraco")
+    (license #f)))
+
+(define-public python-jaraco.functools
+  (package
+    (name "python-jaraco.functools")
+    (version "3.0.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.functools" version))
+        (sha256
+          (base32
+            "1x4l7d4mvr94nfzh4zgvkdcglvvagbx2y6ryw2ijql8p66zc9vcz"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-more-itertools" ,python-more-itertools)))
+    (native-inputs
+      `(("python-jaraco.classes" ,python-jaraco.classes)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-black" ,python-pytest-black)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.functools")
+    (synopsis "Functools like those found in stdlib")
+    (description
+      "Functools like those found in stdlib")
+    (license #f)))
+
+(define-public python-jaraco.text
+  (package
+    (name "python-jaraco.text")
+    (version "3.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.text" version))
+        (sha256
+          (base32
+            "1v0hz3h74m31jlbc5bxwkvrx1h2n7887bajrg1n1c3yc4q8qn1z5"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-importlib-resources"
+         ,python-importlib-resources)
+        ("python-jaraco.functools"
+         ,python-jaraco.functools)
+        ("python-six" ,python-six)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-black-multipy"
+         ,python-pytest-black-multipy)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.text")
+    (synopsis "Module for text manipulation")
+    (description "Module for text manipulation")
+    (license #f)))
+
+(define-public python-pytest-black-multipy
+  (package
+    (name "python-pytest-black-multipy")
+    (version "1.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest-black-multipy" version))
+        (sha256
+          (base32
+            "1ciwa99fnz3ngbsvcjvxqz4k1vwfmvpxaj7qf5vxkx0awvczhsyd"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-pytest-black" ,python-pytest-black)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page "https://github.com/jaraco/skeleton")
+    (synopsis "Allow '--black' on older Pythons")
+    (description "Allow '--black' on older Pythons")
+    (license #f)))
+
+(define-public python-jaraco.classes
+  (package
+    (name "python-jaraco.classes")
+    (version "3.1.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.classes" version))
+        (sha256
+          (base32
+            "1avsxzm5mwylmy2zbxq3xvn48z5djb0qy3hwv4ryncprivzri1n3"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-more-itertools" ,python-more-itertools)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-black-multipy"
+         ,python-pytest-black-multipy)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.classes")
+    (synopsis
+      "Utility functions for Python class constructs")
+    (description
+      "Utility functions for Python class constructs")
+    (license #f)))
+
+(define-public python-jaraco.ui
+  (package
+    (name "python-jaraco.ui")
+    (version "2.0.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.ui" version))
+        (sha256
+          (base32
+            "0di9fnjgwyyk6jq6gvwiz8qy1f6znwq96m416d9q8vr36hkmayzi"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-jaraco.classes" ,python-jaraco.classes)
+        ("python-jaraco.text" ,python-jaraco.text)
+        ("python-six" ,python-six)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page "https://github.com/jaraco/jaraco.ui")
+    (synopsis
+      "User-Interface tools (mainly command-line)")
+    (description
+      "User-Interface tools (mainly command-line)")
+    (license #f)))
+
+(define-public python-jaraco.windows
+  (package
+    (name "python-jaraco.windows")
+    (version "5.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jaraco.windows" version))
+        (sha256
+          (base32
+            "1zxcvmjd2w9n11b3wpdsmrzmlpxj1g2fj9qx6zzbbfzgswqkzg11"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-jaraco.collections"
+         ,python-jaraco.collections)
+        ("python-jaraco.structures"
+         ,python-jaraco.structures)
+        ("python-jaraco.text" ,python-jaraco.text)
+        ("python-jaraco.ui" ,python-jaraco.ui)
+        ("python-more-itertools" ,python-more-itertools)
+        ("python-path.py" ,python-path.py)
+        ("python-six" ,python-six)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-black" ,python-pytest-black)
+        ("python-pytest-checkdocs"
+         ,python-pytest-checkdocs)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-setuptools-scm" ,python-setuptools-scm)
+        ("python-pytest-flake8" ,python-pytest-flake8)))
+    (home-page
+      "https://github.com/jaraco/jaraco.windows")
+    (synopsis "Windows Routines by Jason R. Coombs")
+    (description
+      "Windows Routines by Jason R. Coombs")
+    (license #f)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+(define-public python-ordered-set
+  (package
+    (name "python-ordered-set")
+    (version "4.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ordered-set" version))
+        (sha256
+          (base32
+            "159syfbqnwqnivzjfn3x7ak3xwrxmnzbji7c2qhj1jjv0pgv54xs"))))
+    (build-system python-build-system)
+    (native-inputs
+      `(("python-pytest" ,python-pytest)))
+    (home-page
+      "https://github.com/LuminosoInsight/ordered-set")
+    (synopsis
+      "A set that remembers its order, and allows looking up its items by their index in that order.")
+    (description
+      "A set that remembers its order, and allows looking up its items by their index in that order.")
+    (license #f)))
+
+(define-public python-ubelt
+  (package
+    (name "python-ubelt")
+    (version "0.9.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ubelt" version))
+        (sha256
+          (base32
+            "0dvjwq9j1h04g9r2a0kc1vg1ycgi2kbmfa5z7wrp7lrx2q293qzl"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-jaraco.windows" ,python-jaraco.windows)
+        ("python-ordered-set" ,python-ordered-set)
+        ("python-six" ,python-six)))
+        ;; ("python-typing" ,python-typing)))
+    (native-inputs
+      `(("python-codecov" ,python-codecov)
+        ("python-coverage" ,python-coverage)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pytest-timeout" ,python-pytest-timeout)
+        ("python-xdoctest" ,python-xdoctest)))
+    (home-page "https://github.com/Erotemic/ubelt")
+    (synopsis
+      "A Python utility belt containing simple tools, a stdlib like feel, and extra batteries.")
+    (description
+      "A Python utility belt containing simple tools, a stdlib like feel, and extra batteries.")
+    (license #f)))
+
+(define-public python-line-profiler
+  (package
+    (name "python-line-profiler")
+    (version "3.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri "https://files.pythonhosted.org/packages/98/bd/4ff4e59f97897d21b3b7d0c97ac77cedab23e6137a8c8fb3cbc9ee9d1f71/line_profiler-3.0.2.tar.gz") ; (pypi-uri "line-profiler" version))
+        (sha256
+          (base32
+            "0hficwvgdfz7zwg6ajbbsqbg041rjc4g2jwp26r4k1hzv1mss63j"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-ipython" ,python-ipython)))
+    (native-inputs
+      `(("python-codecov" ,python-codecov)
+        ("python-coverage" ,python-coverage)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("skbuild" ,python-scikit-build)
+        ("python-ubelt" ,python-ubelt)
+        ("python-cython" ,python-cython)
+        ("cmake" ,cmake)))
+    (home-page
+      "https://github.com/pyutils/line_profiler")
+    (synopsis "Line-by-line profiler.")
+    (description "Line-by-line profiler.")
+    (license license:bsd-3)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+
+(define-public python-scikit-build
+  (package
+    (name "python-scikit-build")
+    (version "0.11.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "scikit-build" version))
+        (sha256
+          (base32
+            "0p4smkl2rbpl00m5va5qa8hp2hqb3284p2cs6k8zlmi4kgbdyh6s"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-distro" ,python-distro)
+        ("python-packaging" ,python-packaging)
+        ("python-setuptools" ,python-setuptools)
+        ("python-wheel" ,python-wheel)))
+    ;; (native-inputs
+    ;;  `(("python-pytest" ,python-pytest)
+    ;;    ("python-virtualenv" ,python-virtualenv)
+    ;;    ("python-pytest-runner" ,python-pytest-runner)))
+    (home-page
+      "https://github.com/scikit-build/scikit-build")
+    (synopsis
+      "Improved build system generator for Python C/C++/Fortran/Cython extensions")
+    (description
+      "Improved build system generator for Python C/C++/Fortran/Cython extensions")
+    (license license:expat)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
