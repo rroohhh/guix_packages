@@ -1801,7 +1801,6 @@
                  (modify-phases %standard-phases
                    (delete 'check))))))
 
-
 (define-public python-snakeviz
   (package
     (name "python-snakeviz")
@@ -1823,3 +1822,237 @@
     (description
       "A web-based viewer for Python profiler output")
     (license #f)))
+
+
+(define-public python-numba-fixed
+  (package
+    (inherit python-numba)
+    (name "python-numba-fixed")
+    (arguments
+     (substitute-keyword-arguments (package-arguments python-numba)
+       ((#:phases phases)
+        `(modify-phases ,phases
+           (delete 'check)))))))
+
+
+(define-public python-pythran
+  (package
+    (name "python-pythran")
+    (version "0.9.7")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pythran" version))
+        (sha256
+          (base32
+            "04hhghf0m23xrbrija15zl2mqz1y1nwmhlaqmq6wiqv2v15sjdmc"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-beniget" ,python-beniget)
+        ("python-decorator" ,python-decorator)
+        ("python-gast" ,python-gast-0.4.0)
+        ("python-networkx" ,python-networkx)
+        ("python-numpy" ,python-numpy)
+        ("python-ply" ,python-ply)
+        ("python-six" ,python-six)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-runner" ,python-pytest-runner)))
+    (home-page
+      "https://github.com/serge-sans-paille/pythran")
+    (synopsis
+      "Ahead of Time compiler for numeric kernels")
+    (description
+      "Ahead of Time compiler for numeric kernels")
+    (license #f)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+(define-public python-commonmark
+  (package
+    (name "python-commonmark")
+    (version "0.9.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "commonmark" version))
+        (sha256
+          (base32
+            "0q7d39lm8kcingpmykk5r959hrwwj6v2icyw3mihczxyb749sbs5"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-future" ,python-future)))
+    (native-inputs
+      `(("python-flake8" ,python-flake8)
+        ("python-hypothesis" ,python-hypothesis)))
+    (home-page
+      "https://github.com/rtfd/commonmark.py")
+    (synopsis
+      "Python parser for the CommonMark Markdown spec")
+    (description
+      "Python parser for the CommonMark Markdown spec")
+    (license #f)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+(define-public python-recommonmark
+  (package
+    (name "python-recommonmark")
+    (version "0.6.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "recommonmark" version))
+        (sha256
+          (base32
+            "1szg87jj1aqazmchdya7sgsf0cclxydddwil6riqq9n5nsp4zk99"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-commonmark" ,python-commonmark)
+        ("python-docutils" ,python-docutils)
+        ("python-sphinx" ,python-sphinx)))
+    (home-page
+      "https://github.com/rtfd/recommonmark")
+    (synopsis
+      "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects.")
+    (description
+      "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects.")
+    (license license:expat)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+(define-public python-nbsphinx
+  (package
+    (name "python-nbsphinx")
+    (version "0.7.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nbsphinx" version))
+        (sha256
+          (base32
+            "0j56bxdj08vn3q1804qwb1ywhga1mdg1awgm7i64wfpfwi8df2zm"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-docutils" ,python-docutils)
+        ("python-jinja2" ,python-jinja2)
+        ("python-nbconvert" ,python-nbconvert)
+        ("python-nbformat" ,python-nbformat)
+        ("python-sphinx" ,python-sphinx)
+        ("python-traitlets" ,python-traitlets)))
+    (home-page "https://nbsphinx.readthedocs.io/")
+    (synopsis "Jupyter Notebook Tools for Sphinx")
+    (description "Jupyter Notebook Tools for Sphinx")
+    (license license:expat)))
+
+(define-public python-jupyter
+  (package
+    (name "python-jupyter")
+    (version "1.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jupyter" version))
+        (sha256
+          (base32
+            "0pwf3pminkzyzgx5kcplvvbvwrrzd3baa7lmh96f647k30rlpp6r"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-ipykernel" ,python-ipykernel)
+        ("python-ipywidgets" ,python-ipywidgets)
+        ("python-jupyter-console"
+         ,python-jupyter-console)
+        ("python-nbconvert" ,python-nbconvert)
+        ("python-notebook" ,python-notebook)
+        ("python-qtconsole" ,python-qtconsole)))
+    (home-page "http://jupyter.org")
+    (synopsis
+      "Jupyter metapackage. Install all the Jupyter components in one go.")
+    (description
+      "Jupyter metapackage. Install all the Jupyter components in one go.")
+    (license license:bsd-3)))
+
+(define-public python-beniget
+  (package
+    (name "python-beniget")
+    (version "0.3.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "beniget" version))
+        (sha256
+          (base32
+            "1w8gk9wcxza5rm91jnf10xqwd0adrqf085gv8hqpry6dx4xqjb06"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-gast" ,python-gast-0.4.0)))
+    (home-page
+      "https://github.com/serge-sans-paille/beniget/")
+    (synopsis
+      "Extract semantic information about static Python code")
+    (description
+      "Extract semantic information about static Python code")
+    (license #f)))
+
+(define-public python-transonic
+  (package
+    (name "python-transonic")
+    (version "0.4.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "transonic" version))
+        (sha256
+          (base32
+            "0h7r9k0dx5w6mvlyxa7anml86ipqp3bsabrpkmq95m2ar7qf2k0k"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-astunparse" ,python-astunparse)
+        ("python-autopep8" ,python-autopep8)
+        ("python-beniget" ,python-beniget)
+        ("python-gast" ,python-gast-0.4.0)
+        ("python-numpy" ,python-numpy)))
+    (native-inputs
+      `(("python-black" ,python-black)
+        ("python-cython" ,python-cython)
+        ("python-flake8" ,python-flake8)
+        ("python-ipython" ,python-ipython)
+        ("python-jupyter" ,python-jupyter)
+        ("python-mpi4py" ,python-mpi4py)
+        ("python-nbsphinx" ,python-nbsphinx)
+        ("python-nbval" ,python-nbval)
+        ("python-numpydoc" ,python-numpydoc)
+        ("python-pylint" ,python-pylint)
+        ("python-pytest" ,python-pytest)
+        ("python-pytest-cov" ,python-pytest-cov)
+        ("python-pythran" ,python-pythran)
+        ("python-recommonmark" ,python-recommonmark)
+        ("python-scipy" ,python-scipy)
+        ("python-sphinx" ,python-sphinx)
+        ("python-sphinx-rtd-theme"
+         ,python-sphinx-rtd-theme)))
+    (home-page "")
+    (synopsis
+      "Make your Python code fly at transonic speeds!")
+    (description
+      "Make your Python code fly at transonic speeds!")
+    (license license:bsd-3)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+
+
+
+(define-public python-gast-0.4.0
+  (package
+    (inherit python-gast)
+    (version "0.4.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri "https://files.pythonhosted.org/packages/83/4a/07c7e59cef23fb147454663c3271c21da68ba2ab141427c20548ae5a8a4d/gast-0.4.0.tar.gz") ; (pypi-uri "pytest-gast" version))
+       (sha256
+        (base32
+         "1ha27g42n0dsy53k0nky54cdnzl5idbd295jb9c8ais3p2wbgzj0"))))))
