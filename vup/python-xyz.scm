@@ -2,6 +2,7 @@
   #:use-module (guix utils)
   #:use-module (gnu packages assembly)
   #:use-module (gnu packages xml)
+  #:use-module (gnu packages sphinx)
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages time)
   #:use-module (gnu packages freedesktop)
