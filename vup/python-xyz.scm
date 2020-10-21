@@ -1800,3 +1800,26 @@
     (arguments '(#:phases
                  (modify-phases %standard-phases
                    (delete 'check))))))
+
+
+(define-public python-snakeviz
+  (package
+    (name "python-snakeviz")
+    (version "2.1.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "snakeviz" version))
+        (sha256
+          (base32
+            "0s6byw23hr2khqx2az36hpi52fk4v6bfm1bb7biaf0d2nrpqgbcj"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-tornado" ,python-tornado)))
+    (home-page
+      "https://github.com/jiffyclub/snakeviz")
+    (synopsis
+      "A web-based viewer for Python profiler output")
+    (description
+      "A web-based viewer for Python profiler output")
+    (license #f)))
