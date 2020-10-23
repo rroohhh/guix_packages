@@ -35,8 +35,8 @@
 
 
 (define-public yosys-git
-  (let ((commit "3cb3978ff4f8c917908d03eca6f07c57da52c0dc")
-        (version "0.9+3477"))
+  (let ((commit "623526d17d36fe85ac1b34ddd1026be34c826b9e")
+        (version "0.9+3652"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
        (inherit guix:yosys)
@@ -44,36 +44,36 @@
        (source (origin
                  (inherit (package-source guix:yosys))
                  (uri (git-reference
-                       (url "https://github.com/cliffordwolf/yosys.git")
+                       (url "https://github.com/yosyshq/yosys.git")
                        (commit commit)))
                  (sha256
                   (base32
-                   "16hyk4sg0yx2cr13spmn75s8vwc432vj8z28m6la5w4sbi1x5a4y"))
+                   "15q4dacvyirzmkdzifairf0iqvl5sj51rplf1mnv4zw0h79j7vhi"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "d12308775684cf43ab923227235b4ad43060015e")
-        (revision "2"))
+  (let ((commit "da52117ccd5b4147f64dc7345357ec5439cd7543")
+        (revision "4"))
     (package
       (inherit guix:icestorm)
       (version (string-append "0.0-" revision "-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
-                      (url "https://github.com/cliffordwolf/icestorm")
+                      (url "https://github.com/yosyshq/icestorm")
                       (commit commit)))
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "18ykv6np8sp7rb7c1cm3ha3qnj280gpkyn476faahb15jh0nbjmw")))))))
+                  "072bl3vmvb06ry0ci3b1sfjpm3iigb874khzja4azcai969ybp4k")))))))
 
 (define-public trellis
-  (let ((commit "8c0a6382e11b160ed88d17af8493c12a897617ed"))
+  (let ((commit "23d34647f90ff26ea2032ac72a8f05bae957e5cc"))
     (package
       (name "trellis")
-      (version (string-append "1.0-71-g" (string-take commit 7)))
+      (version (string-append "1.0-71-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -83,7 +83,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0qwq8xykqi0qn0l6lz7kk5wgn52zjl5as5qfghwrrafd6ysmjbil"))))
+                  "0rkzy98sis6jpx4nl9l5vb3s38hqznivn5b4kq5rm5mdg7cn0nnp"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -106,10 +106,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "be607c10a860c1043dc7554463a8e788759809d8"))
+  (let ((commit "d5dde5df4619f31d3fdd7c3ec3439c6989355894"))
     (package
       (name "nextpnr")
-      (version (string-append "2020.07.16" (string-take commit 9)))
+      (version (string-append "2020.10.23" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -118,7 +118,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1y3rdqq4q2yvqn1vhnsy5m8lfc2lcjxj2b7iya4mv0fpl94vhx10"))))
+                  "101k2ikjpq8hjmab4hvzqczv6y8xib2aqij2arrzm4gq7ihvnv7d"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)

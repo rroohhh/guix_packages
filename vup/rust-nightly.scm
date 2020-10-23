@@ -13,6 +13,9 @@
 (use-modules (guix build-system cmake))
 (use-modules ((guix licenses) #:prefix license:))
 
+(define %cargo-reference-hash
+  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+
 (define* (rust-uri version #:key date (dist "static"))
   (string-append "https://" dist ".rust-lang.org/dist/"
                  (if date (string-append date "/") "")
@@ -34,8 +37,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.45 "1.45.2"
-           "0273a1g3f59plyi1n0azf21qjzwml1yqdnj5z472crz37qggr8xp")))
+         (rust-bootstrapped-package rust-1.46 "1.47.0"
+           "07fqd2vp7cf1ka3hr207dnnz93ymxml4935vp74g4is79h3dz19i")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -51,7 +54,8 @@
                    (("submodules = false")
                     "submodules = false
 extended = true
-tools = [\"cargo\", \"rls\", \"clippy\", \"rustfmt\", \"analysis\", \"src\"]"))
+tools = [\"cargo\", \"rls\", \"clippy\", \"miri\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\"]"))
+;; tools = [\"cargo\", \"rls\", \"clippy\", \"rust-analyzer\", \"miri\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\"]"))
                  #t))
              ;; (add-after 'build 'build-more-tools
              ;;   (lambda _
@@ -79,6 +83,35 @@ tools = [\"cargo\", \"rls\", \"clippy\", \"rustfmt\", \"analysis\", \"src\"]"))
              ;;           "manifest-rust-std-x86_64-unknown-linux-gnu"
              ;;           "manifest-rustc"))
              ;;       #t)))
+             (delete 'patch-cargo-checksums)
+             (add-before 'build 'patch-cargo-checksums
+               ;; The Cargo.lock format changed.
+               (lambda* _
+                 (use-modules (guix build cargo-utils))
+                 (substitute* "Cargo.lock"
+                   (("(checksum = )\".*\"" all name)
+                    (string-append name "\"" ,%cargo-reference-hash "\"")))
+                 (generate-all-checksums "vendor")
+                 ;; (generate-all-checksums "src")
+                 #t))
+             (replace 'patch-tests
+               (lambda* (#:key inputs #:allow-other-keys)
+                 (let ((bash (assoc-ref inputs "bash")))
+                   (substitute* "library/std/src/process.rs"
+                     ;; The newline is intentional.
+                     ;; There's a line length "tidy" check in Rust which would
+                     ;; fail otherwise.
+                     (("\"/bin/sh\"") (string-append "\n\"" bash "/bin/sh\"")))
+                   (substitute* "library/std/src/net/tcp.rs"
+                     ;; There is no network in build environment
+                     (("fn connect_timeout_unroutable")
+                      "#[ignore]\nfn connect_timeout_unroutable"))
+                   ;; <https://lists.gnu.org/archive/html/guix-devel/2017-06/msg00222.html>
+                   (substitute* "library/std/src/sys/unix/process/process_common.rs"
+                     (("fn test_process_mask") "#[allow(unused_attributes)]
+    #[ignore]
+    fn test_process_mask"))
+                   #t)))
              (replace 'mkdir-prefix-paths
                (lambda* (#:key outputs #:allow-other-keys)
                  ;; As result of https://github.com/rust-lang/rust/issues/36989
@@ -100,5 +133,3 @@ tools = [\"cargo\", \"rls\", \"clippy\", \"rustfmt\", \"analysis\", \"src\"]"))
                (lambda _
                  (substitute* "config.toml"
                    (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
-
-rust-nightly

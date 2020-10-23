@@ -6,6 +6,7 @@
   #:use-module (guix build-system cmake)
   #:use-module (gnu packages)
   #:use-module (gnu packages audio)
+  #:use-module (gnu packages assembly)
   #:use-module (gnu packages libreoffice)
   #:use-module (gnu packages pulseaudio)
   #:use-module (gnu packages gtk)
@@ -13,6 +14,7 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages digest)
+  #:use-module (gnu packages image)
   #:use-module (gnu packages cmake)
   #:use-module (gnu packages xiph)
   #:use-module (gnu packages check)
@@ -98,20 +100,26 @@
       (license license:boost1.0))))
 
 (define-public rlottie
-  (let ((version "2020.01.20")
-        (commit "ee86b0dc56a6bb6284a721fd505930f1ba566e50"))
+  (let ((version "2020.09.20")
+        (commit "839dcab7f083a51b8130061ea5ec245195af6c58"))
     (package
       (name "rlottie")
       (version (string-append version "-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
-                      (url "https://github.com/Samsung/rlottie") ; there is also https://github.com/desktop-app/rlottie no idea what the proper source is...
+                      (url "https://github.com/desktop-app/rlottie") ; there is also https://github.com/Samsung/rlottie no idea what the proper source is...
                       (commit commit)))
                 (file-name (git-file-name name version))
+                (modules '((guix build utils)))
+                (snippet
+                 '(begin
+                    (substitute* "CMakeLists.txt"
+                      (("-Werror") "")) ;; whyyyyyyy????? does anybody use Werror for release?????
+                    #t))
                 (sha256
                  (base32
-                  "07z21zv07957lq3s171528ljg9acz8d34g0phhi70svg88pszna6"))))
+                  "0ivlyx2kmpwwpdqkp3hkhb997knr69b3yaz08lq47ia37w6fzdvw"))))
       (build-system cmake-build-system)
       (inputs `(("gtest" ,googletest)))
       (arguments
@@ -170,8 +178,34 @@
                  (base32
                   "13br0dsnmgjamsql9hrj3hgdi9a6psbwjb17g03r841c4w1pjbr4")))))))
 
+(define-public tg_owt
+  (let ((version "0.0.1"))
+    (package
+      (name "tg_owt")
+      (version version)
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/desktop-app/tg_owt")
+                      (commit "c73a4718cbff7048373a63db32068482e5fd11ef")))
+                (file-name (git-file-name name version))
+                (patches (search-patches "tg_owt_install.patch"))
+                (sha256
+                 (base32
+                  "0nr20mvvmmg8ii8f2rljd7iv2szplcfjn40rpy6llkmf705mwr1k"))))
+      (build-system cmake-build-system)
+      (inputs `(("openssl" ,openssl) ("libjpeg" ,libjpeg-turbo) ("pkg-config" ,pkg-config)
+                ("ffmpeg" ,ffmpeg) ("opus" ,opus) ("alsa" ,alsa-lib) ("pulseaudio" ,pulseaudio)
+                ("yasm" ,yasm)))
+      (arguments `(#:phases (modify-phases %standard-phases
+                              (delete 'check)))) ;; no tests
+      (synopsis "???")
+      (description "???")
+      (home-page "https://github.com/desktop-app/tg_owt")
+      (license license:bsd-3))))
+
 (define-public telegram-desktop
-  (let ((version "2.2.0"))
+  (let ((version "2.4.3"))
     (package
       (name "telegram-desktop")
       (version version)
@@ -195,7 +229,7 @@
                 ;; (patches `("random_fuckup_new.patch"))
                 (sha256
                  (base32
-                  "1qayqggghvlh6bs6bki62wmxqhljd9n8j95svczaq22dnqwvhh67"))))
+                  "04jgi4k0j02nn4s720d6gnxw89k8clgx2x2z7ymxb7rssz72pxh5"))))
       (inputs `(("qtbase" ,qtbase)
                 ("qtimageformats" ,qtimageformats)
                 ("qtwayland" ,qtwayland)
@@ -206,6 +240,7 @@
                 ("lz4" ,lz4)
                 ("xxhash" ,xxhash)
                 ("ffmpeg" ,ffmpeg)
+                ("tg_owt" ,tg_owt)
                 ("minizip" ,minizip)
                 ("OpenAL" ,openal)
                 ("opus" ,opus)

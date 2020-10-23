@@ -1,0 +1,235 @@
+From 8a98153e2bd263eb4eefeadc5ce0d84d9c83a658 Mon Sep 17 00:00:00 2001
+From: oxalica <oxalicc@pm.me>
+Date: Sun, 18 Oct 2020 01:17:21 +0800
+Subject: [PATCH 1/2] Support to be installed
+
+---
+ CMakeLists.txt             | 46 +++++++++++++++++++++++++++++++++-----
+ cmake/libabsl.cmake        |  3 ++-
+ cmake/libpffft.cmake       |  3 ++-
+ cmake/libsrtp.cmake        |  6 +++--
+ cmake/libusrsctp.cmake     |  6 +++--
+ cmake/libvpx.cmake         | 10 ++++++++-
+ cmake/libwebrtcbuild.cmake |  3 ++-
+ cmake/libyuv.cmake         |  3 ++-
+ 8 files changed, 65 insertions(+), 15 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6fbc0daf..cf0090a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,6 +28,9 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT t
+ get_filename_component(webrtc_loc "src" REALPATH)
+ set(third_party_loc ${webrtc_loc}/third_party)
+ 
++include(GNUInstallDirs)
++set(webrtc_includedir ${CMAKE_INSTALL_INCLUDEDIR}/tg_owt)
++
+ include(cmake/arch.cmake)
+ include(cmake/nice_target_sources.cmake)
+ include(cmake/init_target.cmake)
+@@ -1831,8 +1834,7 @@ if (is_x86 OR is_x64)
+     )
+ endif()
+ 
+-export(
+-TARGETS
++set(export_targets
+     tg_owt
+     libabsl
+     libopenh264
+@@ -1845,10 +1847,12 @@ TARGETS
+     libwebrtcbuild
+     libyuv
+     ${platform_export}
+-NAMESPACE
+-    tg_owt::
+-FILE
+-    "${CMAKE_CURRENT_BINARY_DIR}/tg_owtTargets.cmake"
++)
++
++export(
++    TARGETS ${export_targets}
++    NAMESPACE tg_owt::
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/tg_owtTargets.cmake"
+ )
+ 
+ configure_file(
+@@ -1856,3 +1860,33 @@ configure_file(
+     "${CMAKE_CURRENT_BINARY_DIR}/tg_owtConfig.cmake"
+     COPYONLY
+ )
++
++target_include_directories(tg_owt
++PUBLIC
++    $<BUILD_INTERFACE:${webrtc_loc}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}>
++)
++
++install(
++    TARGETS ${export_targets}
++    EXPORT tg_owtTargets
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++
++install(
++    DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/
++    DESTINATION ${webrtc_includedir}
++    FILES_MATCHING PATTERN "*.h"
++)
++
++install(
++    EXPORT tg_owtTargets
++    NAMESPACE tg_owt::
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tg_owt
++)
++
++install(
++    FILES ${CMAKE_CURRENT_BINARY_DIR}/tg_owtConfig.cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tg_owt
++)
+diff --git a/cmake/libabsl.cmake b/cmake/libabsl.cmake
+index 2fb3b8c8..be593e3d 100644
+--- a/cmake/libabsl.cmake
++++ b/cmake/libabsl.cmake
+@@ -123,5 +123,6 @@ PRIVATE
+ 
+ target_include_directories(libabsl
+ PUBLIC
+-    ${libabsl_loc}
++    $<BUILD_INTERFACE:${libabsl_loc}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/abseil-cpp>
+ )
+diff --git a/cmake/libpffft.cmake b/cmake/libpffft.cmake
+index a6ceb3e8..fa2e66f9 100644
+--- a/cmake/libpffft.cmake
++++ b/cmake/libpffft.cmake
+@@ -24,5 +24,6 @@ endif()
+ 
+ target_include_directories(libpffft
+ PUBLIC
+-    ${libpffft_loc}
++    $<BUILD_INTERFACE:${libpffft_loc}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/pffft/src>
+ )
+diff --git a/cmake/libsrtp.cmake b/cmake/libsrtp.cmake
+index 57c54b51..ce4ff644 100644
+--- a/cmake/libsrtp.cmake
++++ b/cmake/libsrtp.cmake
+@@ -30,6 +30,8 @@ PRIVATE
+ 
+ target_include_directories(libsrtp
+ PUBLIC
+-    ${libsrtp_loc}/include
+-    ${libsrtp_loc}/crypto/include
++    $<BUILD_INTERFACE:${libsrtp_loc}/include>
++    $<BUILD_INTERFACE:${libsrtp_loc}/crypto/include>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/libsrtp/include>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/libsrtp/crypto/include>
+ )
+diff --git a/cmake/libusrsctp.cmake b/cmake/libusrsctp.cmake
+index caa05295..f6526793 100644
+--- a/cmake/libusrsctp.cmake
++++ b/cmake/libusrsctp.cmake
+@@ -67,6 +67,8 @@ endif()
+ 
+ target_include_directories(libusrsctp
+ PUBLIC
+-    ${third_party_loc}/usrsctp/usrsctplib
+-    ${libusrsctp_loc}
++    $<BUILD_INTERFACE:${third_party_loc}/usrsctp/usrsctplib>
++    $<BUILD_INTERFACE:${libusrsctp_loc}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/usrsctp/usrsctplib/usrsctplib>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/usrsctp/usrsctplib>
+ )
+diff --git a/cmake/libvpx.cmake b/cmake/libvpx.cmake
+index e192e7ec..ed0322c0 100644
+--- a/cmake/libvpx.cmake
++++ b/cmake/libvpx.cmake
+@@ -68,6 +68,11 @@ else()
+     set(ASM_SUFFIX ".asm.S")
+ endif()
+ 
++foreach(dir ${include_directories})
++    string(REPLACE ${libvpx_loc} ${webrtc_includedir}/third_party/libvpx install_include_dir ${dir})
++    list(APPEND install_include_directories ${install_include_dir})
++endforeach()
++
+ function(add_sublibrary postfix)
+     add_library(libvpx_${postfix} OBJECT)
+     init_feature_target(libvpx_${postfix} ${postfix})
+@@ -75,6 +80,8 @@ function(add_sublibrary postfix)
+     target_include_directories(libvpx_${postfix}
+     PRIVATE
+         ${include_directories}
++        "$<BUILD_INTERFACE:${include_directories}>"
++        "$<INSTALL_INTERFACE:${install_include_directories}>"
+     )
+     set(sources_list ${ARGV})
+     list(REMOVE_AT sources_list 0)
+@@ -725,5 +732,6 @@ endif()
+ 
+ target_include_directories(libvpx
+ PUBLIC
+-    ${include_directories}
++    "$<BUILD_INTERFACE:${include_directories}>"
++    "$<INSTALL_INTERFACE:${install_include_directories}>"
+ )
+diff --git a/cmake/libwebrtcbuild.cmake b/cmake/libwebrtcbuild.cmake
+index c3520b80..d79049ee 100644
+--- a/cmake/libwebrtcbuild.cmake
++++ b/cmake/libwebrtcbuild.cmake
+@@ -44,5 +44,6 @@ endif()
+ 
+ target_include_directories(libwebrtcbuild
+ INTERFACE
+-    ${webrtc_loc}
++    $<BUILD_INTERFACE:${webrtc_loc}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}>
+ )
+diff --git a/cmake/libyuv.cmake b/cmake/libyuv.cmake
+index ebfc6f02..777b7f34 100644
+--- a/cmake/libyuv.cmake
++++ b/cmake/libyuv.cmake
+@@ -126,7 +126,8 @@ endif()
+ 
+ target_include_directories(libyuv
+ PUBLIC
+-    ${libyuv_loc}/include
++    $<BUILD_INTERFACE:${libyuv_loc}/include>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/third_party/libyuv/include>
+ )
+ 
+ target_compile_definitions(libyuv
+
+From ab50d5835af43e0249b2cf6399ee59d75245d1a9 Mon Sep 17 00:00:00 2001
+From: oxalica <oxalicc@pm.me>
+Date: Tue, 20 Oct 2020 19:45:40 +0800
+Subject: [PATCH 2/2] Fix libsdkmacos.cmake
+
+---
+ cmake/libsdkmacos.cmake | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/libsdkmacos.cmake b/cmake/libsdkmacos.cmake
+index 33287da4..fe7a270c 100644
+--- a/cmake/libsdkmacos.cmake
++++ b/cmake/libsdkmacos.cmake
+@@ -256,8 +256,12 @@ PRIVATE
+ 
+ target_include_directories(libsdkmacos
+ PUBLIC
+-    ${webrtc_loc}
+-    ${libsdkmacos_loc}
+-    ${libsdkmacos_loc}/base
+-    ${libsdkmacos_loc}/components/video_codec
++    $<BUILD_INTERFACE:${webrtc_loc}>
++    $<BUILD_INTERFACE:${libsdkmacos_loc}>
++    $<BUILD_INTERFACE:${libsdkmacos_loc}/base>
++    $<BUILD_INTERFACE:${libsdkmacos_loc}/components/video_codec>
++    $<INSTALL_INTERFACE:${webrtc_includedir}>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/sdk/objc>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/sdk/objc/base>
++    $<INSTALL_INTERFACE:${webrtc_includedir}/sdk/objc/components/video_codec>
+ )

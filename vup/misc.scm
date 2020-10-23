@@ -12,6 +12,7 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python)
   #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages electronics)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages autotools)
@@ -148,6 +149,29 @@
       (license licenses:gpl2+))))
 
 
+(define-public libsigrok-master
+  (package
+    (inherit libsigrok)
+    (version "0.5.2-ec302917")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://repo.or.cz/libsigrok.git")
+                    (commit "ec30291701bb1dcb6755a97ae6c18146fe9ad020")
+                    (recursive? #t))) ; for prjtrellis-db
+              (file-name (git-file-name "libsigrok" version))
+              (sha256
+               (base32 "1xlc51lds56xjhqka2bpwk14jph6rb5hk1raq3wsagl5ki09pxnz"))))
+    (inputs
+     `(("python" ,python)
+       ("zlib" ,zlib)
+       ("autoconf" ,autoconf)
+       ("automake" ,automake)
+       ("libtool" ,libtool)))))
+
+(define-public pulseview-libsigrok-master
+  ((package-input-rewriting/spec `(("libsigrok" . ,(const libsigrok-master))))
+   pulseview))
 
 ;; (define-public tycho-maven-plugin
 ;;   (package

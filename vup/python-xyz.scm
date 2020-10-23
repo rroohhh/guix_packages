@@ -420,7 +420,7 @@
      #t))
 
 (define-public python-nmigen
-  (let ((commit "e46118dac0df315694b0fc6b9367d285a8fc12dd"))
+  (let ((commit "ca6fa036f6cd057c997460cf5898bbf791c4546a"))
     (package
       (name "python-nmigen")
       (version (string-append "0.3+g" (string-take commit 9)))
@@ -440,7 +440,7 @@
              #t))
          (sha256
           (base32
-           "0rp6c99zwi2as9hfj2x7zbm0cgggckqrg49v2nr33jg39sfl0cvr"))))
+           "0d69gvax1fp3min87q0a3fh4rajckn0dark8xgmdwjwh1yhs1y2i"))))
       (build-system python-build-system)
       (inputs `(("yosys" ,yosys-git)
                 ("symbiyosys" ,symbiyosys)
@@ -465,7 +465,7 @@
 
 
 (define-public python-nmigen-boards
-  (let ((commit "d20fb96e358994eb06295b3b64ee1efe13d86004"))
+  (let ((commit "bcc14672994a3cdd04b7c0e1620d6f5e05145d94"))
     (package
       (name "python-nmigen-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -478,7 +478,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0jxpi82zxxr9d91m11818k6ib2pc4jz0paf4sgwl27plw559bd73"))))
+           "0b90bv0q4vs9dm48660pll0xq4qi92257b02yfyblrx1kybgxzs0"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools" ,python-setuptools)
@@ -528,7 +528,7 @@
       (license license:bsd-3))))
 
 (define-public python-nmigen-soc
-  (let ((commit "b4058808a2fcfb56e64eef5ebfe028d3a659e038"))
+  (let ((commit "ecfad4d9abacf903a525f0a252c38844eda0d2dd"))
     (package
       (name "python-nmigen-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -541,7 +541,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "046kxvf9ird2q1lfz69hcx7mibjzdk16hlvvdjzs02v4ynzmx8j5"))))
+           "0afmnfs1ms7p1r4c1nc0sfvlcq36zjwaim7775v5i2vajcn3020c"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools-scm" ,python-setuptools-scm)
@@ -600,10 +600,10 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "b172357161ea16a0734be6782b0744cf6b7108b6"))
+  (let ((commit "091222b87febb10fad87fcbe98a57599a54c5fd3"))
     (package
       (name "symbiyosys")
-      (version (string-append "2020.07.17-" (string-take commit 9)))
+      (version (string-append "2020.10.23-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -613,13 +613,17 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1yz7w2zr4531zvlisxdnfb9qyrx8p9xzmh4ya3drvh1zx8g68wh3"))))
+           "1jdfg38rk25qgjjp79y4pm1d9j34h9wbzlyjj6ipxzagp3kga3yk"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))
       (arguments
        `(#:make-flags `(,(string-append "PREFIX=" %output))
          #:phases (modify-phases %standard-phases
+                    (add-before 'install 'fix-permissions
+                                (lambda _
+                                  (for-each make-file-writable (find-files "." ".*"))
+                                  #t))
                     (add-before 'install 'patch-yosys
                       (lambda* (#:key inputs outputs #:allow-other-keys)
                         (let ((out (assoc-ref outputs "out"))
@@ -2058,3 +2062,24 @@
        (sha256
         (base32
          "1ha27g42n0dsy53k0nky54cdnzl5idbd295jb9c8ais3p2wbgzj0"))))))
+
+(define-public python-pmbootstrap
+  (package
+    (name "python-pmbootstrap")
+    (version "1.23.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pmbootstrap" version))
+        (sha256
+          (base32
+            "0f1mmhdg06ckjk6r4rdwq74aiw9s9a36jmcpfm1cg4f5my647dfa"))))
+    (build-system python-build-system)
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page "https://www.postmarketos.org")
+    (synopsis
+      "A sophisticated chroot / build / flash tool to develop and install postmarketOS")
+    (description
+      "A sophisticated chroot / build / flash tool to develop and install postmarketOS")
+    (license #f)))
