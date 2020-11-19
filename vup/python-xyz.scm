@@ -2083,3 +2083,23 @@
     (description
       "A sophisticated chroot / build / flash tool to develop and install postmarketOS")
     (license #f)))
+
+(define-public python-bitstring
+  (package
+    (name "python-bitstring")
+    (version "3.1.7")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "bitstring" version))
+        (sha256
+          (base32
+            "0jl6192dwrlm5ybkbh7ywmyaymrc3cmz9y07nm7qdli9n9rfpwzx"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/scott-griffiths/bitstring")
+    (synopsis
+      "Simple construction, analysis and modification of binary data.")
+    (description
+      "Simple construction, analysis and modification of binary data.")
+    (license #f)))
