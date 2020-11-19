@@ -7,11 +7,17 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system maven)
+  #:use-module (guix build-system meson)
   #:use-module (guix build-system ant)
+  #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages linux)
+  #:use-module (gnu packages gnome)
+  #:use-module (gnu packages glib)
   #:use-module (gnu packages python)
   #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages electronics)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages xorg)
@@ -235,3 +241,167 @@
 
 
 ;; mytourbook
+
+
+(define-public hostnamed
+  ;; XXX: This package is extracted from systemd but we retain so little of it
+  ;; that it would make more sense to maintain a fork of the bits we need.
+  (package
+    (name "hostnamed")
+    (version "241")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/systemd/systemd")
+                    (commit (string-append "v" version))))
+              (sha256
+               (base32
+                "0sy91flzbhpq58k7v0294pa2gxpr0bk27rcnxlbhk2fi6nc51d28"))
+              (file-name (git-file-name name version))
+              (modules '((guix build utils)))
+              (snippet
+               '(begin
+                  ;; Connect to the right location for our D-Bus daemon.
+                  (substitute* '("src/basic/def.h"
+                                 "src/libsystemd/sd-bus/sd-bus.c"
+                                 "src/stdio-bridge/stdio-bridge.c")
+                    (("/run/dbus/system_bus_socket")
+                     "/var/run/dbus/system_bus_socket"))
+
+                  ;; Don't insist on having systemd as PID 1 (otherwise
+                  ;; 'localectl' would exit without doing anything.)
+                  (substitute* "src/shared/bus-util.c"
+                    (("sd_booted\\(\\)")
+                     "(1)"))
+                  #t))))
+    (build-system meson-build-system)
+    (arguments
+     ;; Try to build as little as possible (list of components taken from the
+     ;; top-level 'meson.build' file.)
+     (let ((components '("utmp"
+                         "hibernate"
+                         "environment-d"
+                         "binfmt"
+                         "coredump"
+                         "resolve"
+                         "logind"
+                         "localed"
+                         "hostnamed"
+                         "machined"
+                         "portabled"
+                         "networkd"
+                         "timedated"
+                         "timesyncd"
+                         "firstboot"
+                         "randomseed"
+                         "backlight"
+                         "vconsole"
+                         "quotacheck"
+                         "sysusers"
+                         "tmpfiles"
+                         "hwdb"
+                         "rfkill"
+                         "ldconfig"
+                         "efi"
+                         "tpm"
+                         "ima"
+                         "smack"
+                         "gshadow"
+                         "idn"
+                         "nss-myhostname"
+                         "nss-systemd")))
+       `(#:configure-flags ',(map (lambda (component)
+                                    (string-append "-D" component "=false"))
+                                  (delete "hostnamed" components))
+
+         ;; It doesn't make sense to test all of systemd.
+         #:tests? #f
+
+         #:phases (modify-phases %standard-phases
+                    (replace 'install
+                      (lambda* (#:key outputs #:allow-other-keys)
+                        ;; Install 'hostnamed', the D-Bus and polkit files, and
+                        ;; 'localectl'.
+                        (let* ((out (assoc-ref outputs "out"))
+                               (libexec (string-append out "/libexec/hostnamed"))
+                               (bin     (string-append out "/bin"))
+                               (lib     (string-append out "/lib"))
+                               (dbus    (string-append out
+                                                       "/share/dbus-1/system-services"))
+                               (conf    (string-append out
+                                                       "/etc/dbus-1/system.d/"))
+                               (polkit  (string-append out
+                                                       "/share/polkit-1/actions"))
+                               (data    (string-append out "/share/systemd")))
+                          (define (source-file regexp)
+                            (car (find-files ".." regexp)))
+
+                          (mkdir-p libexec)
+                          (copy-file "systemd-hostnamed"
+                                     (string-append libexec "/hostnamed"))
+                          (install-file "hostnamectl" bin)
+
+                          (let ((service-file (source-file
+                                               "\\.locale1\\.service$")))
+                            (substitute* service-file
+                              (("^Exec=.*$")
+                               (string-append "Exec=" libexec "/hostnamed\n")))
+                            (install-file service-file dbus))
+                          (install-file (source-file "\\.locale1\\.policy$")
+                                        polkit)
+                          (install-file (source-file "\\.locale1\\.conf$")
+                                        conf)
+                          (for-each (lambda (file)
+                                      (install-file file lib))
+                                    (find-files "src/shared"
+                                                "libsystemd-shared.*\\.so"))
+
+                          (for-each (lambda (map)
+                                      (install-file map data))
+                                    (find-files ".." "^(kbd-model-map|language-fallback-map)$"))
+                          #t)))))))
+    (native-inputs (package-native-inputs elogind))
+    (inputs `(("libmount" ,util-linux "lib") ,@(package-inputs elogind)))
+    (home-page "https://www.freedesktop.org/wiki/Software/systemd/hostnamed/")
+    (synopsis "Control the system locale and keyboard layout")
+    (description
+     "Hostnamed is a tiny daemon that can be used to control the system locale
+and keyboard mapping from user programs.  It is used among other things by the
+GNOME Shell.  The @command{localectl} command-line tool allows you to interact
+with hostnamed.  This package is extracted from the broader systemd package.")
+    (license licenses:lgpl2.1+)))
+
+(define-public ofono
+  (package
+   (name "ofono")
+   (version "1.31")
+   (source
+    (origin
+     (method git-fetch)
+     (uri (git-reference
+           (url "git://git.kernel.org/pub/scm/network/ofono/ofono.git")
+           (commit "285fad8f39d46a5f0a0f9d194789978227558d1e")))
+     (file-name (git-file-name name version))
+     (sha256
+      (base32 "0f8ivncndjq13gn0nmrz0zm51nhnqm2rg2nr5fxzcwv6i2bcvg7z"))
+     (patches `("0001-Search-connectors-in-OFONO_PLUGIN_PATH.patch"))))
+   (build-system gnu-build-system)
+   (inputs `(("automake" ,automake) ("nettle" ,nettle) ("libtool" ,libtool)
+             ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)
+             ("pkg-config" ,pkg-config) ("glib" ,glib) ("dbus" ,dbus) ("ell" ,ell)
+             ("udev" ,eudev) ("mobile-broadband-provider-info" ,mobile-broadband-provider-info)
+             ("bluez" ,bluez)))
+   (arguments '(#:configure-flags
+                (list
+                 "--enable-external-ell"
+                 (string-append
+                  "--with-dbusconfdir=" (assoc-ref %outputs "out") "/etc")
+                 (string-append
+                  "--with-dbusdatadir=" (assoc-ref %outputs "out") "/share"))
+                #:phases
+                (modify-phases %standard-phases
+                  (delete 'check)))) ;; there are no tests
+   (home-page "https://01.org/ofono")
+   (synopsis "ofono")
+   (description "ofono")
+   (license licenses:gpl2)))
