@@ -30,6 +30,8 @@
   #:use-module (gnu packages gnome)
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages xorg)
+  #:use-module (srfi srfi-26)
+  #:use-module (ice-9 regex)
   #:use-module (flat packages gcc))
 
 (define emacs-with-native-comp
@@ -37,8 +39,18 @@
     (let ((libgccjit (libgccjit-for-gcc gcc)))
       (package
         (inherit emacs)
+        (source
+         (origin
+           (inherit (package-source emacs))
+           (patches
+            (append (search-patches "emacs-native-comp-exec-path.patch")
+                    (filter
+                     (negate (cut string-match "/emacs-exec-path.patch$" <>))
+                     (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
+           ((#:make-flags flags ''())
+            `(cons* "NATIVE_FULL_AOT=1" ,flags))
            ((#:configure-flags flags)
             `(cons* "--with-nativecomp" ,flags))
            ((#:phases phases)
@@ -55,32 +67,18 @@
                                             (getenv "LIBRARY_PATH"))))
                    #t))
                ;; Add runtime library paths for libgccjit.
-               (add-before 'restore-emacs-pdmp 'wrap-library-path
-                 (lambda* (#:key inputs outputs #:allow-other-keys)
-                   (let* ((gcc-libdir
-                           (string-append (assoc-ref inputs "gcc:lib")
-                                          "/lib/"))
-                          (glibc-libdir
-                           (string-append (assoc-ref inputs "glibc")
-                                          "/lib/"))
-                          (libgccjit-libdir
-                           (string-append (assoc-ref inputs "libgccjit")
-                                          "/lib/gcc/" %host-type "/"
-                                          ,(package-version libgccjit) "/"))
-                          (library-path (list gcc-libdir
-                                              glibc-libdir
-                                              libgccjit-libdir))
-                          (output   (assoc-ref outputs "out"))
-                          (bindir   (string-append output "/bin"))
-                          (libexec  (string-append output "/libexec"))
-                          (bin-list (append (find-files bindir ".*")
-                                            (find-files libexec ".*"))))
-                     (for-each (lambda (program)
-                                 (unless (wrapper? program)
-                                   (wrap-program
-                                       program
-                                     `("LIBRARY_PATH" prefix ,library-path))))
-                               bin-list))
+               (add-after 'unpack 'patch-driver-options
+                 (lambda* (#:key inputs #:allow-other-keys)
+                   (substitute* "lisp/emacs-lisp/comp.el"
+                     (("\\(defcustom comp-native-driver-options nil")
+                      (format
+                       #f "(defcustom comp-native-driver-options '(~s ~s ~s)"
+                       (string-append
+                        "-B" (assoc-ref inputs "glibc") "/lib/")
+                       (string-append
+                        "-B" (assoc-ref inputs "libgccjit") "/lib/")
+                       (string-append
+                        "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
                    #t))
                ;; Remove wrappers around .eln files in libexec.
                (add-after 'restore-emacs-pdmp 'unwrap-eln-files
@@ -100,14 +98,11 @@
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
         (inputs
-         `(("gcc:lib" ,gcc "lib")
-           ("glibc" ,glibc)
+         `(("glibc" ,glibc)
            ("libgccjit" ,libgccjit)
            ,@(package-inputs emacs)))))))
 
 (define emacs-with-xwidgets
-  ;; FIXME xwidgets-webkit is missing TLS/SSL support
-  ;; FIXME memory leak? needs more testing
   (mlambda (emacs)
     (package
       (inherit emacs)
@@ -124,28 +119,10 @@
   (mlambda (emacs)
     (package
       (inherit emacs)
-      (inputs
-       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
-         ,@(package-inputs emacs)))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs)
          ((#:configure-flags flags)
-          `(cons* "--with-pgtk" ,flags))
-         ((#:phases phases)
-          `(modify-phases ,phases
-             (add-after 'install 'wrap-for-gnome-settings
-               (lambda* (#:key inputs outputs #:allow-other-keys)
-                 (let* ((output   (assoc-ref outputs "out"))
-                        (bindir   (string-append output "/bin"))
-                        (bin-list (append (find-files bindir ".*"))))
-                   (for-each (lambda (program)
-                               (unless (wrapper? program)
-                                 (wrap-program
-                                     program
-                                   `("XDG_DATA_DIRS" ":" suffix (,(string-append (assoc-ref inputs "gsettings-desktop-schemas") "/share"))))))
-                             bin-list)
-                 #t)))))
-         )))))
+          `(cons* "--with-pgtk" ,flags)))))))
 
 (define emacs-from-git
   (lambda* (emacs #:key pkg-name pkg-version pkg-revision git-repo git-commit checksum)
@@ -155,15 +132,27 @@
       (version (git-version pkg-version pkg-revision git-commit))
       (source
        (origin
+         (inherit (package-source emacs))
          (method git-fetch)
          (uri (git-reference
                (url git-repo)
                (commit git-commit)))
          (sha256 (base32 checksum))
-         (file-name (git-file-name pkg-name pkg-version))
-         (patches (origin-patches (package-source emacs)))
-         (modules (origin-modules (package-source emacs)))
-         (snippet (origin-snippet (package-source emacs)))))
+         (file-name (git-file-name pkg-name pkg-version))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments emacs)
+         ((#:phases phases)
+          `(modify-phases ,phases
+             ;; Fix strip-double-wrap referencing the wrong version.
+             (replace 'strip-double-wrap
+               (lambda* (#:key outputs #:allow-other-keys)
+                 (with-directory-excursion (assoc-ref outputs "out")
+                   (copy-file (string-append "bin/emacs-" ,pkg-version)
+                              "bin/emacs")
+                   #t)))))))
+      (inputs
+       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
+         ,@(package-inputs emacs)))
       (native-search-paths
        (list (search-path-specification
               (variable "EMACSLOADPATH")
@@ -182,5 +171,5 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "890a5bf910d5d0c4df44706976c360103cdbe8aa"
-   #:checksum "1v177137yhgmz8d0i5h97isi1isym4a22wkhb0fsjp5g3bi18v3p"))
+   #:git-commit "8db90986ec1fdbaa21ee5a3694346bcfe1cc1589"
+   #:checksum "0grpvscwijv3l5rqk5jhbhmqqyyasz92iy356xafb9z577i3pp7c"))
