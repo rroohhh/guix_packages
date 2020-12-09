@@ -118,7 +118,7 @@
                 ("sqlite" ,sqlite) ("glew" ,glew) ("gl2ps" ,gl2ps)
                 ("jpeg" ,libjpeg-turbo) ("tiff" ,libtiff) ("gif" ,giflib)
                 ("openblas" ,openblas) ("afterimage" ,afterimage)))
-      (arguments '(#:configure-flags `("-Dclad=OFF" "-Dasimage=on" "-Dmysql=off" "-Doracle=off" "-Dpgsql=off" "-Dpythia6=off" "-Dpythia8=off" "-Dgfal=off" "-Ddavix=off" "-Dfail-on-missing=ON"
+      (arguments '(#:configure-flags `("-Dclad=OFF" "-Dasimage=on" "-Dgnuinstall=ON" "-Dmysql=off" "-Doracle=off" "-Dpgsql=off" "-Dpythia6=off" "-Dpythia8=off" "-Dgfal=off" "-Ddavix=off" "-Dfail-on-missing=ON"
                                        "-Drpath=ON" "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_INSTALL_INCLUDEDIR=include"
                                        "-Dcxxmodules=OFF" "-Druntime_cxxmodules=OFF")
                    #:phases (modify-phases %standard-phases
