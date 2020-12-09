@@ -39,7 +39,7 @@
          "linux-" version ".tar.xz")))
 
 (define-public linux-nonfree
-  (let* ((version "5.8.1"))
+  (let* ((version "5.9.12"))
     (package
       (inherit linux-libre)
       (name "linux-nonfree")
@@ -49,13 +49,13 @@
                 (uri (linux-nonfree-urls version))
                 (sha256
                  (base32
-                  "09574qbcrncb34dx9pd65iqs06758zim4nkncnjzmxwgjgza9lpq"))))
+                  "1gfrn3sz3h4cbsf3r8f9jxja400qsmbrk8sclk4cjx1l5qcmczyr"))))
       (synopsis "Mainline Linux kernel, nonfree binary blobs included.")
       (description "Linux is a kernel.")
       (license license:gpl2)
       (home-page "https://kernel.org/"))))
 
-(define linux-firmware-version "20200817")
+(define linux-firmware-version "20201118")
 (define (linux-firmware-source version)
   (origin
     (method git-fetch)
@@ -66,7 +66,7 @@
     (file-name (git-file-name "linux-firmware" (string-take version 8)))
     (sha256
      (base32
-      "0c0m1qyrgqnqip5xqsi0sa80vqc5pl7kqa7mmq908vwn09c11z7j"))))
+      "107p7h13gncsxqhixqq9zmmswvs910sck54ab10s4m5cafvnaf94"))))
 
 (define-public radeon-firmware-nonfree
   (package
