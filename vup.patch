@@ -4,13 +4,13 @@ diff -Naur a/rules/base.extras.xml b/rules/base.extras.xml
 @@ -142,6 +142,12 @@
          </variant>
          <variant>
-           <configItem>
+           <configItem popularity="exotic">
 +            <name>vup</name>
 +            <description>German (vup)</description>
 +          </configItem>
 +        </variant>
 +        <variant>
-+          <configItem>
++          <configItem popularity="exotic">
              <name>koy</name>
              <description>German (KOY)</description>
            </configItem>

@@ -47,12 +47,14 @@
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
           `(modify-phases ,phases
-             ;; (delete 'check) ;; TODO(robin): remove again, just delete for testing
+             (delete 'check) ;; TODO(robin): remove again, just delete for testing
              (add-after 'configure 'enable-extended
                (lambda* (#:key outputs #:allow-other-keys)
                  (substitute* "config.toml"
                    (("submodules = false")
                     "submodules = false
+sanitizers = true
+profiler = true
 extended = true
 tools = [\"cargo\", \"rls\", \"clippy\", \"miri\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\"]"))
 ;; tools = [\"cargo\", \"rls\", \"clippy\", \"rust-analyzer\", \"miri\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\"]"))
