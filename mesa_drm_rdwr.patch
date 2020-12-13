@@ -1,0 +1,13 @@
+diff --git a/src/intel/vulkan/anv_gem.c b/src/intel/vulkan/anv_gem.c
+index 81e22428e18..4c43f5f77b4 100644
+--- a/src/intel/vulkan/anv_gem.c
++++ b/src/intel/vulkan/anv_gem.c
+@@ -437,7 +437,7 @@ anv_gem_handle_to_fd(struct anv_device *device, uint32_t gem_handle)
+ {
+    struct drm_prime_handle args = {
+       .handle = gem_handle,
+-      .flags = DRM_CLOEXEC,
++      .flags = DRM_CLOEXEC | DRM_RDWR,
+    };
+
+    int ret = gen_ioctl(device->fd, DRM_IOCTL_PRIME_HANDLE_TO_FD, &args);
