@@ -1,0 +1,65 @@
+diff --git a/gst/vaapi/gstvaapipostproc.c b/gst/vaapi/gstvaapipostproc.c
+index 5f7d9cd8..1a813bc3 100644
+--- a/gst/vaapi/gstvaapipostproc.c
++++ b/gst/vaapi/gstvaapipostproc.c
+@@ -62,7 +62,8 @@ static const char gst_vaapipostproc_sink_caps_str[] =
+   GST_VAAPI_MAKE_SURFACE_CAPS ", "
+   GST_CAPS_INTERLACED_MODES "; "
+   GST_VIDEO_CAPS_MAKE (GST_VAAPI_FORMATS_ALL) ", "
+-   GST_CAPS_INTERLACED_MODES;
++   GST_CAPS_INTERLACED_MODES ";"
++   GST_VAAPI_MAKE_DMABUF_CAPS;
+ /* *INDENT-ON* */
+ 
+ /* *INDENT-OFF* */
+@@ -1292,7 +1293,7 @@ gst_vaapipostproc_update_src_caps (GstVaapiPostproc * postproc, GstCaps * caps,
+ static gboolean
+ ensure_allowed_sinkpad_caps (GstVaapiPostproc * postproc)
+ {
+-  GstCaps *out_caps, *raw_caps;
++  GstCaps *out_caps, *raw_caps, *dma_caps;
+   guint i, num_structures;
+ 
+   if (postproc->allowed_sinkpad_caps)
+@@ -1306,18 +1307,24 @@ ensure_allowed_sinkpad_caps (GstVaapiPostproc * postproc)
+       GST_CAPS_INTERLACED_MODES);
+   if (!out_caps) {
+     GST_WARNING_OBJECT (postproc, "failed to create VA sink caps");
+-    return FALSE;
++    goto error_out_caps;
+   }
+ 
+   raw_caps = gst_vaapi_plugin_base_get_allowed_sinkpad_raw_caps
+       (GST_VAAPI_PLUGIN_BASE (postproc));
+   if (!raw_caps) {
+-    gst_caps_unref (out_caps);
+     GST_WARNING_OBJECT (postproc, "failed to create YUV sink caps");
+-    return FALSE;
++    goto error_raw_caps;
++  }
++
++  dma_caps = gst_caps_from_string (GST_VAAPI_MAKE_DMABUF_CAPS);
++  if (!dma_caps) {
++    GST_WARNING_OBJECT (postproc, "failed to create DMA caps");
++    goto error_dma_caps;
+   }
+ 
+   out_caps = gst_caps_make_writable (out_caps);
++  gst_caps_append (out_caps, gst_caps_copy (dma_caps));
+   gst_caps_append (out_caps, gst_caps_copy (raw_caps));
+ 
+   num_structures = gst_caps_get_size (out_caps);
+@@ -1336,6 +1343,13 @@ ensure_allowed_sinkpad_caps (GstVaapiPostproc * postproc)
+ 
+   /* XXX: append VA/VPP filters */
+   return TRUE;
++
++error_dma_caps:
++  gst_caps_unref (dma_caps);
++error_raw_caps:
++  gst_caps_unref (out_caps);
++error_out_caps:
++  return FALSE;
+ }
+ 
+ /* Fixup output caps so that to reflect the supported set of pixel formats */

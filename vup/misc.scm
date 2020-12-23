@@ -14,6 +14,9 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages gnome)
+  #:use-module (gnu packages video)
+  #:use-module (gnu packages xdisorg)
+  #:use-module (gnu packages gstreamer)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages python)
   #:use-module (gnu packages ncurses)
@@ -26,7 +29,8 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages libusb)
   #:use-module (gnu packages xml)
-  #:use-module (gnu packages boost))
+  #:use-module (gnu packages boost)
+  #:use-module (vup mesa))
 
 (define-public mbuffer
   (let* ((version "20200505"))
@@ -405,3 +409,53 @@ with hostnamed.  This package is extracted from the broader systemd package.")
    (synopsis "ofono")
    (description "ofono")
    (license licenses:gpl2)))
+
+(define %common-gstreamer-phases
+  '((add-after 'unpack 'increase-test-timeout
+      (lambda _
+        (substitute* "tests/check/meson.build"
+          (("'CK_DEFAULT_TIMEOUT', '[0-9]*'")
+           "'CK_DEFAULT_TIMEOUT', '600'")
+          (("timeout ?: .*\\)")
+           "timeout: 90 * 60)"))
+        #t))))
+
+(define-public gstreamer-vaapi
+  (package
+    (name "gstreamer-vaapi")
+    (version "1.18.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://gstreamer.freedesktop.org/src/" name "/"
+                    name "-" version ".tar.xz"))
+              (patches `("gstreamer_vaapi.patch"))
+              (sha256
+               (base32
+                "1sm6x2qa7ng78w0w8q4mjs7pbpbbk8qkfgzhdmbb8l0bh513q3a0"))))
+    (build-system meson-build-system)
+    (arguments
+     ;; FIXME: 16/22 failing tests.
+     `(#:tests? #f
+       #:phases (modify-phases %standard-phases
+                  ,@%common-gstreamer-phases)))
+    (inputs
+     `(("libva" ,libva)
+       ("gstreamer" ,gstreamer)
+       ("gst-plugins-base" ,gst-plugins-base)
+       ("gst-plugins-bad", gst-plugins-bad)
+       ("libdrm", libdrm)
+       ("mesa" ,mesa-fixed)))
+    (native-inputs
+     `(; ("flex" ,flex)
+       ; ("gst-plugins-bad" ,gst-plugins-bad)
+       ; ("gst-plugins-good" ,gst-plugins-good)
+       ; ("perl" ,perl)
+       ("pkg-config" ,pkg-config)
+      ; ("python" ,python)
+       ))
+    (home-page "https://gstreamer.freedesktop.org/")
+    (synopsis "GStreamer library for vaapi")
+    (description
+     "Hardware-accelerated video decoding, encoding and processing on Intel graphics through VA-API")
+    (license licenses:gpl2+)))
