@@ -72,7 +72,9 @@
                    (substitute* "lisp/emacs-lisp/comp.el"
                      (("\\(defcustom comp-native-driver-options nil")
                       (format
-                       #f "(defcustom comp-native-driver-options '(~s ~s ~s)"
+                       #f "(defcustom comp-native-driver-options '(~s ~s ~s ~s)"
+                       (string-append
+                        "-B" (assoc-ref inputs "binutils") "/bin/")
                        (string-append
                         "-B" (assoc-ref inputs "glibc") "/lib/")
                        (string-append
@@ -163,6 +165,7 @@
               (variable "INFOPATH")
               (files '("share/info"))))))))
 
+
 (define-public emacs-pgtk-native-comp-no-xwidgets
   (emacs-from-git
    (emacs-with-pgtk
@@ -171,5 +174,5 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "45efb9036c54c8494642c017947328b79ce067cf"
-   #:checksum "0wicplghm4vwianxlvxfsl830ycml219v4s43gz38nqrm9nrky5x"))
+   #:git-commit "ea61382a3a718f0842331e9a02e6809320ee9fd4"
+   #:checksum "1f6xiqk0qr9fjy9zb07swxfvgd1a73nxbndmlq715f34j3yijl6f"))
