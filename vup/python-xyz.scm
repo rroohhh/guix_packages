@@ -2103,3 +2103,46 @@
     (description
       "Simple construction, analysis and modification of binary data.")
     (license #f)))
+
+
+(define-public python-sonic-client
+  (package
+    (name "python-sonic-client")
+    (version "0.0.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "sonic-client" version))
+        (sha256
+          (base32
+            "1scnpi17y520134j2k2ja1nbb04izf1f6xwfrpy2r82yxb672w74"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/cyprx/pysonic")
+    (synopsis "Python client for Sonic Search DB")
+    (description "Python client for Sonic Search DB")
+    (license license:expat)))
+
+
+(define-public python-meilisearch
+  (package
+    (name "python-meilisearch")
+    (version "0.14.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "meilisearch" version))
+        (sha256
+          (base32
+            "1h4qb88l0xa8q8ccvrn22q1rcrar06bl8068pfzn13bvklnn7z84"))))
+    (build-system python-build-system)
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (propagated-inputs
+      `(("python-requests" ,python-requests)))
+    (home-page
+      "https://github.com/meilisearch/meilisearch-python")
+    (synopsis
+      "The python client for MeiliSearch API.")
+    (description
+      "The python client for MeiliSearch API.")
+    (license #f)))
