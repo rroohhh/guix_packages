@@ -429,7 +429,7 @@ with hostnamed.  This package is extracted from the broader systemd package.")
               (uri (string-append
                     "https://gstreamer.freedesktop.org/src/" name "/"
                     name "-" version ".tar.xz"))
-              (patches `("gstreamer_vaapi.patch"))
+              (patches (search-patches "gstreamer_vaapi.patch"))
               (sha256
                (base32
                 "1sm6x2qa7ng78w0w8q4mjs7pbpbbk8qkfgzhdmbb8l0bh513q3a0"))))
