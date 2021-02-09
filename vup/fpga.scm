@@ -35,8 +35,8 @@
 
 
 (define-public yosys-git
-  (let ((commit "3b5a1314cd02d093cb1328d7c2f7abced876a514")
-        (version "0.9+3773"))
+  (let ((commit "2f64f96129e09b2efb02d741839549c472fd350a")
+        (version "0.9+3891"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
        (inherit guix:yosys)
@@ -48,7 +48,7 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "1chilzr2dajq4x6whnj71hklzdj8i1axvbpsmwx2s6k5amkwz9rr"))
+                   "16v3mdkxpy30hadndmk2yqqc4mwi6g8bww5lvhljpmk716abr7mb"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
