@@ -13,6 +13,7 @@
   #:use-module (gnu packages libevent)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages python-crypto)
   #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-check)
   #:use-module (gnu packages python-compression)
@@ -2145,4 +2146,153 @@
       "The python client for MeiliSearch API.")
     (description
       "The python client for MeiliSearch API.")
+    (license #f)))
+
+(define-public python-ipympl
+  (package
+    (name "python-ipympl")
+    (version "0.5.8")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ipympl" version))
+        (sha256
+          (base32
+            "10n3llpwnx9c70gnx0m3maqkd4icap43z6dp4hasdzid19a2wbqf"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-ipykernel" ,python-ipykernel)
+        ("python-ipywidgets" ,python-ipywidgets)
+        ("python-jupyter-packaging" ,python-jupyter-packaging)
+        ("python-matplotlib" ,python-matplotlib)))
+    (home-page "http://matplotlib.org")
+    (synopsis "Matplotlib Jupyter Extension")
+    (description "Matplotlib Jupyter Extension")
+    (license license:bsd-3)))
+
+
+(define-public python-jupyter-packaging
+  (package
+    (name "python-jupyter-packaging")
+    (version "0.7.11")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jupyter-packaging" version))
+        (sha256
+          (base32
+            "0ma4dsi2rjha1d592wkranbz4ppzwpvakgmybxzx3bqgdpi6w9gh"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-packaging" ,python-packaging)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)))
+    (home-page "http://jupyter.org")
+    (synopsis "Jupyter Packaging Utilities")
+    (description "Jupyter Packaging Utilities")
+    (license license:bsd-3)))
+
+(define-public python-nbconvert-new
+  (package
+    (name "python-nbconvert")
+    (version "5.6.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "nbconvert" version))
+       (sha256
+        (base32
+         "08xm2sz7fslp2cm87k38anv3jxwxcld44hii1sx84gml03kliyr1"))))
+    (build-system python-build-system)
+    (arguments
+     `(;; The "bdist_egg" target is disabled by default, causing the installation
+       ;; to fail.
+       #:configure-flags (list "bdist_egg")
+       ;; FIXME: 5 failures, 40 errors.
+       #:tests? #f))
+       ;; #:phases
+       ;; (modify-phases %standard-phases
+       ;;   (replace 'check
+       ;;     (lambda _
+       ;;       (zero? (system* "py.test" "-v")))))
+    (native-inputs
+     `(("python-pytest" ,python-pytest)))
+    (propagated-inputs
+     `(("python-bleach" ,python-bleach)
+       ("python-entrypoints" ,python-entrypoints)
+       ("python-jinja2" ,python-jinja2)
+       ("python-jupyter-core" ,python-jupyter-core)
+       ("python-mistune" ,python-mistune)
+       ("python-nbformat" ,python-nbformat)
+       ("python-pygments" ,python-pygments)
+       ("python-traitlets" ,python-traitlets)))
+    (home-page "http://jupyter.org")
+    (synopsis "Converting Jupyter Notebooks")
+    (description "The @code{nbconvert} tool, @{jupyter nbconvert}, converts
+notebooks to various other formats via Jinja templates.  It allows you to
+convert an @code{.ipynb} notebook file into various static formats including:
+
+@enumerate
+@item HTML
+@item LaTeX
+@item PDF
+@item Reveal JS
+@item Markdown (md)
+@item ReStructured Text (rst)
+@item executable script
+@end enumerate\n")
+    (license license:bsd-3)))
+
+(define-public jupyter
+  (package
+    (name "jupyter")
+    (version "1.0.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "jupyter" version))
+       (sha256
+        (base32
+         "0pwf3pminkzyzgx5kcplvvbvwrrzd3baa7lmh96f647k30rlpp6r"))))
+    (build-system python-build-system)
+    (arguments '(#:tests? #f)) ; there are none.
+    (propagated-inputs
+     `(("python-ipykernel" ,python-ipykernel)
+       ("python-ipywidgets" ,python-ipywidgets)
+       ("python-jupyter-console" ,python-jupyter-console)
+       ("python-nbconvert" ,python-nbconvert-new)
+       ("python-notebook" ,python-notebook)
+       ("python-qtconsole" ,python-qtconsole)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "JUPYTER_PATH")
+            (files '("share/jupyter")))))
+    (home-page "https://jupyter.org")
+    (synopsis "Web application for interactive documents")
+    (description
+     "The Jupyter Notebook is a web application that allows you to create and
+share documents that contain live code, equations, visualizations and
+explanatory text.  Uses include: data cleaning and transformation, numerical
+simulation, statistical modeling, machine learning and much more.")
+    (license license:bsd-3)))
+
+(define-public python-huffman
+  (package
+    (name "python-huffman")
+    (version "0.1.2")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/nicktimko/huffman")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "1yfiymnl2nkww14185mm4axhh2h0lpr6hqgc3m8g6ld61yxr11mr"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/nicktimko/huffman")
+    (synopsis "Generate Huffman codes with Python")
+    (description
+     "Generate Huffman codes with Python")
     (license #f)))
