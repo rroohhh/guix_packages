@@ -11,6 +11,7 @@
   #:use-module (guix build-system ant)
   #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
+  #:use-module (gnu packages audio)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages gnome)
@@ -108,9 +109,9 @@
                    #:phases
                    (modify-phases %standard-phases
                      (add-before 'configure 'cd-to-src
-                         (lambda _
-                           (chdir "src")
-                           #t))
+                       (lambda _
+                         (chdir "src")
+                         #t))
                      (delete 'check)))) ;; no tests
       (home-page "https://github.com/ralovich/antpm")
       (synopsis "ANT+minus (ANT / ANT+ / ANT-FS)")
@@ -377,38 +378,38 @@ with hostnamed.  This package is extracted from the broader systemd package.")
 
 (define-public ofono
   (package
-   (name "ofono")
-   (version "1.31")
-   (source
-    (origin
-     (method git-fetch)
-     (uri (git-reference
-           (url "git://git.kernel.org/pub/scm/network/ofono/ofono.git")
-           (commit "285fad8f39d46a5f0a0f9d194789978227558d1e")))
-     (file-name (git-file-name name version))
-     (sha256
-      (base32 "0f8ivncndjq13gn0nmrz0zm51nhnqm2rg2nr5fxzcwv6i2bcvg7z"))
-     (patches `("0001-Search-connectors-in-OFONO_PLUGIN_PATH.patch"))))
-   (build-system gnu-build-system)
-   (inputs `(("automake" ,automake) ("nettle" ,nettle) ("libtool" ,libtool)
-             ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)
-             ("pkg-config" ,pkg-config) ("glib" ,glib) ("dbus" ,dbus) ("ell" ,ell)
-             ("udev" ,eudev) ("mobile-broadband-provider-info" ,mobile-broadband-provider-info)
-             ("bluez" ,bluez)))
-   (arguments '(#:configure-flags
-                (list
-                 "--enable-external-ell"
-                 (string-append
-                  "--with-dbusconfdir=" (assoc-ref %outputs "out") "/etc")
-                 (string-append
-                  "--with-dbusdatadir=" (assoc-ref %outputs "out") "/share"))
-                #:phases
-                (modify-phases %standard-phases
-                  (delete 'check)))) ;; there are no tests
-   (home-page "https://01.org/ofono")
-   (synopsis "ofono")
-   (description "ofono")
-   (license licenses:gpl2)))
+    (name "ofono")
+    (version "1.31")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "git://git.kernel.org/pub/scm/network/ofono/ofono.git")
+             (commit "285fad8f39d46a5f0a0f9d194789978227558d1e")))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0f8ivncndjq13gn0nmrz0zm51nhnqm2rg2nr5fxzcwv6i2bcvg7z"))
+       (patches `("0001-Search-connectors-in-OFONO_PLUGIN_PATH.patch"))))
+    (build-system gnu-build-system)
+    (inputs `(("automake" ,automake) ("nettle" ,nettle) ("libtool" ,libtool)
+              ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)
+              ("pkg-config" ,pkg-config) ("glib" ,glib) ("dbus" ,dbus) ("ell" ,ell)
+              ("udev" ,eudev) ("mobile-broadband-provider-info" ,mobile-broadband-provider-info)
+              ("bluez" ,bluez)))
+    (arguments '(#:configure-flags
+                 (list
+                  "--enable-external-ell"
+                  (string-append
+                   "--with-dbusconfdir=" (assoc-ref %outputs "out") "/etc")
+                  (string-append
+                   "--with-dbusdatadir=" (assoc-ref %outputs "out") "/share"))
+                 #:phases
+                 (modify-phases %standard-phases
+                   (delete 'check)))) ;; there are no tests
+    (home-page "https://01.org/ofono")
+    (synopsis "ofono")
+    (description "ofono")
+    (license licenses:gpl2)))
 
 (define %common-gstreamer-phases
   '((add-after 'unpack 'increase-test-timeout
@@ -448,14 +449,30 @@ with hostnamed.  This package is extracted from the broader systemd package.")
        ("mesa" ,mesa-fixed)))
     (native-inputs
      `(; ("flex" ,flex)
-       ; ("gst-plugins-bad" ,gst-plugins-bad)
-       ; ("gst-plugins-good" ,gst-plugins-good)
-       ; ("perl" ,perl)
+                                        ; ("gst-plugins-bad" ,gst-plugins-bad)
+                                        ; ("gst-plugins-good" ,gst-plugins-good)
+                                        ; ("perl" ,perl)
        ("pkg-config" ,pkg-config)
-      ; ("python" ,python)
+                                        ; ("python" ,python)
        ))
     (home-page "https://gstreamer.freedesktop.org/")
     (synopsis "GStreamer library for vaapi")
     (description
      "Hardware-accelerated video decoding, encoding and processing on Intel graphics through VA-API")
     (license licenses:gpl2+)))
+
+(define-public carla-2.2
+  (package
+    (inherit carla)
+    (version "2.2.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri
+        (git-reference
+         (url "https://github.com/falkTX/Carla")
+         (commit (string-append "v" version))))
+       (file-name (git-file-name (package-name carla) version))
+       (sha256
+        (base32
+         "0p289d1aj5ymmd7724fdcjq34drrn7xg33qnyvrq4ns4wd36i307"))))))
