@@ -1741,7 +1741,7 @@ Simple gem that adds various color methods to String class, and can be used as f
          ,ruby-google-api-client-0.38)
         ("ruby-google-cloud-storage"
          ,ruby-google-cloud-storage)
-        ("ruby-highline" ,ruby-highline)
+        ("ruby-highline" ,ruby-highline-1.7.2)
         ("ruby-json" ,ruby-json)
         ("ruby-jwt" ,ruby-jwt)
         ("ruby-mini-magick" ,ruby-mini-magick)
