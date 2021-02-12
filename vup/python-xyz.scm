@@ -582,14 +582,14 @@
 (define-public python-varname
   (package
     (name "python-varname")
-    (version "0.1.1")
+    (version "0.6.2")
     (source
      (origin
        (method url-fetch)
-       (uri (pypi-uri "python-varname" version))
+       (uri (pypi-uri "varname" version))
        (sha256
         (base32
-         "12glk17k11apva7n92knqplhvfbvmsjgg1ydcrlsgxr2p0nkx8pd"))))
+         "16qzzdls1jdygdn7x2pnvrn6gkxpm0j7p69zy7ykc6hbd683v8wn"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-executing" ,python-executing)))
