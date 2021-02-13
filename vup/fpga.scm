@@ -5,6 +5,7 @@
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
+  #:use-module (guix build-system python)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module ((gnu packages fpga) #:prefix guix:)
   #:use-module (gnu packages python)
@@ -12,8 +13,12 @@
   #:use-module (gnu packages perl)
   #:use-module (gnu packages shells)
   #:use-module (gnu packages qt)
+  #:use-module (gnu packages tcl)
   #:use-module (gnu packages algebra)
-  #:use-module (gnu packages compression))
+  #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages python-science)
+  #:use-module (gnu packages compression)
+  #:use-module (vup prjoxide))
 
 
 ;; kept in lockstep with yosys upstream for reproducability
@@ -54,8 +59,8 @@
 
 
 (define-public icestorm
-  (let ((commit "da52117ccd5b4147f64dc7345357ec5439cd7543")
-        (revision "4"))
+  (let ((commit "7afc64b480212c9ac2ce7cb1622731a69a7d212c")
+        (revision "5"))
     (package
       (inherit guix:icestorm)
       (version (string-append "0.0-" revision "-" (string-take commit 9)))
@@ -67,13 +72,13 @@
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "072bl3vmvb06ry0ci3b1sfjpm3iigb874khzja4azcai969ybp4k")))))))
+                  "0vxhqs2fampglg3xlfwb35229iv96kvlwp1gyxrdrmlpznhkqdrk")))))))
 
 (define-public trellis
-  (let ((commit "23d34647f90ff26ea2032ac72a8f05bae957e5cc"))
+  (let ((commit "210a0a72757d57b278ac7397ae6b14729f149b10"))
     (package
       (name "trellis")
-      (version (string-append "1.0-71-" (string-take commit 7)))
+      (version (string-append "1.0-72-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -83,7 +88,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0rkzy98sis6jpx4nl9l5vb3s38hqznivn5b4kq5rm5mdg7cn0nnp"))))
+                  "0ghwzqzdnkhnjnvhljkkq4zjzzzp9bwys1askp57f4iqwi17k74c"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -105,11 +110,56 @@ open Verilog to bitstream toolchain for these devices.")
       (license license:isc))))
 
 
+(define-public python-crcmod
+  (package
+    (name "python-crcmod")
+    (version "1.7")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "crcmod" version))
+        (sha256
+          (base32
+            "07k0hgr42vw2j92cln3klxka81f33knd7459cn3d8aszvfh52w6w"))))
+    (build-system python-build-system)
+    (home-page "http://crcmod.sourceforge.net/")
+    (synopsis "CRC Generator")
+    (description "CRC Generator")
+    (license license:expat)))
+
+(define-public python-apycula
+  (package
+    (name "python-apycula")
+    (version "0.0.1a6")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "Apycula" version))
+        (sha256
+          (base32
+            "1f59j7x95cmj4fm3jiw9s403v8mc80ly6rrpzysl57lng6f83j3n"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-setuptools-scm" ,python-setuptools-scm)))
+    (propagated-inputs
+      `(("python-crcmod" ,python-crcmod)
+        ("python-numpy" ,python-numpy)
+        ("python-openpyxl" ,python-openpyxl)
+        ("python-pandas" ,python-pandas)
+        ("python-pillow" ,python-pillow)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page "https://github.com/YosysHQ/apicula")
+    (synopsis "Open Source tools for Gowin FPGAs")
+    (description "Open Source tools for Gowin FPGAs")
+    (license #f)))
+
+
 (define-public nextpnr
-  (let ((commit "d5dde5df4619f31d3fdd7c3ec3439c6989355894"))
+  (let ((commit "f1ccc0e20531f63355e3da7c6c5f4f39a684fa3f"))
     (package
       (name "nextpnr")
-      (version (string-append "2020.10.23" (string-take commit 9)))
+      (version (string-append "2021.02.13" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -118,22 +168,27 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "101k2ikjpq8hjmab4hvzqczv6y8xib2aqij2arrzm4gq7ihvnv7d"))))
+                  "1nv44awic1nxw2ghcrfnyn3r6vsczp2sqm1ql4kf9q1aq1cymj7d"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
                 ("qtbase" ,qtbase)
                 ("trellis" ,trellis)
                 ("icestorm" ,icestorm)
+                ("prjoxide" ,rust-prjoxide)
+                ("apicula" ,python-apycula)
+                ("tcl" ,tcl)
                 ("eigen" ,eigen)))
       (arguments
        `(#:configure-flags (list
-                            "-DARCH=generic;ice40;ecp5"
+                            "-DARCH=generic;ice40;ecp5;nexus;gowin;fpga_interchange"
                             "-DBUILD_TESTS=ON"
                             "-DUSE_OPENMP=ON"
-                            "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
+                            ;; "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
                             (string-append "-DICESTORM_INSTALL_PREFIX=" (assoc-ref %build-inputs "icestorm"))
-                            (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis")))))
+                            (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis"))
+                            (string-append "-DOXIDE_INSTALL_PREFIX=" (assoc-ref %build-inputs "prjoxide"))
+                            (string-append "-DGOWIN_BBA_EXECUTABLE=" (assoc-ref %build-inputs "apicula") "/bin/gowin_bba"))))
       (synopsis "nextpnr -- a portable FPGA place and route tool")
       (description "nextpnr aims to be a vendor neutral, timing driven, FOSS FPGA place and route tool.")
       (home-page "https://github.com/yosyshq/nextpnr")

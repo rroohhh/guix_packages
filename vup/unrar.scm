@@ -7,13 +7,13 @@
 (define-public unrar
   (package
     (name "unrar")
-    (version "5.3.11")
+    (version "6.0.3")
     (source (origin
               (method url-fetch)
-              (uri "http://www.rarlab.com/rar/unrarsrc-5.3.11.tar.gz")
+              (uri (string-append "http://www.rarlab.com/rar/unrarsrc-" version ".tar.gz"))
               (sha256
                (base32
-                "0qw77gvr57azjbn76cjlm4sv1hf2hh90g7n7n33gfvlpnbs7mf3p"))))
+                "185cqhw5frkia22gb8hi2779n7zlkhrw3sm698q9x7w75lwm7vqx"))))
     (build-system gnu-build-system)
     (arguments
      '(#:make-flags (list "CC=gcc"

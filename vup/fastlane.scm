@@ -1705,14 +1705,14 @@ Simple gem that adds various color methods to String class, and can be used as f
 (define-public ruby-fastlane
   (package
     (name "ruby-fastlane")
-    (version "2.173.0")
+    (version "2.174.0")
     (source
       (origin
         (method url-fetch)
         (uri (rubygems-uri "fastlane" version))
         (sha256
           (base32
-            "1aaj24lx18s216j9d72ndv95k1rfzajkx1qc9b2sbqybaq6rs2lp"))))
+            "13whhkywip08wj9fdsvdd0f6sx9ykg35g3kigfh2bbv51xx9vhdr"))))
     (build-system ruby-build-system)
     (arguments
      `(#:phases (modify-phases %standard-phases

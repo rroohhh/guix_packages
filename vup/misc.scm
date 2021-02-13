@@ -34,7 +34,7 @@
   #:use-module (vup mesa))
 
 (define-public mbuffer
-  (let* ((version "20200505"))
+  (let* ((version "20210209"))
     (package
       (name "mbuffer")
       (version version)
@@ -43,7 +43,7 @@
          (method url-fetch)
          (uri (string-append "https://www.maier-komor.de/software/mbuffer/mbuffer-" version ".tgz"))
          (sha256
-          (base32 "02qzy3appah0llg6aa71isl2a5nc93bkzy5r4d682lcy2j1n216c"))))
+          (base32 "034si7ym7ckl2lq7yhwihqr14vdc375z47hq93w207v2wa42f7z8"))))
       (build-system gnu-build-system)
       (arguments '(#:phases
                    (modify-phases %standard-phases
@@ -159,20 +159,19 @@
       (description "Uses the X-Resource extension to provide 'top' like statistics")
       (license licenses:gpl2+))))
 
-
 (define-public libsigrok-master
   (package
     (inherit libsigrok)
-    (version "0.5.2-ec302917")
+    (version "0.5.2-1c5d5905")
     (source (origin
               (method git-fetch)
               (uri (git-reference
                     (url "https://repo.or.cz/libsigrok.git")
-                    (commit "ec30291701bb1dcb6755a97ae6c18146fe9ad020")
+                    (commit "1c5d5905a44f8e3abbb9327cb47e80d09eb2dc6a")
                     (recursive? #t))) ; for prjtrellis-db
               (file-name (git-file-name "libsigrok" version))
               (sha256
-               (base32 "1xlc51lds56xjhqka2bpwk14jph6rb5hk1raq3wsagl5ki09pxnz"))))
+               (base32 "07wvy06a1w8dir6d8ha7crcvnpayv7z4y2wpjmz6k0y50wdbbm5q"))))
     (inputs
      `(("python" ,python)
        ("zlib" ,zlib)
@@ -181,200 +180,20 @@
        ("libtool" ,libtool)))))
 
 (define-public pulseview-libsigrok-master
-  ((package-input-rewriting/spec `(("libsigrok" . ,(const libsigrok-master))))
-   pulseview))
-
-;; (define-public tycho-maven-plugin
-;;   (package
-;;     (name "tycho-maven-plugin")
-;;     (version "1.4.0")
-;;     (source (origin
-;;               (method url-fetch)
-;;               (uri (string-append "https://repo1.maven.org/maven2/"
-;;                                   "org/eclipse/tycho/tycho-maven-plugin/"
-;;                                   version "/tycho-maven-plugin-"
-;;                                   version "-sources.jar"))
-;;               (sha256
-;;                (base32
-;;                 "0dzi96qckq4m9ncxz0qnyjnsw1r4fihpn58adm28diisnbf0sy54"))))
-;;     (build-system ant-build-system)
-;;     (arguments
-;;      `(#:jar-name "tycho-maven-plugin.jar"
-;;        #:source-dir "tycho-maven-plugin/src/main/java"
-;;        #:tests? #f
-;;        #:phases
-;;        (modify-phases %standard-phases
-;;          (replace 'install
-;;            (install-from-pom "tycho-maven-plugin/pom.xml")))))
-;;     ;; (propagated-inputs
-;;     ;;  `(("maven-artifact" ,maven-artifact)
-;;     ;;    ("maven-plugin-tools-parent-pom" ,maven-plugin-tools-parent-pom)))
-;;     ;; (native-inputs
-;;     ;;  `(("unzip" ,unzip)))
-;;     (home-page "")
-;;     (synopsis "")
-;;     (description "")
-;;     (license licenses:#f)))
-
-;; (define-public mytourbook
-;;   (let* ((version "20.8.0_2020-08-04_1351"))
-;;     (package
-;;       (name "mytourbook")
-;;       (version version)
-;;       (source
-;;        (origin
-;;          (method url-fetch)
-;;          (uri (string-append "https://github.com/wolfgang-ch/mytourbook/archive/" version ".tar.gz"))
-;;          (file-name (git-file-name name version))
-;;          (sha256
-;;           (base32 "1dxqg16md2ic6ak80c9d3ahmi7iyh58afcfk8g7s753yjjqsbvrb"))))
-;;       (build-system maven-build-system)
-;;       (native-inputs `(("tycho-maven-plugin" ,tycho-maven-plugin)))
-;;       ;; (inputs `(("libusb" ,libusb) ("boost" ,boost) ("libxml2" ,libxml2)))
-;;       ;; (arguments '(#:configure-flags `("-DUSE_BOOST_STATIC_LINK=False")
-;;       ;;              #:phases
-;;       ;;              (modify-phases %standard-phases
-;;       ;;                (add-before 'configure 'cd-to-src
-;;       ;;                    (lambda _
-;;       ;;                      (chdir "src")
-;;       ;;                      #t))
-;;       ;;                (delete 'check)))) ;; no tests
-;;       (home-page "http://mytourbook.sourceforge.net/")
-;;       (synopsis "Free software to visualize and analyze tours which are recorded by a GPS device, bike- or exercise computer and ergometer.")
-;;       (description "Free software to visualize and analyze tours which are recorded by a GPS device, bike- or exercise computer and ergometer.")
-;;       (license licenses:gpl2))))
-
-
-;; mytourbook
-
-
-(define-public hostnamed
-  ;; XXX: This package is extracted from systemd but we retain so little of it
-  ;; that it would make more sense to maintain a fork of the bits we need.
   (package
-    (name "hostnamed")
-    (version "241")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/systemd/systemd")
-                    (commit (string-append "v" version))))
-              (sha256
-               (base32
-                "0sy91flzbhpq58k7v0294pa2gxpr0bk27rcnxlbhk2fi6nc51d28"))
-              (file-name (git-file-name name version))
-              (modules '((guix build utils)))
-              (snippet
-               '(begin
-                  ;; Connect to the right location for our D-Bus daemon.
-                  (substitute* '("src/basic/def.h"
-                                 "src/libsystemd/sd-bus/sd-bus.c"
-                                 "src/stdio-bridge/stdio-bridge.c")
-                    (("/run/dbus/system_bus_socket")
-                     "/var/run/dbus/system_bus_socket"))
-
-                  ;; Don't insist on having systemd as PID 1 (otherwise
-                  ;; 'localectl' would exit without doing anything.)
-                  (substitute* "src/shared/bus-util.c"
-                    (("sd_booted\\(\\)")
-                     "(1)"))
-                  #t))))
-    (build-system meson-build-system)
-    (arguments
-     ;; Try to build as little as possible (list of components taken from the
-     ;; top-level 'meson.build' file.)
-     (let ((components '("utmp"
-                         "hibernate"
-                         "environment-d"
-                         "binfmt"
-                         "coredump"
-                         "resolve"
-                         "logind"
-                         "localed"
-                         "hostnamed"
-                         "machined"
-                         "portabled"
-                         "networkd"
-                         "timedated"
-                         "timesyncd"
-                         "firstboot"
-                         "randomseed"
-                         "backlight"
-                         "vconsole"
-                         "quotacheck"
-                         "sysusers"
-                         "tmpfiles"
-                         "hwdb"
-                         "rfkill"
-                         "ldconfig"
-                         "efi"
-                         "tpm"
-                         "ima"
-                         "smack"
-                         "gshadow"
-                         "idn"
-                         "nss-myhostname"
-                         "nss-systemd")))
-       `(#:configure-flags ',(map (lambda (component)
-                                    (string-append "-D" component "=false"))
-                                  (delete "hostnamed" components))
-
-         ;; It doesn't make sense to test all of systemd.
-         #:tests? #f
-
-         #:phases (modify-phases %standard-phases
-                    (replace 'install
-                      (lambda* (#:key outputs #:allow-other-keys)
-                        ;; Install 'hostnamed', the D-Bus and polkit files, and
-                        ;; 'localectl'.
-                        (let* ((out (assoc-ref outputs "out"))
-                               (libexec (string-append out "/libexec/hostnamed"))
-                               (bin     (string-append out "/bin"))
-                               (lib     (string-append out "/lib"))
-                               (dbus    (string-append out
-                                                       "/share/dbus-1/system-services"))
-                               (conf    (string-append out
-                                                       "/etc/dbus-1/system.d/"))
-                               (polkit  (string-append out
-                                                       "/share/polkit-1/actions"))
-                               (data    (string-append out "/share/systemd")))
-                          (define (source-file regexp)
-                            (car (find-files ".." regexp)))
-
-                          (mkdir-p libexec)
-                          (copy-file "systemd-hostnamed"
-                                     (string-append libexec "/hostnamed"))
-                          (install-file "hostnamectl" bin)
-
-                          (let ((service-file (source-file
-                                               "\\.locale1\\.service$")))
-                            (substitute* service-file
-                              (("^Exec=.*$")
-                               (string-append "Exec=" libexec "/hostnamed\n")))
-                            (install-file service-file dbus))
-                          (install-file (source-file "\\.locale1\\.policy$")
-                                        polkit)
-                          (install-file (source-file "\\.locale1\\.conf$")
-                                        conf)
-                          (for-each (lambda (file)
-                                      (install-file file lib))
-                                    (find-files "src/shared"
-                                                "libsystemd-shared.*\\.so"))
-
-                          (for-each (lambda (map)
-                                      (install-file map data))
-                                    (find-files ".." "^(kbd-model-map|language-fallback-map)$"))
-                          #t)))))))
-    (native-inputs (package-native-inputs elogind))
-    (inputs `(("libmount" ,util-linux "lib") ,@(package-inputs elogind)))
-    (home-page "https://www.freedesktop.org/wiki/Software/systemd/hostnamed/")
-    (synopsis "Control the system locale and keyboard layout")
-    (description
-     "Hostnamed is a tiny daemon that can be used to control the system locale
-and keyboard mapping from user programs.  It is used among other things by the
-GNOME Shell.  The @command{localectl} command-line tool allows you to interact
-with hostnamed.  This package is extracted from the broader systemd package.")
-    (license licenses:lgpl2.1+)))
+    (inherit
+     ((package-input-rewriting/spec
+       `(("libsigrok" . ,(const libsigrok-master)))) pulseview))
+    (version (string-append (package-version pulseview) "-89b7b94a0"))
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "git://sigrok.org/pulseview.git")
+             (commit "89b7b94a048ec53e82f38412a4b65cabb609f395")))
+       (file-name (git-file-name (package-name pulseview) version))
+       (sha256
+        (base32 "1vvkm30gw8wy8a3j73npzn0fybqskhx3mv3wb13zlhyvy3k1hmvz"))))))
 
 (define-public ofono
   (package

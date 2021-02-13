@@ -14,7 +14,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public solvespace
-  (let ((commit "0761339ec96a5c5e8936c2cc8fad8e04b757062d"))
+  (let ((commit "7795b0bc1911a01eaa4661e252488d8f07ec2135"))
     (package
       (name "solvespace")
       (version (string-append "solvespace+" (string-take commit 7)))
@@ -27,7 +27,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0qsvi6vb7nlxl6nbfcryddvldvv6d50r240kpf9w4x70y2sjl06f"))))
+                  "1j22mz2aijmvlwcgxfh87v30l5c1wpc78s9p573x0331ccv4cw13"))))
       (inputs `(("pkg-config" ,pkg-config) ("zlib" ,zlib) ("libpng" ,libpng)
                 ("freetype" ,freetype) ("cairo" ,cairo) ("opengl" ,mesa)
                 ("josn-c" ,json-c) ("libspnav" ,libspnav) ("gtkmm" ,gtkmm)
