@@ -30,6 +30,7 @@
   #:use-module (gnu packages gnome)
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages xorg)
+  #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 regex)
   #:use-module (flat packages gcc))
