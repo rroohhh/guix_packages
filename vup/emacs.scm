@@ -35,7 +35,7 @@
   #:use-module (flat packages gcc))
 
 (define emacs-with-native-comp
-  (mlambda (emacs gcc)
+  (lambda* (emacs gcc #:optional full-aot)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
       (package
         (inherit emacs)
@@ -45,12 +45,17 @@
            (patches
             (append (search-patches "emacs-native-comp-exec-path.patch")
                     (filter
-                     (negate (cut string-match "/emacs-exec-path.patch$" <>))
+                     (lambda (f)
+                       (not (any (cut string-match <> f)
+                                 '("/emacs-exec-path\\.patch$"
+                                   "/emacs-ignore-empty-xim-styles\\.patch$"))))
                      (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
            ((#:make-flags flags ''())
-            `(cons* "NATIVE_FULL_AOT=1" ,flags))
+            (if full-aot
+                `(cons* "NATIVE_FULL_AOT=1" ,flags)
+                flags))
            ((#:configure-flags flags)
             `(cons* "--with-nativecomp" ,flags))
            ((#:phases phases)
@@ -169,7 +174,7 @@
 (define-public emacs-pgtk-native-comp-no-xwidgets
   (emacs-from-git
    (emacs-with-pgtk
-     (emacs-with-native-comp emacs-next gcc-10))
+     (emacs-with-native-comp emacs-next gcc-10 'full-aot))
    #:pkg-name "emacs-pgtk-native-comp-no-xwidgets"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
