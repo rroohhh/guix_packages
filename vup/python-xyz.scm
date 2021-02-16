@@ -6,6 +6,8 @@
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages time)
+  #:use-module (gnu packages protobuf)
+  #:use-module (gnu packages libffi)
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages cmake)
   #:use-module (gnu packages pkg-config)
@@ -2347,3 +2349,411 @@ simulation, statistical modeling, machine learning and much more.")
     (description
      "Generate Huffman codes with Python")
     (license #f)))
+
+
+(define-public python-proto-plus
+  (package
+    (name "python-proto-plus")
+    (version "1.13.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "proto-plus" version))
+        (sha256
+          (base32
+            "1i5jjnwpd288378h37zads08h695iwmhxm0sxbr3ln6aax97rdb1"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-protobuf" ,python-protobuf)))
+    (native-inputs
+      `(("python-google-api-core"
+         ,python-google-api-core)))
+    (home-page
+      "https://github.com/googleapis/proto-plus-python.git")
+    (synopsis
+      "Beautiful, Pythonic protocol buffers.")
+    (description
+      "Beautiful, Pythonic protocol buffers.")
+    (license license:asl2.0)))
+
+(define-public python-google-cloud-firestore
+  (package
+    (name "python-google-cloud-firestore")
+    (version "2.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-cloud-firestore" version))
+        (sha256
+          (base32
+            "1q5s2gpkibnjxal9zrz02jfnazf7rxk0bi0ln5a3di6i47kjnga9"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-api-core"
+         ,python-google-api-core)
+        ("python-google-cloud-core"
+         ,python-google-cloud-core)
+        ("python-proto-plus" ,python-proto-plus)
+        ("python-pytz" ,python-pytz)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/python-firestore")
+    (synopsis
+      "Google Cloud Firestore API client library")
+    (description
+      "Google Cloud Firestore API client library")
+    (license license:asl2.0)))
+
+(define-public python-google-crc32c
+  (package
+    (name "python-google-crc32c")
+    (version "1.1.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-crc32c" version))
+        (sha256
+          (base32
+            "09qbsvmbdhd8mlq8sy67pa758i41lzkmvllr16anczvk6q9bvxfz"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cffi" ,python-cffi)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)))
+    (home-page
+      "https://github.com/googleapis/python-crc32c")
+    (synopsis
+      "A python wrapper of the C library 'Google CRC32C'")
+    (description
+      "A python wrapper of the C library 'Google CRC32C'")
+    (license license:asl2.0)))
+
+(define-public python-google-resumable-media
+  (package
+    (name "python-google-resumable-media")
+    (version "1.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-resumable-media" version))
+        (sha256
+          (base32
+            "0hwxdgsqh6933kp4jkv6hwwdcqs7bgjn9j08ga399njv3s9b367f"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-crcmod" ,python-crcmod)
+        ("python-google-crc32c" ,python-google-crc32c)
+        ("python-six" ,python-six)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/google-resumable-media-python")
+    (synopsis
+      "Utilities for Google Media Downloads and Resumable Uploads")
+    (description
+      "Utilities for Google Media Downloads and Resumable Uploads")
+    (license license:asl2.0)))
+
+(define-public python-google-cloud-core
+  (package
+    (name "python-google-cloud-core")
+    (version "1.6.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-cloud-core" version))
+        (sha256
+          (base32
+            "00mvgh4vm4z5mjnlbiigmp674dwsrrsxxi7ghby7jlsl4y2v3ay6"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-api-core"
+         ,python-google-api-core)
+        ("python-google-auth" ,python-google-auth)
+        ("python-six" ,python-six)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/python-cloud-core")
+    (synopsis "Google Cloud API client core library")
+    (description
+      "Google Cloud API client core library")
+    (license license:asl2.0)))
+
+(define-public python-google-cloud-storage
+  (package
+    (name "python-google-cloud-storage")
+    (version "1.36.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-cloud-storage" version))
+        (sha256
+          (base32
+            "1g04szsbkwfj5887i02i5qd3awhy0nsd2g78276jzrdlmmnf45wm"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-auth" ,python-google-auth)
+        ("python-google-cloud-core"
+         ,python-google-cloud-core)
+        ("python-google-resumable-media"
+         ,python-google-resumable-media)
+        ("python-requests" ,python-requests)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/python-storage")
+    (synopsis
+      "Google Cloud Storage API client library")
+    (description
+      "Google Cloud Storage API client library")
+    (license license:asl2.0)))
+
+(define-public python-futures
+  (package
+    (name "python-futures")
+    (version "3.3.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "futures" version))
+        (sha256
+          (base32
+            "154pvaybk9ncyb1wpcnzgd7ayvvhhzk92ynsas7gadaydbvkl0vy"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/agronholm/pythonfutures")
+    (synopsis
+      "Backport of the concurrent.futures package from Python 3")
+    (description
+      "Backport of the concurrent.futures package from Python 3")
+    (license #f)))
+
+(define-public python-googleapis-common-protos
+  (package
+    (name "python-googleapis-common-protos")
+    (version "1.52.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "googleapis-common-protos" version))
+        (sha256
+          (base32
+            "0lakcsd35qm5x4visvw6z5f1niasv9a0mjyf2bd98wqi0z41c1sn"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-protobuf" ,python-protobuf)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/python-api-common-protos")
+    (synopsis "Common protobufs used in Google APIs")
+    (description
+      "Common protobufs used in Google APIs")
+    (license #f)))
+
+(define-public python-grpcio
+  (package
+    (name "python-grpcio")
+    (version "1.35.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "grpcio" version))
+        (sha256
+          (base32
+            "0p34hjhliajpjwrjyblm8gly94rkkp9fyqhidbv8pryx2jxypl3v"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-six" ,python-six)))
+    (home-page "https://grpc.io")
+    (synopsis "HTTP/2-based RPC framework")
+    (description "HTTP/2-based RPC framework")
+    (license #f)))
+
+(define-public python-google-api-core
+  (package
+    (name "python-google-api-core")
+    (version "1.26.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-api-core" version))
+        (sha256
+          (base32
+            "02vk1qsmbk9a4lzgk3gnfvhl9s1igqhwr1cvwr7r7jj89mvfqc22"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-grpcio" ,python-grpcio)
+        ("python-google-auth" ,python-google-auth)
+        ("python-googleapis-common-protos"
+         ,python-googleapis-common-protos)
+        ("python-packaging" ,python-packaging)
+        ("python-protobuf" ,python-protobuf)
+        ("python-pytz" ,python-pytz)
+        ("python-requests" ,python-requests)
+        ("python-setuptools" ,python-setuptools)
+        ("python-six" ,python-six)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/python-api-core")
+    (synopsis "Google API client core library")
+    (description "Google API client core library")
+    (license license:asl2.0)))
+
+(define-public python-google-auth-httplib2
+  (package
+    (name "python-google-auth-httplib2")
+    (version "0.0.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-auth-httplib2" version))
+        (sha256
+          (base32
+            "0fdwnx2yd65f5vhnmn39f4xnxac5j6x0pv2p42qifrdi1z32q2cd"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-auth" ,python-google-auth)
+        ("python-httplib2" ,python-httplib2)
+        ("python-six" ,python-six)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/GoogleCloudPlatform/google-auth-library-python-httplib2")
+    (synopsis
+      "Google Authentication Library: httplib2 transport")
+    (description
+      "Google Authentication Library: httplib2 transport")
+    (license license:asl2.0)))
+
+(define-public python-cachetools
+  (package
+    (name "python-cachetools")
+    (version "4.2.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "cachetools" version))
+        (sha256
+          (base32
+            "1scjvk1w6r9zv7h6hv514l8yms3dwxfdkap4im6zdkx4gagf4sgl"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/tkem/cachetools/")
+    (synopsis
+      "Extensible memoizing collections and decorators")
+    (description
+      "Extensible memoizing collections and decorators")
+    (license license:expat)))
+
+(define-public python-google-auth
+  (package
+    (name "python-google-auth")
+    (version "1.26.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-auth" version))
+        (sha256
+          (base32
+            "0ksm317n1hc9c78scfbfm7kskzrnqnalx0d7jbjfyl2nkc3isihv"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cachetools" ,python-cachetools)
+        ("python-pyasn1-modules" ,python-pyasn1-modules)
+        ("python-rsa" ,python-rsa)
+        ("python-setuptools" ,python-setuptools)
+        ("python-six" ,python-six)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/google-auth-library-python")
+    (synopsis "Google Authentication Library")
+    (description "Google Authentication Library")
+    (license license:asl2.0)))
+
+(define-public python-google-api-python-client
+  (package
+    (name "python-google-api-python-client")
+    (version "1.12.8")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "google-api-python-client" version))
+        (sha256
+          (base32
+            "1fq89wifa9ymby655is246w5d54ixybffj5vz7lwzhpf8926ifgk"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-api-core"
+         ,python-google-api-core)
+        ("python-google-auth" ,python-google-auth)
+        ("python-google-auth-httplib2"
+         ,python-google-auth-httplib2)
+        ("python-httplib2" ,python-httplib2)
+        ("python-six" ,python-six)
+        ("python-uritemplate" ,python-uritemplate)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/googleapis/google-api-python-client/")
+    (synopsis "Google API Client Library for Python")
+    (description
+      "Google API Client Library for Python")
+    (license license:asl2.0)))
+
+(define-public python-firebase-admin
+  (package
+    (name "python-firebase-admin")
+    (version "4.5.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri "https://files.pythonhosted.org/packages/3a/b0/e5996cc335d67463901be3481973517b81d34dce760cc5a619f61c025064/firebase_admin-4.5.1.tar.gz")
+        ; (uri (pypi-uri "firebase-admin" version))
+        (sha256
+          (base32
+            "1y1k5a98qjpi9lbdn47fl47mkcidav3nyi2dp75a00a5h28nw6jn"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cachecontrol" ,python-cachecontrol)
+        ("python-google-api-core"
+         ,python-google-api-core)
+        ("python-google-api-python-client"
+         ,python-google-api-python-client)
+        ("python-google-cloud-firestore"
+         ,python-google-cloud-firestore)
+        ("python-google-cloud-storage"
+         ,python-google-cloud-storage)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://firebase.google.com/docs/admin/setup/")
+    (synopsis "Firebase Admin Python SDK")
+    (description "Firebase Admin Python SDK")
+    (license #f)))
+
+(define-public python-demjson
+  (package
+    (name "python-demjson")
+    (version "2.2.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "demjson" version))
+        (sha256
+          (base32
+            "0ygbddpnvp5lby6mr5kz60la3hkvwwzv3wwb3z0w9ngxl0w21pii"))))
+    (build-system python-build-system)
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "http://deron.meranda.us/python/demjson/")
+    (synopsis
+      "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
+    (description
+      "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
+    (license #f)))
+
