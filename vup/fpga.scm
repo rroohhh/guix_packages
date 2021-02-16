@@ -156,10 +156,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "f1ccc0e20531f63355e3da7c6c5f4f39a684fa3f"))
+  (let ((commit "9fc02041fe7bdcbac99e54f30423b2c39b92bb8a"))
     (package
       (name "nextpnr")
-      (version (string-append "2021.02.13" (string-take commit 9)))
+      (version (string-append "2021.02.15-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -168,7 +168,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1nv44awic1nxw2ghcrfnyn3r6vsczp2sqm1ql4kf9q1aq1cymj7d"))))
+                  "0yj16cpaqxixnl30q662rszy59fkgzzqjrhz3732gl7cvc1wgavd"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
@@ -181,7 +181,7 @@ open Verilog to bitstream toolchain for these devices.")
                 ("eigen" ,eigen)))
       (arguments
        `(#:configure-flags (list
-                            "-DARCH=generic;ice40;ecp5;nexus;gowin;fpga_interchange"
+                            "-DARCH=generic;ice40;ecp5;nexus;gowin;fpga_interchange;machxo2"
                             "-DBUILD_TESTS=ON"
                             "-DUSE_OPENMP=ON"
                             ;; "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
