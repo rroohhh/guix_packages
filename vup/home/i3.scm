@@ -185,7 +185,7 @@
 						    (set-port-encoding! (current-output-port) "UTF-8")    ;; shitty hack for unicode to work
 						    (format #t "~a" (string-append #$@(generate-i3-config config)))))))  
 ;;    #~(let ((config #$(apply mixed-text-file "config" (generate-i3-config config)))   ; can't use this, as it breaks unicode :(
-	    (i3-dir (string-append #$output "/.config/i3")))
+	    (i3-dir (string-append #$output "")))
 	(use-modules (guix build utils))
 	(mkdir-p i3-dir)
 	(copy-file config (string-append i3-dir "/config")))
