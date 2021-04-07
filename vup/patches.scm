@@ -1,5 +1,6 @@
 (define-module (vup patches)
   #:use-module (guix packages)
+  #:use-module (guix download)
   #:use-module (gnu packages) ;; search-patches
   #:use-module (gnu packages xorg))
 
