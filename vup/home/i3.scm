@@ -143,7 +143,7 @@
     (($ <i3-bar-configuration> bar-command position workspace-buttons
         status-command font strip-workspace-numbers colors)
       `("bar {"
-        ("i3bar_command " ,bar-command)
+        ("swaybar_command " ,bar-command)
         ,(format #f "workspace_buttons ~a" (i3-yes-no workspace-buttons))
         ,(format #f "strip_workspace_numbers ~a" (i3-yes-no strip-workspace-numbers))
         ("status_command " ,status-command)
