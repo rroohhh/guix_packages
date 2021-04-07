@@ -1196,8 +1196,8 @@
                     (("free = load_dll\\('c'\\)\\.free")
                      (string-append "free = load_dll('c', fallbacks=['"
                                     glibc "/lib/libc.so.6']).free"))))
-                '("shapely/geos.py" "shapely/_buildcfg.py"))
-               )
+                '("shapely/geos.py" "shapely/_buildcfg.py")))
+               
              #t)))))))
 
 (define-public python-flask-cors
@@ -2667,7 +2667,7 @@ simulation, statistical modeling, machine learning and much more.")
         ("python-setuptools" ,python-setuptools)
         ("python-six" ,python-six)))
     (arguments `(#:phases (modify-phases %standard-phases
-                  (delete 'check))))
+                           (delete 'check))))
     (home-page
       "https://github.com/googleapis/google-auth-library-python")
     (synopsis "Google Authentication Library")
@@ -2755,5 +2755,163 @@ simulation, statistical modeling, machine learning and much more.")
       "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
     (description
       "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
+    (license #f)))
+
+(define-public python-stdlib-list
+  (package
+    (name "python-stdlib-list")
+    (version "0.8.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "stdlib-list" version))
+        (sha256
+          (base32
+            "17vdn4q0sdlndc2fr9svapxx6366hnrhkn0fswp1xmr0jxqh7rd1"))))
+    (build-system python-build-system)
+    (native-inputs
+      `(("python-sphinx" ,python-sphinx)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page
+      "https://github.com/jackmaney/python-stdlib-list")
+    (synopsis
+      "A list of Python Standard Libraries (2.6-7, 3.2-9).")
+    (description
+      "A list of Python Standard Libraries (2.6-7, 3.2-9).")
+    (license license:expat)))
+
+(define-public python-pydeps
+  (package
+    (name "python-pydeps")
+    (version "1.9.13")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pydeps" version))
+        (sha256
+          (base32
+            "0hyi9011fczrkjmcs6adaycw8fjxhhynwsa1n0nq5sgg9a0i062g"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-stdlib-list" ,python-stdlib-list)))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (home-page "https://github.com/thebjorn/pydeps")
+    (synopsis "Display module dependencies")
+    (description "Display module dependencies")
+    (license license:bsd-3)))
+
+
+(define-public python-openstep-parser
+  (package
+    (name "python-openstep-parser")
+    (version "1.5.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "openstep-parser" version))
+        (sha256
+          (base32
+            "0y3dk0l612r7w48jfnbz6iq7df406hbv7fkpq2gv6w0gg33qsmb4"))))
+    (build-system python-build-system)
+    (home-page
+      "http://github.com/kronenthaler/openstep-parser")
+    (synopsis
+      "OpenStep plist reader into python objects")
+    (description
+      "OpenStep plist reader into python objects")
+    (license license:bsd-3)))
+
+(define-public python-pbxproj
+  (package
+    (name "python-pbxproj")
+    (version "3.2.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pbxproj" version))
+        (sha256
+          (base32
+            "034dx46y8lj42b3v5vbcnb69i7c4z7sxdsl21g0dvpps5gc94sls"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-docopt" ,python-docopt)
+        ("python-openstep-parser"
+         ,python-openstep-parser)))
+    (home-page
+      "http://github.com/kronenthaler/mod-pbxproj")
+    (synopsis
+      "XCode Project manipulation library for Python")
+    (description
+      "XCode Project manipulation library for Python")
+    (license license:expat)))
+
+
+;; (define-public python-docx
+;;   (package
+;;     (name "python-docx")
+;;     (version "0.2.4")
+;;     (source
+;;       (origin
+;;         (method url-fetch)
+;;         (uri (pypi-uri "docx" version))
+;;         (sha256
+;;           (base32
+;;             "0xw8vkjvpaq510qa6s53xbrw2ffh319rk8inf45xlv78qvm9axcx"))))
+;;     (build-system python-build-system)
+;;     (propagated-inputs
+;;       `(("python-lxml" ,python-lxml)
+;;         ("python-pillow" ,python-pillow)))
+;;     (home-page
+;;       "http://github.com/mikemaccana/python-docx")
+;;     (synopsis
+;;       "The docx module creates, reads and writes Microsoft Office Word 2007 docx files")
+;;     (description
+;;       "The docx module creates, reads and writes Microsoft Office Word 2007 docx files")
+;;     (license #f)))
+
+
+(define-public python-docx
+  (package
+    (name "python-docx")
+    (version "0.8.10")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "python-docx" version))
+        (sha256
+          (base32
+            "0900j8by7pvjfid41n1w55rcswawyfk077d689jcw01ddfnfqxmw"))))
+    (build-system python-build-system)
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (propagated-inputs
+      `(("python-lxml" ,python-lxml)))
+    (home-page
+      "https://github.com/python-openxml/python-docx")
+    (synopsis
+      "Create and update Microsoft Word .docx files.")
+    (description
+      "Create and update Microsoft Word .docx files.")
+    (license #f)))
+
+
+(define-public python-docx2python
+  (package
+    (name "python-docx2python")
+    (version "1.27.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "docx2python" version))
+        (sha256
+          (base32
+            "0s56ix45jyf1bvp5ii1x6n48ah4lx3nmqj6f1q30h1r2x4pak83c"))))
+    (build-system python-build-system)
+    (home-page
+      "https://github.com/ShayHill/docx2python")
+    (synopsis "Extract content from docx files")
+    (description "Extract content from docx files")
     (license #f)))
 

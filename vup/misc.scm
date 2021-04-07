@@ -1,4 +1,5 @@
 (define-module (vup misc)
+  #:use-module (srfi srfi-1)
   #:use-module (guix packages)
   #:use-module ((guix licenses) #:prefix licenses:)
   #:use-module (guix download)
@@ -11,10 +12,14 @@
   #:use-module (guix build-system ant)
   #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
+  #:use-module ((gnu packages animation) #:prefix guix:)
   #:use-module (gnu packages audio)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages gtk)
+  #:use-module (gnu packages maths)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages gnome)
+  #:use-module (gnu packages engineering)
   #:use-module (gnu packages video)
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages gstreamer)
@@ -271,9 +276,9 @@
                                         ; ("gst-plugins-bad" ,gst-plugins-bad)
                                         ; ("gst-plugins-good" ,gst-plugins-good)
                                         ; ("perl" ,perl)
-       ("pkg-config" ,pkg-config)
+       ("pkg-config" ,pkg-config)))
                                         ; ("python" ,python)
-       ))
+       
     (home-page "https://gstreamer.freedesktop.org/")
     (synopsis "GStreamer library for vaapi")
     (description
@@ -295,3 +300,76 @@
        (sha256
         (base32
          "0p289d1aj5ymmd7724fdcjq34drrn7xg33qnyvrq4ns4wd36i307"))))))
+
+(define-public kicad-nightly
+  (package
+   (inherit kicad)
+   (name "kicad-nightly")
+   (version "6.0.0-b47453a9")
+   (source
+    (origin
+     (method git-fetch)
+     (uri (git-reference
+           (url "https://gitlab.com/kicad/code/kicad.git")
+              
+           (commit "b47453a93b9cd3869dc97c2464be153628dd757b")))
+     (sha256
+      (base32 "0hmayrbkni3anqgfkx2phrxfyh0nj1agsrf9g4rwxkg2xijzn2z1"))
+     (file-name (git-file-name name version))))
+   (inputs (append `(("occ" ,opencascade-occt) ("gtk+3" ,gtk+)) (alist-delete  "opencascade-oce" (package-inputs kicad))))
+   (arguments
+     (substitute-keyword-arguments (package-arguments kicad)
+       ((#:configure-flags flags)
+        `(append `("-DKICAD_USE_OCC=true" ,(string-append "-DOCC_INCLUDE_DIR=" (assoc-ref %build-inputs "occ") "/include/opencascade")) ,flags))))))
+   
+
+(define synfig-version "1.4.0")
+(define-public etl
+  (package
+    (inherit guix:etl)
+    (version synfig-version)
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "mirror://sourceforge/synfig/releases/"
+                                  version "/source/ETL-" version ".tar.gz"))
+              (sha256
+               (base32
+                "04d0s40z4g5ndnj90ma7sn42az14ay96l8b96iqi8q9mmk09ccyl"))))))
+
+(define-public synfig
+  (package
+    (inherit guix:synfig)
+    (version synfig-version)
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "mirror://sourceforge/synfig/releases/"
+                                  version "/source/synfig-" version
+                                  ".tar.gz"))
+              (sha256
+               (base32
+                "170c10rzz7kalharjffryavqv845hn8fd2dfvvhmkjcxp9zdadkz"))))
+    (propagated-inputs (append `(("ffmpeg" ,ffmpeg)) (package-propagated-inputs guix:synfig)))
+    (inputs (append `(("etl" ,etl)) (alist-delete  "etl" (package-inputs guix:synfig))))))
+
+(define-public synfigstudio
+  (package
+    (inherit guix:synfigstudio)
+    (version synfig-version)
+    (source (origin
+              (modules '((guix build utils)))
+              (snippet
+                '(begin
+                  (substitute* "src/gui/pluginmanager.cpp"
+                    (("xmlpp::Node\\* n =")    "const xmlpp::Node* n =")
+                    (("xmlpp::Node::NodeList") "xmlpp::Node::const_NodeList"))
+                  #t))
+              (method url-fetch)
+              (uri (string-append "mirror://sourceforge/synfig/releases/"
+                                      version "/source/synfigstudio-" version
+                                      ".tar.gz"))
+              (sha256
+                (base32
+                  "0mmx7z4p5vfdmbzkv7g1rsb9s1q5w2aijvap9abmfk16waiv27na"))))
+    (inputs (append `(("etl" ,etl) ("synfig" ,synfig)) (alist-delete  "synfig" (package-inputs guix:synfigstudio))))))
+
+synfigstudio

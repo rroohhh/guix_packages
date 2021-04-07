@@ -4,7 +4,12 @@
   #:use-module (guix download)
   #:use-module (guix build-system cargo)
   #:use-module ((guix import utils) #:select (beautify-description spdx-string->license))
-  #:use-module (gnu packages crates-io))
+  #:use-module (gnu packages crates-io)
+  #:use-module (gnu packages version-control)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages xorg)
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages crates-graphics))
 
 (define-public rust-autocfg_1_0_1
   (package
@@ -83,12 +88,12 @@
             "0wjpipv40xfp40a9y0qcazc72m896hzsi96g18vk9rykggdzs8fh"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-libc" ,rust-libc_0_2_77)        
-       ("rust-num-integer" ,rust-num-integer_0_1_43)        
-       ("rust-num-traits" ,rust-num-traits_0_2_12)        
-       ("rust-time" ,rust-time_0_1_44)        
-       ("rust-winapi" ,rust-winapi_0_3_9))))
+     `(#:cargo-inputs
+       (("rust-libc" ,rust-libc_0_2_77)        
+        ("rust-num-integer" ,rust-num-integer_0_1_43)        
+        ("rust-num-traits" ,rust-num-traits_0_2_12)        
+        ("rust-time" ,rust-time_0_1_44)        
+        ("rust-winapi" ,rust-winapi_0_3_9))))
     (home-page "https://github.com/chronotope/chrono")
     (synopsis "Date and time library for Rust")
     (description
@@ -111,10 +116,10 @@
             "00i065a58987k1sbzqmlz721rw521zcg08jmsh40gi3khp3qmr9p"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-bitflags" ,rust-bitflags_1_2_1)        
-       ("rust-textwrap" ,rust-textwrap_0_11_0)        
-       ("rust-unicode-width" ,rust-unicode-width_0_1_8))))
+     `(#:cargo-inputs
+       (("rust-bitflags" ,rust-bitflags_1_2_1)        
+        ("rust-textwrap" ,rust-textwrap_0_11_0)        
+        ("rust-unicode-width" ,rust-unicode-width_0_1_8))))
     (home-page "https://clap.rs/")
     (synopsis "A simple to use, efficient, and full-featured Command Line Argument Parser")
     (description
@@ -157,9 +162,9 @@
             "1anslk0hx9an4ypcaxqff080hgbcxm7ji7d4qf4f6qx1mkav16p6"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-chrono" ,rust-chrono_0_4_18)        
-       ("rust-log" ,rust-log_0_4_11))))
+     `(#:cargo-inputs
+       (("rust-chrono" ,rust-chrono_0_4_18)        
+        ("rust-log" ,rust-log_0_4_11))))
     (home-page "None")
     (synopsis "Simple, efficient logging")
     (description
@@ -181,8 +186,8 @@
             "1c0hmj46xma5aysz0qb49padhc26aw875whx6q6rglsj5dqpds1b"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-num" ,rust-num_0_1_42))))
+     `(#:cargo-inputs
+       (("rust-num" ,rust-num_0_1_42))))
     (home-page "None")
     (synopsis "Floating point approximate comparison traits")
     (description
@@ -224,8 +229,8 @@
             "12xzqaflpiljn5cmxsbnbv9sjaj13ykhwsvll0gysbx4blbyvasg"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-cfg-if" ,rust-cfg-if_0_1_10))))
+     `(#:cargo-inputs
+       (("rust-cfg-if" ,rust-cfg-if_0_1_10))))
     (home-page "None")
     (synopsis "A lightweight logging facade for Rust")
     (description
@@ -247,10 +252,10 @@
             "0vhmyvfan380f86895z0f8rjscjc6qvwcmyvm15370ik2mjas0s7"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-num-integer" ,rust-num-integer_0_1_43)        
-       ("rust-num-iter" ,rust-num-iter_0_1_41)        
-       ("rust-num-traits" ,rust-num-traits_0_2_12))))
+     `(#:cargo-inputs
+       (("rust-num-integer" ,rust-num-integer_0_1_43)        
+        ("rust-num-iter" ,rust-num-iter_0_1_41)        
+        ("rust-num-traits" ,rust-num-traits_0_2_12))))
     (home-page "https://github.com/rust-num/num")
     (synopsis "A collection of numeric types and traits for Rust, including bigint,\ncomplex, rational, range iterators, generic integers, and more!")
     (description
@@ -273,9 +278,9 @@
             "0nw79ynfvw8br6yncv27pw65y2vw2z7m3kv9g2hinm1dcrz4ancd"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-autocfg" ,rust-autocfg_1_0_1)        
-       ("rust-num-traits" ,rust-num-traits_0_2_12))))
+     `(#:cargo-inputs
+       (("rust-autocfg" ,rust-autocfg_1_0_1)        
+        ("rust-num-traits" ,rust-num-traits_0_2_12))))
     (home-page "https://github.com/rust-num/num-integer")
     (synopsis "Integer traits and functions")
     (description
@@ -298,10 +303,10 @@
             "17sb142lhmpsq17cf9wrffjh8vjk901axxf55565r6cgfiy6nvks"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-autocfg" ,rust-autocfg_1_0_1)        
-       ("rust-num-integer" ,rust-num-integer_0_1_43)        
-       ("rust-num-traits" ,rust-num-traits_0_2_12))))
+     `(#:cargo-inputs
+       (("rust-autocfg" ,rust-autocfg_1_0_1)        
+        ("rust-num-integer" ,rust-num-integer_0_1_43)        
+        ("rust-num-traits" ,rust-num-traits_0_2_12))))
     (home-page "https://github.com/rust-num/num-iter")
     (synopsis "External iterators for generic mathematics")
     (description
@@ -324,8 +329,8 @@
             "04fnzwlnn6fcy09jjbi9l7bj5dvg657x5c2sjgwfb3pl0z67n9mc"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-autocfg" ,rust-autocfg_1_0_1))))
+     `(#:cargo-inputs
+       (("rust-autocfg" ,rust-autocfg_1_0_1))))
     (home-page "https://github.com/rust-num/num-traits")
     (synopsis "Numeric traits for generic mathematics")
     (description
@@ -348,8 +353,8 @@
             "066xwv4dr6056a9adlkarwp4n94kbpwngbmd47ngm3cfbyw49nmk"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-phf_shared" ,rust-phf_shared_0_7_24))))
+     `(#:cargo-inputs
+       (("rust-phf_shared" ,rust-phf_shared_0_7_24))))
     (home-page "None")
     (synopsis "Runtime support for perfect hash function data structures")
     (description
@@ -371,8 +376,8 @@
             "18371fla0vsj7d6d5rlfb747xbr2in11ar9vgv5qna72bnhp2kr3"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-siphasher" ,rust-siphasher_0_2_3))))
+     `(#:cargo-inputs
+       (("rust-siphasher" ,rust-siphasher_0_2_3))))
     (home-page "None")
     (synopsis "Support code shared by PHF libraries")
     (description
@@ -435,12 +440,12 @@
             "1xxsr4bwyz9qxmvsizk4hswc8mnwv4y1v0x6x6s0f5444lmsi9jm"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-clap" ,rust-clap_2_33_3)        
-       ("rust-error-chain" ,rust-error-chain_0_11_0)        
-       ("rust-fern" ,rust-fern_0_5_9)        
-       ("rust-log" ,rust-log_0_4_11)        
-       ("rust-svgdom" ,rust-svgdom_0_10_5))))
+     `(#:cargo-inputs
+       (("rust-clap" ,rust-clap_2_33_3)        
+        ("rust-error-chain" ,rust-error-chain_0_11_0)        
+        ("rust-fern" ,rust-fern_0_5_9)        
+        ("rust-log" ,rust-log_0_4_11)        
+        ("rust-svgdom" ,rust-svgdom_0_10_5))))
     (home-page "None")
     (synopsis "svgcleaner could help you to clean up your SVG files from the unnecessary data.")
     (description
@@ -462,12 +467,12 @@
             "10rfrdwdvzrysddf69x14xiv4in5w1zp7psvp5pjdd2is8sx5ifs"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-error-chain" ,rust-error-chain_0_11_0)        
-       ("rust-float-cmp" ,rust-float-cmp_0_3_0)        
-       ("rust-log" ,rust-log_0_4_11)        
-       ("rust-simplecss" ,rust-simplecss_0_1_0)        
-       ("rust-svgparser" ,rust-svgparser_0_6_4))))
+     `(#:cargo-inputs
+       (("rust-error-chain" ,rust-error-chain_0_11_0)        
+        ("rust-float-cmp" ,rust-float-cmp_0_3_0)        
+        ("rust-log" ,rust-log_0_4_11)        
+        ("rust-simplecss" ,rust-simplecss_0_1_0)        
+        ("rust-svgparser" ,rust-svgparser_0_6_4))))
     (home-page "None")
     (synopsis "[DEPRECATED] Library to represent an SVG as a DOM.")
     (description
@@ -489,11 +494,11 @@
             "1jx30w022dqva6zia5aq6agmf1jf49dgndp4a33jcmfjyzas9clh"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-error-chain" ,rust-error-chain_0_11_0)        
-       ("rust-log" ,rust-log_0_4_11)        
-       ("rust-phf" ,rust-phf_0_7_24)        
-       ("rust-xmlparser" ,rust-xmlparser_0_1_2))))
+     `(#:cargo-inputs
+       (("rust-error-chain" ,rust-error-chain_0_11_0)        
+        ("rust-log" ,rust-log_0_4_11)        
+        ("rust-phf" ,rust-phf_0_7_24)        
+        ("rust-xmlparser" ,rust-xmlparser_0_1_2))))
     (home-page "None")
     (synopsis "Featureful, pull-based, zero-allocation SVG parser.")
     (description
@@ -515,8 +520,8 @@
             "0q5hky03ik3y50s9sz25r438bc4nwhqc6dqwynv4wylc807n29nk"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-unicode-width" ,rust-unicode-width_0_1_8))))
+     `(#:cargo-inputs
+       (("rust-unicode-width" ,rust-unicode-width_0_1_8))))
     (home-page "None")
     (synopsis "Textwrap is a library for word wrapping, indenting, and dedenting\nstrings.\n\nYou can use it to format strings (such as help and error messages) for\ndisplay in commandline applications. It is designed to be efficient\nand handle Unicode characters correctly.")
     (description
@@ -538,11 +543,11 @@
             "0m9jwy2pcmk232r3b9r80fs12mkckfjffjha4qfaxcdq9a8ydfbd"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-libc" ,rust-libc_0_2_77)        
-       ("rust-wasi" ,rust-wasi_0_10_0+wasi-snapshot-preview1))
-      #:cargo-development-inputs
-      (("rust-winapi" ,rust-winapi_0_3_9))))
+     `(#:cargo-inputs
+       (("rust-libc" ,rust-libc_0_2_77)        
+        ("rust-wasi" ,rust-wasi_0_10_0+wasi-snapshot-preview1))
+       #:cargo-development-inputs
+       (("rust-winapi" ,rust-winapi_0_3_9))))
     (home-page "None")
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
@@ -606,9 +611,9 @@
             "06gl025x418lchw1wxj64ycr7gha83m44cjr5sarhynd9xkrm0sw"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-winapi-i686-pc-windows-gnu" ,rust-winapi-i686-pc-windows-gnu_0_4_0)        
-       ("rust-winapi-x86_64-pc-windows-gnu" ,rust-winapi-x86_64-pc-windows-gnu_0_4_0))))
+     `(#:cargo-inputs
+       (("rust-winapi-i686-pc-windows-gnu" ,rust-winapi-i686-pc-windows-gnu_0_4_0)        
+        ("rust-winapi-x86_64-pc-windows-gnu" ,rust-winapi-x86_64-pc-windows-gnu_0_4_0))))
     (home-page "None")
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
@@ -673,11 +678,69 @@
             "1anl2lz0xxkcbzydk3jcr2v1gfhvr14f7sjiwxam1kwgwyvqryx4"))))
     (build-system cargo-build-system)
     (arguments
-    `(#:cargo-inputs
-      (("rust-error-chain" ,rust-error-chain_0_11_0)        
-       ("rust-log" ,rust-log_0_4_11))))
+     `(#:cargo-inputs
+       (("rust-error-chain" ,rust-error-chain_0_11_0)        
+        ("rust-log" ,rust-log_0_4_11))))
     (home-page "None")
     (synopsis "Pull-based, zero-allocation XML parser.")
     (description
       (beautify-description "Pull-based, zero-allocation XML parser."))
     (license (spdx-string->license "MIT"))))
+
+(define-public rust-hacksaw
+  (package
+    (name "rust-hacksaw")
+    (version "1.0.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "hacksaw" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "0xvcfx0mrbab3hs0lmcrh5grxdsr3y0awv2inwqgv3c35dj5278p"))))
+    (inputs `(("python" ,python) ("libxcb" ,libxcb)))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-structopt" ,rust-structopt-0.3)
+         ("rust-xcb" ,rust-xcb-0.9))))
+    (home-page
+      "https://github.com/neXromancers/hacksaw")
+    (synopsis
+      "Lightweight selection tool for usage in screenshot scripts etc.")
+    (description
+      "Lightweight selection tool for usage in screenshot scripts etc.")
+    (license #f)))
+
+(define-public rust-shotgun
+  (package
+    (name "rust-shotgun")
+    (version "2.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "shotgun" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "17jk6xy7fhj6iiz5rjsyprr8xhvn7w24l8fc6rxmrrwjjz5wjl5i"))))
+    (inputs `(("git" ,git) ("pkg-config" ,pkg-config) ("libx11" ,libx11)
+              ("libxrandr" ,libxrandr)))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-getopts" ,rust-getopts-0.2)
+         ("rust-image" ,rust-image-0.22)
+         ("rust-libc" ,rust-libc-0.2)
+         ("rust-num-traits" ,rust-num-traits-0.2)
+         ("rust-time" ,rust-time-0.1)
+         ("rust-x11" ,rust-x11-2))))
+    (home-page
+      "https://github.com/neXromancers/shotgun")
+    (synopsis "Minimal X screenshot utility")
+    (description "Minimal X screenshot utility")
+    (license (spdx-string->license "MPL-2.0"))))
+
