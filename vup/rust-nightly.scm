@@ -48,8 +48,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.49 "1.49.0"
-           "0yf7kll517398dgqsr7m3gldzj0iwsp3ggzxrayckpqzvylfy2mm")))
+         (rust-bootstrapped-package rust-1.51 "1.51.0"
+           "0ixqkqglv3isxbvl4ldr4byrkx692wghsz3fasy1pn5kr2prnsvs")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -112,7 +112,7 @@ tools = [\"cargo\", \"rls\", \"clippy\", \"miri\", \"llvm-tools\", \"rustfmt\", 
                                        (nix-system->gnu-triplet-for-rust))
                        "manifest-rustc"))
                    #t)))
-             (add-after 'configure 'switch-to-nightly
-               (lambda _
-                 (substitute* "config.toml"
-                   (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
+            (add-after 'configure 'switch-to-nightly
+              (lambda _
+                (substitute* "config.toml"
+                             (("channel = \"stable\"") "channel = \"nightly\"")))))))))))

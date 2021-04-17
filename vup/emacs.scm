@@ -58,7 +58,7 @@
                 `(cons* "NATIVE_FULL_AOT=1" ,flags)
                 flags))
            ((#:configure-flags flags)
-            `(cons* "--with-nativecomp" ,flags))
+            `(cons* "--with-native-compilation" ,flags))
            ((#:phases phases)
             `(modify-phases ,phases
                ;; Add build-time library paths for libgccjit.
@@ -87,21 +87,7 @@
                         "-B" (assoc-ref inputs "libgccjit") "/lib/")
                        (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
-                   #t))
-               ;; Remove wrappers around .eln files in libexec.
-               (add-after 'restore-emacs-pdmp 'unwrap-eln-files
-                 (lambda* (#:key inputs outputs #:allow-other-keys)
-                   (let* ((output   (assoc-ref outputs "out"))
-                          (libexec  (string-append output "/libexec"))
-                          (eln-list (find-files libexec "\\.eln$")))
-                     (for-each (lambda (wrapper)
-                                 (let ((real (string-append
-                                              (dirname wrapper) "/."
-                                              (basename wrapper) "-real")))
-                                   (delete-file wrapper)
-                                   (rename-file real wrapper)))
-                               eln-list)
-                     #t)))))))
+                   #t))))))
         (native-inputs
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
@@ -178,7 +164,7 @@
      (emacs-with-native-comp emacs-next gcc-10 'full-aot))
    #:pkg-name "emacs-pgtk-native-comp-no-xwidgets"
    #:pkg-version "28.0.50"
-   #:pkg-revision "0"
+   #:pkg-revision "177"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "8bcd71bf75672bbcfbb6175301a3552dae4bfb4a"
-   #:checksum "18j28xmdwi1d9pk356rp36b1r2xwr2pkvqcj1324d4pan3m8jjzq"))
+   #:git-commit "a5af234c593b34243c44c77d0467a35952ffba40"
+   #:checksum "0p4lnh20vmkqqw8q03hj366i4r49fpzckh2kzm0gb3h0f269543p"))

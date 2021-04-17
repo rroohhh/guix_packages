@@ -18,6 +18,19 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages maths)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages sqlite)
+  #:use-module (gnu packages backup)
+  #:use-module (gnu packages curl)
+  #:use-module (gnu packages polkit)
+  #:use-module (gnu packages package-management)
+  #:use-module (gnu packages elf)
+  #:use-module (gnu packages hardware)
+  #:use-module (gnu packages mingw)
+  #:use-module (gnu packages efi)
+  #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages check)
+  #:use-module (gnu packages man)
+  #:use-module (gnu packages gettext)
   #:use-module (gnu packages gnome)
   #:use-module (gnu packages engineering)
   #:use-module (gnu packages video)
@@ -305,16 +318,16 @@
   (package
    (inherit kicad)
    (name "kicad-nightly")
-   (version "6.0.0-b47453a9")
+   (version "6.0.0-fe6cc0c3")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://gitlab.com/kicad/code/kicad.git")
               
-           (commit "b47453a93b9cd3869dc97c2464be153628dd757b")))
+           (commit "fe6cc0c3d8a8784e061d0b77643e8334ed4d14ac")))
      (sha256
-      (base32 "0hmayrbkni3anqgfkx2phrxfyh0nj1agsrf9g4rwxkg2xijzn2z1"))
+      (base32 "0yv54lz9jr48mz7qngfi31r04l852nfv8n0h6np7pkp48lqysqig"))
      (file-name (git-file-name name version))))
    (inputs (append `(("occ" ,opencascade-occt) ("gtk+3" ,gtk+)) (alist-delete  "opencascade-oce" (package-inputs kicad))))
    (arguments
@@ -372,4 +385,91 @@
                   "0mmx7z4p5vfdmbzkv7g1rsb9s1q5w2aijvap9abmfk16waiv27na"))))
     (inputs (append `(("etl" ,etl) ("synfig" ,synfig)) (alist-delete  "synfig" (package-inputs guix:synfigstudio))))))
 
-synfigstudio
+(define-public fwupd
+  (package
+    (name "fwupd")
+    (version "1.5.5")
+    (source
+     (origin
+       (method git-fetch)
+       (uri
+        (git-reference
+         (url "https://github.com/fwupd/fwupd")
+         (commit version)))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0hrxp3hl1sm0gb1200qwyb330pknxicf5p0x5vgdv8ha4jf9zygc"))
+       (patches '("fwupd-do-not-write-to-var.patch"
+                  "fwupd-add-option-for-installation-sysconfdir.patch"
+                  "fwupd-installed-tests-path.patch"))))
+    (build-system meson-build-system)
+    (outputs (list "out" "installed-tests"))
+    (arguments
+     `(#:configure-flags
+       (list "--wrap-mode=nofallback"
+             "-Dsystemd=false"
+             (string-append
+              "-Defi-libdir=" (assoc-ref %build-inputs "gnu-efi") "/lib")
+             (string-append
+              "-Defi-ldsdir=" (assoc-ref %build-inputs "gnu-efi") "/lib")
+             (string-append
+              "-Defi-includedir=" (assoc-ref %build-inputs "gnu-efi")
+              "/include/efi")
+             (string-append
+              "-Dudevdir=" (assoc-ref %outputs "out") "/lib/udev")
+             "--localstatedir=/var"
+             "--sysconfdir=/etc"
+             (string-append
+              "-Dsysconfdir_install=" (assoc-ref %outputs "out") "/etc")
+             (string-append
+              "--libexecdir=" (assoc-ref %outputs "out") "/libexec")
+             "-Dsupported_build=true"
+             (string-append
+              "-Dinstalled_test_prefix="
+              (assoc-ref %outputs "installed-tests")))
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'check)
+         (add-before 'install 'no-polkit-magic
+           ;; Meson ‘magically’ invokes pkexec, which fails (not setuid).
+           (lambda _
+             (setenv "PKEXEC_UID" "something")
+             #t)))))
+    (native-inputs
+     `(("gobject-introspection" ,gobject-introspection)
+       ("python-pygobject" ,python-pygobject)
+       ("python-pillow" ,python-pillow)
+       ("python-pycairo" ,python-pycairo)
+       ("pkg-config" ,pkg-config)
+       ("vala" ,vala)
+       ("umockdev" ,umockdev)
+       ("glib:bin" ,glib "bin")
+       ("help2man" ,help2man)
+       ("gettext" ,gettext-minimal)))
+    (inputs
+     `(("glib" ,glib)
+       ("libgudev" ,libgudev)
+       ("libxmlb" ,libxmlb)
+       ("gusb" ,gusb)
+       ("sqlite" ,sqlite)
+       ("libarchive" ,libarchive)
+       ("libjcat" ,libjcat)
+       ("json-glib" ,json-glib)
+       ("curl" ,curl)
+       ("polkit" ,polkit)
+       ("eudev" ,eudev)
+       ("gcab" ,gcab)
+       ("gnutls" ,gnutls)
+       ("libelf" ,libelf)
+       ("tpm2-tss" ,tpm2-tss)
+       ("cairo" ,cairo)
+       ("efivar" ,efivar)
+       ("pango" ,pango)
+       ("mingw-w64-tools", mingw-w64-tools)
+       ("libsmbios" ,libsmbios)
+       ("gnu-efi" ,gnu-efi)))
+    (home-page "https://fwupd.org/")
+    (synopsis "A simple daemon to allow session software to update firmware")
+    (description "This package aims to make updating firmware on Linux
+automatic, safe and reliable.")
+    (license licenses:lgpl2.1+)))
