@@ -21,6 +21,7 @@
 (define-module (vup emacs)
   #:use-module (guix packages)
   #:use-module (guix memoization)
+  #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (gnu packages)
@@ -44,7 +45,11 @@
          (origin
            (inherit (package-source emacs))
            (patches
-            (append (search-patches "emacs-native-comp-exec-path.patch")
+            (append (list
+                     (origin
+                      (method url-fetch)
+                      (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
+                      (sha256 "14fqmgpf34l20xb34fdpirc6bn756g200s8f0sh95xnxph7h79is")))
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
