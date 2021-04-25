@@ -49,6 +49,7 @@
   #:use-module (gnu packages libusb)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages boost)
+  #:use-module (gnu packages samba)
   #:use-module (vup mesa))
 
 (define-public mbuffer
@@ -473,3 +474,31 @@
     (description "This package aims to make updating firmware on Linux
 automatic, safe and reliable.")
     (license licenses:lgpl2.1+)))
+
+(define-public xdg-desktop-portal-wlr
+  (package
+    (name "xdg-desktop-portal-wlr")
+    (version "0.3.0")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                     (url "https://github.com/emersion/xdg-desktop-portal-wlr")
+                     (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "18nlkqqxgxh7k0r2nk867wnp2nmaiinl6z67lrfv7rmiym0x82p8"))))
+    (build-system meson-build-system)
+    (native-inputs `(("pkg-config" ,pkg-config)))
+    (inputs `(("pipewire" ,pipewire-0.3) ("wayland" ,wayland)
+              ("wayland-protocols" ,wayland-protocols) ("iniparser" ,iniparser)
+              ("elogind" ,elogind)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "XDG_DESKTOP_PORTAL_DIR")
+            (files '("share/xdg-desktop-portal/portals")))))
+    (home-page "https://github.com/flatpak/xdg-desktop-portal-gtk")
+    (synopsis "xdg-desktop-portal backend for wlroots")
+    (description
+     "xdg-desktop-portal backend for wlroots")
+    (license #f)))
