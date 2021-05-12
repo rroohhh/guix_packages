@@ -24,6 +24,7 @@
   #:use-module (gnu packages polkit)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages elf)
+  #:use-module (gnu packages gl)
   #:use-module (gnu packages hardware)
   #:use-module (gnu packages mingw)
   #:use-module (gnu packages efi)
@@ -268,7 +269,12 @@
               (uri (string-append
                     "https://gstreamer.freedesktop.org/src/" name "/"
                     name "-" version ".tar.xz"))
-              (patches (search-patches "gstreamer_vaapi.patch"))
+              (patches
+                (list
+                 (origin (method url-fetch)
+                         (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/e99ecbb/gstreamer_vaapi.patch")
+                         (sha256 "06sk93zy9ddq3iynswjjiq4gv7kn5qgy5rnygjld34jxvmp2gyl6"))))
+              ;; (patches (search-patches "gstreamer_vaapi.patch"))
               (sha256
                (base32
                 "1sm6x2qa7ng78w0w8q4mjs7pbpbbk8qkfgzhdmbb8l0bh513q3a0"))))
@@ -284,7 +290,7 @@
        ("gst-plugins-base" ,gst-plugins-base)
        ("gst-plugins-bad", gst-plugins-bad)
        ("libdrm", libdrm)
-       ("mesa" ,mesa-fixed)))
+       ("mesa" ,mesa)))
     (native-inputs
      `(; ("flex" ,flex)
                                         ; ("gst-plugins-bad" ,gst-plugins-bad)
@@ -292,7 +298,7 @@
                                         ; ("perl" ,perl)
        ("pkg-config" ,pkg-config)))
                                         ; ("python" ,python)
-       
+
     (home-page "https://gstreamer.freedesktop.org/")
     (synopsis "GStreamer library for vaapi")
     (description
