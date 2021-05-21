@@ -36,12 +36,6 @@
   #:use-module (ice-9 regex)
   #:use-module (flat packages gcc))
 
-(define emacs-native-comp-patches
-  (list (origin
-         (method url-fetch
-          (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
-          (sha256 "14fqmgpf34l20xb34fdpirc6bn756g200s8f0sh95xnxph7h79is")))))
-
 (define emacs-with-native-comp
   (lambda* (emacs gcc #:optional full-aot)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
@@ -51,14 +45,17 @@
          (origin
            (inherit (package-source emacs))
            (patches
-            (append emacs-native-comp-patches
+            (append (list (origin
+                     (method url-fetch)
+                     (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
+                     (sha256 "1k1111111111111111111111111111111111111111111111111k")))
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
                                  '("/emacs-exec-path\\.patch$"
                                    "/emacs-ignore-empty-xim-styles\\.patch$"))))
-                     (origin-patches (package-source emacs)))
-                (arguments))))
+                     (origin-patches (package-source emacs)))))))
+        (arguments
          (substitute-keyword-arguments (package-arguments emacs)
            ((#:make-flags flags ''())
             (if full-aot
@@ -94,7 +91,7 @@
                         "-B" (assoc-ref inputs "libgccjit") "/lib/")
                        (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
-                   #t))))))
+                   #t))))))))
         (native-inputs
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
