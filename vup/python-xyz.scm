@@ -2915,3 +2915,56 @@ simulation, statistical modeling, machine learning and much more.")
     (description "Extract content from docx files")
     (license #f)))
 
+(define-public python-nose-cov
+  (package
+    (name "python-nose-cov")
+    (version "1.6")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "nose-cov" version))
+        (sha256
+          (base32
+            "04j4fw01bv648gimqqj4z88606lcczbm1k326agcc74gb4sh7v4b"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cov-core" ,python-cov-core)
+        ("python-nose" ,python-nose)))
+    (home-page
+      "http://bitbucket.org/memedough/nose-cov/overview")
+    (synopsis
+      "nose plugin for coverage reporting, including subprocesses and multiprocessing")
+    (description
+      "nose plugin for coverage reporting, including subprocesses and multiprocessing")
+    (license license:expat)))
+
+(define-public python-influxdb
+  (package
+    (name "python-influxdb")
+    (version "5.3.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "influxdb" version))
+        (sha256
+          (base32
+            "0ymjv322mv6y424fmpd70f87152w55mbwwj6i7p3sjzf0ixmxy26"))))
+    (build-system python-build-system)
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check))))
+    (propagated-inputs
+      `(("python-dateutil" ,python-dateutil)
+        ("python-msgpack" ,python-msgpack)
+        ("python-pytz" ,python-pytz)
+        ("python-requests" ,python-requests)
+        ("python-six" ,python-six)))
+    (native-inputs
+      `(("python-mock" ,python-mock)
+        ("python-nose" ,python-nose)
+        ("python-nose-cov" ,python-nose-cov)
+        ("python-requests-mock" ,python-requests-mock)))
+    (home-page
+      "https://github.com/influxdb/influxdb-python")
+    (synopsis "InfluxDB client")
+    (description "InfluxDB client")
+    (license license:expat)))
