@@ -36,6 +36,12 @@
   #:use-module (ice-9 regex)
   #:use-module (flat packages gcc))
 
+(define emacs-native-comp-patches
+  (list (origin
+         (method url-fetch
+          (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
+          (sha256 "14fqmgpf34l20xb34fdpirc6bn756g200s8f0sh95xnxph7h79is")))))
+
 (define emacs-with-native-comp
   (lambda* (emacs gcc #:optional full-aot)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
@@ -45,18 +51,14 @@
          (origin
            (inherit (package-source emacs))
            (patches
-            (append (list
-                     (origin
-                      (method url-fetch)
-                      (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
-                      (sha256 "14fqmgpf34l20xb34fdpirc6bn756g200s8f0sh95xnxph7h79is")))
+            (append emacs-native-comp-patches
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
                                  '("/emacs-exec-path\\.patch$"
                                    "/emacs-ignore-empty-xim-styles\\.patch$"))))
-                     (origin-patches (package-source emacs)))))))
-        (arguments
+                     (origin-patches (package-source emacs)))
+                (arguments))))
          (substitute-keyword-arguments (package-arguments emacs)
            ((#:make-flags flags ''())
             (if full-aot
@@ -81,9 +83,9 @@
                (add-after 'unpack 'patch-driver-options
                  (lambda* (#:key inputs #:allow-other-keys)
                    (substitute* "lisp/emacs-lisp/comp.el"
-                     (("\\(defcustom comp-native-driver-options nil")
+                     (("\\(defcustom native-comp-driver-options nil")
                       (format
-                       #f "(defcustom comp-native-driver-options '(~s ~s ~s ~s)"
+                       #f "(defcustom native-comp-driver-options '(~s ~s ~s ~s)"
                        (string-append
                         "-B" (assoc-ref inputs "binutils") "/bin/")
                        (string-append
@@ -101,28 +103,6 @@
            ("libgccjit" ,libgccjit)
            ,@(package-inputs emacs)))))))
 
-(define emacs-with-xwidgets
-  (mlambda (emacs)
-    (package
-      (inherit emacs)
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:configure-flags flags)
-          `(cons* "--with-xwidgets" ,flags))))
-      (inputs
-       `(("glib-networking" ,glib-networking)
-         ("webkitgtk" ,webkitgtk)
-         ,@(package-inputs emacs))))))
-
-(define emacs-with-pgtk
-  (mlambda (emacs)
-    (package
-      (inherit emacs)
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:configure-flags flags)
-          `(cons* "--with-pgtk" ,flags)))))))
-
 (define emacs-from-git
   (lambda* (emacs #:key pkg-name pkg-version pkg-revision git-repo git-commit checksum)
     (package
@@ -138,38 +118,25 @@
                (commit git-commit)))
          (sha256 (base32 checksum))
          (file-name (git-file-name pkg-name pkg-version))))
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             ;; Fix strip-double-wrap referencing the wrong version.
-             (replace 'strip-double-wrap
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (with-directory-excursion (assoc-ref outputs "out")
-                   (copy-file (string-append "bin/emacs-" ,pkg-version)
-                              "bin/emacs")
-                   #t)))))))
-      (inputs
-       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
-         ,@(package-inputs emacs)))
-      (native-search-paths
-       (list (search-path-specification
-              (variable "EMACSLOADPATH")
-              (files
-               (list "share/emacs/site-lisp"
-                     (string-append "share/emacs/" pkg-version "/lisp"))))
-             (search-path-specification
-              (variable "INFOPATH")
-              (files '("share/info"))))))))
+      (outputs
+       '("out" "debug")))))
 
-
-(define-public emacs-pgtk-native-comp-no-xwidgets
+(define-public emacs-native-comp
   (emacs-from-git
-   (emacs-with-pgtk
-     (emacs-with-native-comp emacs-next gcc-10 'full-aot))
-   #:pkg-name "emacs-pgtk-native-comp-no-xwidgets"
+   (emacs-with-native-comp emacs-next gcc-10 'full-aot)
+   #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "177"
+   #:pkg-revision "167"
+   #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
+   #:git-commit "b6e0b66e0edfcf339b37cd4ddc99a56dee1df213"
+   #:checksum "1pd2xiz2nmry20dvfgbzihkbbhb78d5b61pfwqrlzr5bck13cs98"))
+
+(define-public emacs-pgtk-native-comp
+  (emacs-from-git
+   (emacs-with-native-comp emacs-next-pgtk gcc-10 'full-aot)
+   #:pkg-name "emacs-pgtk-native-comp"
+   #:pkg-version "28.0.50"
+   #:pkg-revision "189"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "a5af234c593b34243c44c77d0467a35952ffba40"
-   #:checksum "0p4lnh20vmkqqw8q03hj366i4r49fpzckh2kzm0gb3h0f269543p"))
+   #:git-commit "78575c53fc8c78de1494822f9f6680e2a21308d6"
+   #:checksum "026xkjshnbhwyvhf5k526q8fs4shvxxbw081m3ggpyd7fb1glbzg"))
