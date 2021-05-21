@@ -19,6 +19,8 @@
   #:use-module (gnu packages maths)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages sqlite)
+  #:use-module (gnu packages perl)
+  #:use-module (gnu packages ruby)
   #:use-module (gnu packages backup)
   #:use-module (gnu packages curl)
   #:use-module (gnu packages polkit)
@@ -508,3 +510,31 @@ automatic, safe and reliable.")
     (description
      "xdg-desktop-portal backend for wlroots")
     (license #f)))
+
+(define-public btrbk
+  (package
+    (name "btrbk")
+    (version "0.31.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                     (url "https://github.com/digint/btrbk")
+                     (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "0wlr0nikc8grskb574sfxpi1rd5v8vmaxbvpna37g8kxs1al10ld"))))
+    (build-system gnu-build-system)
+    (inputs `(("perl" ,perl)
+              ("python" ,python)))
+    (native-inputs `(("asciidoctor" ,ruby-asciidoctor)))
+    (arguments `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out"))
+                                    (string-append "CONFDIR=" (assoc-ref %outputs "out") "/etc"))
+                 #:phases (modify-phases %standard-phases
+                            (delete 'configure)
+                            (delete 'check))))
+    (home-page "https://github.com/digint/btrbk")
+    (synopsis "Tool for creating snapshots and remote backups of btrfs subvolumes")
+    (description
+     "Btrbk is a backup tool for btrfs subvolumes, taking advantage of btrfs specific capabilities to create atomic snapshots and transfer them incrementally to your backup locations.")
+    (license licenses:gpl3)))
