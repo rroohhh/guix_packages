@@ -36,6 +36,8 @@
   #:use-module (ice-9 regex)
   #:use-module (flat packages gcc))
 
+
+
 (define emacs-with-native-comp
   (lambda* (emacs gcc #:optional full-aot)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
@@ -46,9 +48,9 @@
            (inherit (package-source emacs))
            (patches
             (append (list (origin
-                     (method url-fetch)
-                     (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
-                     (sha256 "1k1111111111111111111111111111111111111111111111111k")))
+                           (method url-fetch)
+                           (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
+                           (sha256 "0rfi90b4rvjksrl7fycisayyfs4wj1ybnd7dynairar8fxz5bmw3")))
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
@@ -91,7 +93,7 @@
                         "-B" (assoc-ref inputs "libgccjit") "/lib/")
                        (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
-                   #t))))))))
+                   #t))))))
         (native-inputs
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
@@ -137,3 +139,5 @@
    #:git-repo "https://github.com/flatwhatson/emacs.git"
    #:git-commit "78575c53fc8c78de1494822f9f6680e2a21308d6"
    #:checksum "026xkjshnbhwyvhf5k526q8fs4shvxxbw081m3ggpyd7fb1glbzg"))
+
+emacs-pgtk-native-comp
