@@ -525,6 +525,7 @@ automatic, safe and reliable.")
                (base32
                 "0wlr0nikc8grskb574sfxpi1rd5v8vmaxbvpna37g8kxs1al10ld"))))
     (build-system gnu-build-system)
+    (propagated-inputs `(("btrfs" ,btrfs-progs)))
     (inputs `(("perl" ,perl)
               ("python" ,python)))
     (native-inputs `(("asciidoctor" ,ruby-asciidoctor)))
