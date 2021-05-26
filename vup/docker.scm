@@ -184,6 +184,21 @@ built-in registry server of Docker.")
                 (string-append "DefaultRuntimeName = \""
                                (assoc-ref inputs "runc")
                                "/sbin/runc\"\n")))
+             (substitute* "vendor/github.com/moby/buildkit/executor/runcexecutor/executor.go"
+               (("defaultCommandCandidates = .*")
+                (string-append "defaultCommandCandidates = []string{\""
+                               (assoc-ref inputs "runc")
+                               "/sbin/runc\"}\n")))
+             (substitute* "vendor/github.com/containerd/containerd/runtime/v1/linux/runtime.go"
+               (("defaultRuntime = .*")
+                (string-append "defaultRuntime = \""
+                               (assoc-ref inputs "runc")
+                               "/sbin/runc\"\n")))
+             (substitute* "daemon/runtime_unix.go"
+               (("defaultRuntimeName = .*")
+                (string-append "defaultRuntimeName = \""
+                               (assoc-ref inputs "runc")
+                               "/sbin/runc\"\n")))
              (substitute* "daemon/config/config.go"
                (("StockRuntimeName = .*")
                 (string-append "StockRuntimeName = \""
@@ -521,5 +536,3 @@ containers.  It manages a single child process and ensures that any zombie
 processes produced from it are reaped and that signals are properly forwarded.
 Tini is integrated with Docker.")
     (license license:expat)))
-
-docker-cli
