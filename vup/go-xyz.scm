@@ -1,27 +1,33 @@
 (define-module (vup go-xyz)
   #:use-module (guix packages)
-  #:use-module (guix git-download)
-  #:use-module (guix build-system go)
+  #:use-module (guix download)
+  #:use-module (guix build-system trivial)
+  #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages compression)
   #:use-module (gnu packages golang)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public go-github-com-hashicorp-vault
+(define-public vault
   (package
-    (name "go-github-com-hashicorp-vault")
+    (name "vault")
     (version "1.7.2")
     (source
-      (origin
-        (method git-fetch)
-        (uri (git-reference
-               (url "https://github.com/hashicorp/vault")
-               (commit (string-append "v" version))))
-        (file-name (git-file-name name version))
-        (sha256
-          (base32
-            "06h31flxrv10r2n012i5g2mkqcqi53z7vikd1vbz001jyszi5n5c"))))
-    (build-system go-build-system)
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://releases.hashicorp.com/vault/" version "/vault_" version "_linux_amd64.zip"))
+       (sha256
+        (base32 "1g37pgj7hbi6vfpwq9rrh6is980lfwbq5jb4736jfp5m360vprjy"))))
+    (build-system trivial-build-system)
+    (native-inputs `(("unzip" ,unzip)))
     (arguments
-      '(#:import-path "github.com/hashicorp/vault"))
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (invoke (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip") (assoc-ref %build-inputs "source"))
+         (install-file "vault" (string-append %output "/bin"))
+         #t)))
     (home-page
       "https://www.vaultproject.io")
     (synopsis "A tool for managing secrets")
