@@ -1,6 +1,8 @@
 (define-module (vup influxdb)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix git-download)
+  #:use-module (guix utils)
   #:use-module (guix build-system copy)
   #:use-module (gnu packages)
   #:use-module ((guix licenses) #:prefix license:))
@@ -33,3 +35,25 @@
    (arguments
     '(#:install-plan
       '(("influx" "bin/influx"))))))
+
+(define-public telegraf
+  (package
+    (name "telegraf")
+    (version "1.19.0-rc1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://dl.influxdata.com/telegraf/releases/telegraf-" (string-replace-substring version "-" "~") "_linux_amd64.tar.gz"))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "10vf1jh9ay5zxfbpn5c78h6g7bf1356hn5d2xd824pcbnjz19pmk"))))
+    (build-system copy-build-system)
+    (arguments
+     '(#:install-plan
+       '(("usr/bin/telegraf" "bin/telegraf"))))
+    (home-page
+      "https://www.influxdata.com/")
+    (synopsis "Telegraf is a plugin-driven server agent for collecting and sending metrics and events from databases, systems, and IoT sensors.")
+    (description
+      "Telegraf is a plugin-driven server agent for collecting and sending metrics and events from databases, systems, and IoT sensors.")
+    (license #f)))                      ; MIT
