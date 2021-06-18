@@ -2,6 +2,7 @@
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages gettext)
   #:use-module (gnu packages texinfo)
+  #:use-module (gnu packages m4)
   #:use-module (guix build-system cargo)
   #:use-module (guix licenses)
   #:use-module (guix packages)
@@ -9,10 +10,30 @@
   #:use-module (guix git-download)
   #:use-module ((guix import utils) #:select (beautify-description spdx-string->license)))
 
-(define-public rust-aho-corasick_0_7_15
+(define-public rust-adler_1_0_2
+  (package
+    (name "rust-adler")
+    (version "1.0.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "adler" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "1zim79cvzd5yrkzl3nyfx0avijwgk9fqv3yrscdy1cc79ih02qpj"))))
+    (build-system cargo-build-system)
+    (home-page "None")
+    (synopsis "A simple clean-room implementation of the Adler-32 checksum")
+    (description
+      (beautify-description "A simple clean-room implementation of the Adler-32 checksum"))
+    (license (spdx-string->license "0BSD OR MIT OR Apache-2.0"))))
+
+(define-public rust-aho-corasick_0_7_18
   (package
     (name "rust-aho-corasick")
-    (version "0.7.15")
+    (version "0.7.18")
     (source
       (origin
         (method url-fetch)
@@ -21,11 +42,11 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1rb8gzhljl8r87dpf2n5pnqnkl694casgns4ma0sqzd4zazzw13l"))))
+            "0vv50b3nvkhyy7x7ip19qnsq11bqlnffkmj2yx2xlyk5wzawydqy"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-memchr" ,rust-memchr_2_3_4))))
+      (("rust-memchr" ,rust-memchr_2_4_0))))
     (home-page "https://github.com/BurntSushi/aho-corasick")
     (synopsis "Fast multiple substring searching.")
     (description
@@ -33,10 +54,10 @@
     (license `((spdx-string->license "Unlicense")
                (spdx-string->license "MIT")))))
 
-(define-public rust-anyhow_1_0_38
+(define-public rust-anyhow_1_0_41
   (package
     (name "rust-anyhow")
-    (version "1.0.38")
+    (version "1.0.41")
     (source
       (origin
         (method url-fetch)
@@ -45,7 +66,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1c8ls4w26bjwvjvb6a3s4bpk28raljy3a2pmwrvby3d843szgpdg"))))
+            "0qaa0vgsa7ybq7wqk57508l52l1lr3sbx49vk9hf43w9yql2dbqm"))))
     (build-system cargo-build-system)
     (home-page "None")
     (synopsis "Flexible concrete Error type built on std::error::Error")
@@ -69,8 +90,8 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-hermit-abi" ,rust-hermit-abi_0_1_18)        
-       ("rust-libc" ,rust-libc_0_2_86)        
+      (("rust-hermit-abi" ,rust-hermit-abi_0_1_18)
+       ("rust-libc" ,rust-libc_0_2_97)
        ("rust-winapi" ,rust-winapi_0_3_9))))
     (home-page "https://github.com/softprops/atty")
     (synopsis "A simple interface for querying atty")
@@ -98,10 +119,10 @@
       (beautify-description "Automatic cfg for Rust compiler features"))
     (license (spdx-string->license "Apache-2.0 OR MIT"))))
 
-(define-public rust-az_1_1_0
+(define-public rust-az_1_1_1
   (package
     (name "rust-az")
-    (version "1.1.0")
+    (version "1.1.1")
     (source
       (origin
         (method url-fetch)
@@ -110,7 +131,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "12pc997lxgs65bzm0ligiwyff7hlcs3fz5fvmnk9amzwgf81sknq"))))
+            "1jk4pl8i0klhxlkabb1hp3mbjyawdwqhs7vb1w2hl9n0w1ipsbc2"))))
     (build-system cargo-build-system)
     (home-page "None")
     (synopsis "Casts and checked casts")
@@ -135,7 +156,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-byteorder" ,rust-byteorder_1_4_2))))
+      (("rust-byteorder" ,rust-byteorder_1_4_3))))
     (home-page "None")
     (synopsis "encodes and decodes base64 as bytes or utf8")
     (description
@@ -164,10 +185,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-byteorder_1_4_2
+(define-public rust-byteorder_1_4_3
   (package
     (name "rust-byteorder")
-    (version "1.4.2")
+    (version "1.4.3")
     (source
       (origin
         (method url-fetch)
@@ -176,13 +197,56 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0srh0h0594jmsnbvm7n0g8xabhla8lwb3gn8s0fzd7d1snix2i5f"))))
+            "0456lv9xi1a5bcm32arknf33ikv76p3fr9yzki4lb2897p2qkh8l"))))
     (build-system cargo-build-system)
     (home-page "https://github.com/BurntSushi/byteorder")
     (synopsis "Library for reading/writing numbers in big-endian and little-endian.")
     (description
       (beautify-description "Library for reading/writing numbers in big-endian and little-endian."))
     (license (spdx-string->license "Unlicense OR MIT"))))
+
+(define-public rust-capnp_0_14_2
+  (package
+    (name "rust-capnp")
+    (version "0.14.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "capnp" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "1mldpiv3mqqznwvrh0mprwidg6xwvacy5vvxhg60k46ljscwd82p"))))
+    (build-system cargo-build-system)
+    (home-page "None")
+    (synopsis "runtime library for Cap\u0027n Proto data encoding")
+    (description
+      (beautify-description "runtime library for Cap\u0027n Proto data encoding"))
+    (license (spdx-string->license "MIT"))))
+
+(define-public rust-capnpc_0_14_4
+  (package
+    (name "rust-capnpc")
+    (version "0.14.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "capnpc" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "1zhis7h4wbhd4d7zc3jnpgkjm4nj9dcfsipp71f8nlb2260wwyxl"))))
+    (build-system cargo-build-system)
+    (arguments
+    `(#:cargo-inputs
+      (("rust-capnp" ,rust-capnp_0_14_2))))
+    (home-page "None")
+    (synopsis "Cap\u0027n Proto code generation")
+    (description
+      (beautify-description "Cap\u0027n Proto code generation"))
+    (license (spdx-string->license "MIT"))))
 
 (define-public rust-cfg-if_1_0_0
   (package
@@ -221,16 +285,16 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-atty" ,rust-atty_0_2_14)        
-       ("rust-bitflags" ,rust-bitflags_1_2_1)        
-       ("rust-clap_derive" ,rust-clap_derive_3_0_0-beta_2)        
-       ("rust-indexmap" ,rust-indexmap_1_6_1)        
-       ("rust-lazy_static" ,rust-lazy_static_1_4_0)        
-       ("rust-os_str_bytes" ,rust-os_str_bytes_2_4_0)        
-       ("rust-strsim" ,rust-strsim_0_10_0)        
-       ("rust-termcolor" ,rust-termcolor_1_1_2)        
-       ("rust-textwrap" ,rust-textwrap_0_12_1)        
-       ("rust-unicode-width" ,rust-unicode-width_0_1_8)        
+      (("rust-atty" ,rust-atty_0_2_14)
+       ("rust-bitflags" ,rust-bitflags_1_2_1)
+       ("rust-clap_derive" ,rust-clap_derive_3_0_0-beta_2)
+       ("rust-indexmap" ,rust-indexmap_1_6_2)
+       ("rust-lazy_static" ,rust-lazy_static_1_4_0)
+       ("rust-os_str_bytes" ,rust-os_str_bytes_2_4_0)
+       ("rust-strsim" ,rust-strsim_0_10_0)
+       ("rust-termcolor" ,rust-termcolor_1_1_2)
+       ("rust-textwrap" ,rust-textwrap_0_12_1)
+       ("rust-unicode-width" ,rust-unicode-width_0_1_8)
        ("rust-vec_map" ,rust-vec_map_0_8_2))))
     (home-page "https://clap.rs/")
     (synopsis "A simple to use, efficient, and full-featured Command Line Argument Parser")
@@ -254,21 +318,44 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-heck" ,rust-heck_0_3_2)        
-       ("rust-proc-macro-error" ,rust-proc-macro-error_1_0_4)        
-       ("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-heck" ,rust-heck_0_3_3)
+       ("rust-proc-macro-error" ,rust-proc-macro-error_1_0_4)
+       ("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "https://clap.rs/")
     (synopsis "Parse command line argument by defining a struct, derive crate.")
     (description
       (beautify-description "Parse command line argument by defining a struct, derive crate."))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-ctor_0_1_19
+(define-public rust-crc32fast_1_2_1
+  (package
+    (name "rust-crc32fast")
+    (version "1.2.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "crc32fast" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "06ivjlkzcxxxk7nyshc44aql4zjpmvirq46vmzrakdjax3n6y5c1"))))
+    (build-system cargo-build-system)
+    (arguments
+    `(#:cargo-inputs
+      (("rust-cfg-if" ,rust-cfg-if_1_0_0))))
+    (home-page "None")
+    (synopsis "Fast, SIMD-accelerated CRC32 (IEEE) checksum computation")
+    (description
+      (beautify-description "Fast, SIMD-accelerated CRC32 (IEEE) checksum computation"))
+    (license (spdx-string->license "MIT OR Apache-2.0"))))
+
+(define-public rust-ctor_0_1_20
   (package
     (name "rust-ctor")
-    (version "0.1.19")
+    (version "0.1.20")
     (source
       (origin
         (method url-fetch)
@@ -277,12 +364,12 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "06bbsv7lm9c9mfdg896vdxmdkkammc0sa56n2x4fzg0psjd5vx78"))))
+            "0v80naiw5fp81xkyfkds6jpyamf3wx43kz4nif936bkq3any562y"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "None")
     (synopsis "__attribute__((constructor)) for Rust")
     (description
@@ -307,6 +394,33 @@
     (synopsis "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.")
     (description
       (beautify-description "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases."))
+    (license `((spdx-string->license "MIT")
+               (spdx-string->license "Apache-2.0")))))
+
+(define-public rust-flate2_1_0_20
+  (package
+    (name "rust-flate2")
+    (version "1.0.20")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "flate2" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "1q5b4r2rclhjbcxlbv5231avp1y6y8bynrf5v3brdzhhvr9yqfnd"))))
+    (build-system cargo-build-system)
+    (arguments
+    `(#:cargo-inputs
+      (("rust-cfg-if" ,rust-cfg-if_1_0_0)
+       ("rust-crc32fast" ,rust-crc32fast_1_2_1)
+       ("rust-libc" ,rust-libc_0_2_97)
+       ("rust-miniz_oxide" ,rust-miniz_oxide_0_4_4))))
+    (home-page "https://github.com/rust-lang/flate2-rs")
+    (synopsis "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams.")
+    (description
+      (beautify-description "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams."))
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
@@ -350,9 +464,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "None")
     (synopsis "Define your own PhantomData")
     (description
@@ -380,10 +494,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-gmp-mpfr-sys_1_4_2
+(define-public rust-gmp-mpfr-sys_1_4_5
   (package
     (name "rust-gmp-mpfr-sys")
-    (version "1.4.2")
+    (version "1.4.5")
     (source
       (origin
         (method url-fetch)
@@ -392,11 +506,11 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0vpiyx6qizqxlq8mb7ch6dz91bj0s8761vgxn4hk10s9klrxnzx5"))))
+            "0r00n7fbc99pnbr9qw1dkm4xdncq1a4mxb6qz175h79bg52h1rqq"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-libc" ,rust-libc_0_2_86)        
+      (("rust-libc" ,rust-libc_0_2_97)
        ("rust-winapi" ,rust-winapi_0_3_9))))
     (home-page "None")
     (synopsis "Rust FFI bindings for GMP, MPFR and MPC")
@@ -425,10 +539,10 @@
     (license `((spdx-string->license "Apache-2.0")
                (spdx-string->license "MIT")))))
 
-(define-public rust-heck_0_3_2
+(define-public rust-heck_0_3_3
   (package
     (name "rust-heck")
-    (version "0.3.2")
+    (version "0.3.3")
     (source
       (origin
         (method url-fetch)
@@ -437,7 +551,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1b56s2c1ymdd0qmy31bw0ndhm31hcdamnhg3npp7ssrmc1ag9jw7"))))
+            "0b0kkr790p66lvzn9nsmfjvydrbmh9z5gb664jchwgw64vxiwqkd"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
@@ -464,7 +578,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-libc" ,rust-libc_0_2_86))))
+      (("rust-libc" ,rust-libc_0_2_97))))
     (home-page "None")
     (synopsis "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`.")
     (description
@@ -488,8 +602,8 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-glob" ,rust-glob_0_3_0)        
-       ("rust-include_dir_impl" ,rust-include_dir_impl_0_6_0)        
+      (("rust-glob" ,rust-glob_0_3_0)
+       ("rust-include_dir_impl" ,rust-include_dir_impl_0_6_0)
        ("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19))))
     (home-page "None")
     (synopsis "Embed the contents of a directory in your binary")
@@ -513,21 +627,21 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-anyhow" ,rust-anyhow_1_0_38)        
-       ("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19)        
-       ("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-anyhow" ,rust-anyhow_1_0_41)
+       ("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19)
+       ("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "None")
     (synopsis "Implementation crate for include_dir")
     (description
       (beautify-description "Implementation crate for include_dir"))
     (license (spdx-string->license "MIT"))))
 
-(define-public rust-indexmap_1_6_1
+(define-public rust-indexmap_1_6_2
   (package
     (name "rust-indexmap")
-    (version "1.6.1")
+    (version "1.6.2")
     (source
       (origin
         (method url-fetch)
@@ -536,11 +650,11 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0friqyzr4ssyayks7nirqbc36zcsf8fdi67jmvl4vpjh8a9zmcag"))))
+            "1wxfh55zlrlpdxfcvvvj6wwc46f23cnb0j9q71190yl9pyh4aj42"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-autocfg" ,rust-autocfg_1_0_1)        
+      (("rust-autocfg" ,rust-autocfg_1_0_1)
        ("rust-hashbrown" ,rust-hashbrown_0_9_1))))
     (home-page "None")
     (synopsis "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap.")
@@ -565,7 +679,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-indoc-impl" ,rust-indoc-impl_0_3_6)        
+      (("rust-indoc-impl" ,rust-indoc-impl_0_3_6)
        ("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19))))
     (home-page "None")
     (synopsis "Indented document literals")
@@ -589,10 +703,10 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19)        
-       ("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60)        
+      (("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19)
+       ("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73)
        ("rust-unindent" ,rust-unindent_0_1_7))))
     (home-page "None")
     (synopsis "Indented document literals")
@@ -639,8 +753,8 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-ctor" ,rust-ctor_0_1_19)        
-       ("rust-ghost" ,rust-ghost_0_1_2)        
+      (("rust-ctor" ,rust-ctor_0_1_20)
+       ("rust-ghost" ,rust-ghost_0_1_2)
        ("rust-inventory-impl" ,rust-inventory-impl_0_1_10))))
     (home-page "None")
     (synopsis "Typed distributed plugin registration")
@@ -664,9 +778,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "None")
     (synopsis "Implementation of macros for the `inventory` crate")
     (description
@@ -738,10 +852,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-libc_0_2_86
+(define-public rust-libc_0_2_97
   (package
     (name "rust-libc")
-    (version "0.2.86")
+    (version "0.2.97")
     (source
       (origin
         (method url-fetch)
@@ -750,7 +864,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "074b38mq1rx3dgg7sf952d4ccywq450zymk7gzn5q9z39f92sa5p"))))
+            "1dlgdziv6nkabx287jjmghnlgc5dqv6fgpvh9n7ibpr0synsvf0j"))))
     (build-system cargo-build-system)
     (home-page "https://github.com/rust-lang/libc")
     (synopsis "Raw FFI bindings to platform libraries like libc.")
@@ -758,10 +872,10 @@
       (beautify-description "Raw FFI bindings to platform libraries like libc."))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-lock_api_0_4_2
+(define-public rust-lock_api_0_4_4
   (package
     (name "rust-lock_api")
-    (version "0.4.2")
+    (version "0.4.4")
     (source
       (origin
         (method url-fetch)
@@ -770,7 +884,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "04hkhfq308agxg9wwmzh7ncfiyyyhn0d49n07abppzdj6p8zz5nx"))))
+            "1sq7pw7h7jbfvnv5nq3vm912gdwhhv8idi3njifd3xnz0q38i0h3"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
@@ -805,10 +919,10 @@
       (beautify-description "A lightweight logging facade for Rust"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-memchr_2_3_4
+(define-public rust-memchr_2_4_0
   (package
     (name "rust-memchr")
-    (version "2.3.4")
+    (version "2.4.0")
     (source
       (origin
         (method url-fetch)
@@ -817,7 +931,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "098m9clfs495illlw00hv2gg67mhm7jflld3msyclvi5m9xc9q8f"))))
+            "1p478fqf4nia2ma0kv4npb8x1hli0zz6k16517ikb51jkryx8sxi"))))
     (build-system cargo-build-system)
     (home-page "https://github.com/BurntSushi/rust-memchr")
     (synopsis "Safe interface to memchr.")
@@ -826,10 +940,34 @@
     (license `((spdx-string->license "Unlicense")
                (spdx-string->license "MIT")))))
 
-(define-public rust-multimap_0_8_2
+(define-public rust-miniz_oxide_0_4_4
+  (package
+    (name "rust-miniz_oxide")
+    (version "0.4.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "miniz_oxide" version))
+        (file-name
+          (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32
+            "0jsfv00hl5rmx1nijn59sr9jmjd4rjnjhh4kdjy8d187iklih9d9"))))
+    (build-system cargo-build-system)
+    (arguments
+    `(#:cargo-inputs
+      (("rust-adler" ,rust-adler_1_0_2)
+       ("rust-autocfg" ,rust-autocfg_1_0_1))))
+    (home-page "https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide")
+    (synopsis "DEFLATE compression and decompression library rewritten in Rust based on miniz")
+    (description
+      (beautify-description "DEFLATE compression and decompression library rewritten in Rust based on miniz"))
+    (license (spdx-string->license "MIT OR Zlib OR Apache-2.0"))))
+
+(define-public rust-multimap_0_8_3
   (package
     (name "rust-multimap")
-    (version "0.8.2")
+    (version "0.8.3")
     (source
       (origin
         (method url-fetch)
@@ -838,37 +976,17 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0cq3hlqwyxz0hmcpbajghhc832ln6h0qszvf89kv8fx875hhfm8j"))))
+            "0sicyz4n500vdhgcxn4g8jz97cp1ijir1rnbgph3pmx9ckz4dkp5"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-serde" ,rust-serde_1_0_123))))
+      (("rust-serde" ,rust-serde_1_0_126))))
     (home-page "None")
     (synopsis "A multimap implementation.")
     (description
       (beautify-description "A multimap implementation."))
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
-
-(define-public rust-once_cell_1_5_2
-  (package
-    (name "rust-once_cell")
-    (version "1.5.2")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "once_cell" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "183zs1dbmsv24mkafjypf9qwjrx46an58vb004a162l113sl3g8k"))))
-    (build-system cargo-build-system)
-    (home-page "None")
-    (synopsis "Single assignment cells and lazy values.")
-    (description
-      (beautify-description "Single assignment cells and lazy values."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
 
 (define-public rust-os_str_bytes_2_4_0
   (package
@@ -906,8 +1024,8 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-instant" ,rust-instant_0_1_9)        
-       ("rust-lock_api" ,rust-lock_api_0_4_2)        
+      (("rust-instant" ,rust-instant_0_1_9)
+       ("rust-lock_api" ,rust-lock_api_0_4_4)
        ("rust-parking_lot_core" ,rust-parking_lot_core_0_8_3))))
     (home-page "None")
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
@@ -932,11 +1050,11 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-cfg-if" ,rust-cfg-if_1_0_0)        
-       ("rust-instant" ,rust-instant_0_1_9)        
-       ("rust-libc" ,rust-libc_0_2_86)        
-       ("rust-redox_syscall" ,rust-redox_syscall_0_2_4)        
-       ("rust-smallvec" ,rust-smallvec_1_6_1)        
+      (("rust-cfg-if" ,rust-cfg-if_1_0_0)
+       ("rust-instant" ,rust-instant_0_1_9)
+       ("rust-libc" ,rust-libc_0_2_97)
+       ("rust-redox_syscall" ,rust-redox_syscall_0_2_9)
+       ("rust-smallvec" ,rust-smallvec_1_6_1)
        ("rust-winapi" ,rust-winapi_0_3_9))))
     (home-page "None")
     (synopsis "An advanced API for creating custom synchronization primitives.")
@@ -961,7 +1079,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-paste-impl" ,rust-paste-impl_0_1_18)        
+      (("rust-paste-impl" ,rust-paste-impl_0_1_18)
        ("rust-proc-macro-hack" ,rust-proc-macro-hack_0_5_19))))
     (home-page "None")
     (synopsis "Macros for all your token pasting needs")
@@ -992,49 +1110,50 @@
       (beautify-description "Implementation detail of the `paste` crate"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-prjoxide
+(define-public rust-prjoxide_0_1_0
   (package
     (name "rust-prjoxide")
     (version "0.1.0")
-    (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/gatecat/prjoxide")
-                      (commit "6a5a2f554ec85bef0880842993f741f27a1d608b")
-                      (recursive? #t)))
-                (file-name (git-file-name name version))
-                (sha256
-                 (base32
-                  "1n0hww5di4rlbv120914x71igshlj7ihk8p69lshrkwhg4vy305g"))))
+    (source
+      (origin
+        (method git-fetch)
+        (uri (git-reference
+          (url "https://github.com/gatecat/prjoxide")
+          (commit "391ef7bdfa4ae7fcece1dcfb5abe62c9aab83e50")
+          (recursive? #t)))
+        (file-name (git-file-name name version))
+        (sha256
+          (base32
+            "0iwqw7ykbhwfscvf7m51gs76py0v5bskqahjycydpdpliqvmjkbi"))))
     (build-system cargo-build-system)
-    (native-inputs `(("autoconf" ,autoconf)
-                     ("automake" ,automake)
-                     ("libtool" ,libtool)
-                     ("gettext" ,gnu-gettext)
-                     ("texinfo" ,texinfo)))
+    (inputs `(("m4" ,m4)))
     (arguments
     `(#:cargo-inputs
-      (("rust-clap" ,rust-clap_3_0_0-beta_2)        
-       ("rust-include_dir" ,rust-include_dir_0_6_0)        
-       ("rust-itertools" ,rust-itertools_0_8_2)        
-       ("rust-lazy_static" ,rust-lazy_static_1_4_0)        
-       ("rust-log" ,rust-log_0_4_14)        
-       ("rust-multimap" ,rust-multimap_0_8_2)        
-       ("rust-pulldown-cmark" ,rust-pulldown-cmark_0_6_1)        
-       ("rust-regex" ,rust-regex_1_4_3)        
-       ("rust-ron" ,rust-ron_0_5_1)        
-       ("rust-rug" ,rust-rug_1_11_0)        
-       ("rust-serde" ,rust-serde_1_0_123)        
-       ("rust-serde_json" ,rust-serde_json_1_0_62))
-      #:phases (modify-phases %standard-phases
-                  (add-after 'unpack 'change-directory
-                    (lambda _
-                      (delete-file "libprjoxide/Cargo.toml")
-                      (chdir "libprjoxide/prjoxide")
-                      (setenv "CONFIG_SHELL" (which "sh"))
-                      (display "changed to")
-                      (display (getcwd))
-                      #t)))))
+      (("rust-capnp" ,rust-capnp_0_14_2)
+       ("rust-capnpc" ,rust-capnpc_0_14_4)
+       ("rust-clap" ,rust-clap_3_0_0-beta_2)
+       ("rust-flate2" ,rust-flate2_1_0_20)
+       ("rust-gmp-mpfr-sys" ,rust-gmp-mpfr-sys_1_4_5)
+       ("rust-include_dir" ,rust-include_dir_0_6_0)
+       ("rust-itertools" ,rust-itertools_0_8_2)
+       ("rust-lazy_static" ,rust-lazy_static_1_4_0)
+       ("rust-log" ,rust-log_0_4_14)
+       ("rust-multimap" ,rust-multimap_0_8_3)
+       ("rust-pulldown-cmark" ,rust-pulldown-cmark_0_6_1)
+       ("rust-regex" ,rust-regex_1_5_4)
+       ("rust-ron" ,rust-ron_0_5_1)
+       ("rust-rug" ,rust-rug_1_12_0)
+       ("rust-serde" ,rust-serde_1_0_126)
+       ("rust-serde_json" ,rust-serde_json_1_0_64))
+       #:phases (modify-phases %standard-phases
+                   (add-after 'unpack 'change-directory
+                     (lambda _
+                       (delete-file "libprjoxide/Cargo.toml")
+                       (chdir "libprjoxide/prjoxide")
+                       (setenv "CONFIG_SHELL" (which "sh"))
+                       (display "changed to")
+                       (display (getcwd))
+                       #t)))))
     (home-page "FILLMEIN")
     (synopsis "")
     (description
@@ -1057,11 +1176,11 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro-error-attr" ,rust-proc-macro-error-attr_1_0_4)        
-       ("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60)        
-       ("rust-version_check" ,rust-version_check_0_9_2))))
+      (("rust-proc-macro-error-attr" ,rust-proc-macro-error-attr_1_0_4)
+       ("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73)
+       ("rust-version_check" ,rust-version_check_0_9_3))))
     (home-page "None")
     (synopsis "Almost drop-in replacement to panics in proc-macros")
     (description
@@ -1084,9 +1203,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-version_check" ,rust-version_check_0_9_2))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-version_check" ,rust-version_check_0_9_3))))
     (home-page "None")
     (synopsis "Attribute macro for proc-macro-error crate")
     (description
@@ -1113,10 +1232,10 @@
       (beautify-description "Procedural macros in expression position"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-proc-macro2_1_0_24
+(define-public rust-proc-macro2_1_0_27
   (package
     (name "rust-proc-macro2")
-    (version "1.0.24")
+    (version "1.0.27")
     (source
       (origin
         (method url-fetch)
@@ -1125,11 +1244,11 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0wcabxzrddcjmryndw8fpyxcq6rw63m701vx86xxf03y3bp081qy"))))
+            "0f3h0zl5w5090ajmmvpmhkpr4iwqnn5rip3afacabhc657vwmn7h"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-unicode-xid" ,rust-unicode-xid_0_2_1))))
+      (("rust-unicode-xid" ,rust-unicode-xid_0_2_2))))
     (home-page "None")
     (synopsis "A substitute implementation of the compiler\u0027s `proc_macro` API to decouple\ntoken-based libraries from the procedural macro use case.")
     (description
@@ -1152,9 +1271,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-bitflags" ,rust-bitflags_1_2_1)        
-       ("rust-getopts" ,rust-getopts_0_2_21)        
-       ("rust-memchr" ,rust-memchr_2_3_4)        
+      (("rust-bitflags" ,rust-bitflags_1_2_1)
+       ("rust-getopts" ,rust-getopts_0_2_21)
+       ("rust-memchr" ,rust-memchr_2_4_0)
        ("rust-unicase" ,rust-unicase_2_6_0))))
     (home-page "None")
     (synopsis "A pull parser for CommonMark")
@@ -1178,14 +1297,14 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-cfg-if" ,rust-cfg-if_1_0_0)        
-       ("rust-ctor" ,rust-ctor_0_1_19)        
-       ("rust-indoc" ,rust-indoc_0_3_6)        
-       ("rust-inventory" ,rust-inventory_0_1_10)        
-       ("rust-libc" ,rust-libc_0_2_86)        
-       ("rust-parking_lot" ,rust-parking_lot_0_11_1)        
-       ("rust-paste" ,rust-paste_0_1_18)        
-       ("rust-pyo3-macros" ,rust-pyo3-macros_0_13_2)        
+      (("rust-cfg-if" ,rust-cfg-if_1_0_0)
+       ("rust-ctor" ,rust-ctor_0_1_20)
+       ("rust-indoc" ,rust-indoc_0_3_6)
+       ("rust-inventory" ,rust-inventory_0_1_10)
+       ("rust-libc" ,rust-libc_0_2_97)
+       ("rust-parking_lot" ,rust-parking_lot_0_11_1)
+       ("rust-paste" ,rust-paste_0_1_18)
+       ("rust-pyo3-macros" ,rust-pyo3-macros_0_13_2)
        ("rust-unindent" ,rust-unindent_0_1_7))))
     (home-page "https://github.com/pyo3/pyo3")
     (synopsis "Bindings to Python interpreter")
@@ -1209,9 +1328,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-pyo3-macros-backend" ,rust-pyo3-macros-backend_0_13_2)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-pyo3-macros-backend" ,rust-pyo3-macros-backend_0_13_2)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "https://github.com/pyo3/pyo3")
     (synopsis "Proc macros for PyO3 package")
     (description
@@ -1234,9 +1353,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "https://github.com/pyo3/pyo3")
     (synopsis "Code generation for PyO3 package")
     (description
@@ -1259,17 +1378,17 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27))))
     (home-page "None")
     (synopsis "Quasi-quoting macro quote!(...)")
     (description
       (beautify-description "Quasi-quoting macro quote!(...)"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-redox_syscall_0_2_4
+(define-public rust-redox_syscall_0_2_9
   (package
     (name "rust-redox_syscall")
-    (version "0.2.4")
+    (version "0.2.9")
     (source
       (origin
         (method url-fetch)
@@ -1278,7 +1397,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0w254gyccyinrzhgd562ddrhgcpwswy700mmc9qa6pkc86lqrv05"))))
+            "1vpyfnfrw5ki262720yks8m7vn1a2mg89s4rqi5ir7izvyx9md2s"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
@@ -1289,10 +1408,10 @@
       (beautify-description "A Rust library to access raw Redox system calls"))
     (license (spdx-string->license "MIT"))))
 
-(define-public rust-regex_1_4_3
+(define-public rust-regex_1_5_4
   (package
     (name "rust-regex")
-    (version "1.4.3")
+    (version "1.5.4")
     (source
       (origin
         (method url-fetch)
@@ -1301,24 +1420,23 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "12llbg82js69mdl50lav4yn1iqlx71ckb18dww467q99w4wi49fr"))))
+            "0qf479kjbmb582h4d1d6gfl75h0j8aq2nrdi5wg6zdcy6llqcynh"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-aho-corasick" ,rust-aho-corasick_0_7_15)        
-       ("rust-memchr" ,rust-memchr_2_3_4)        
-       ("rust-regex-syntax" ,rust-regex-syntax_0_6_22)        
-       ("rust-thread_local" ,rust-thread_local_1_1_3))))
+      (("rust-aho-corasick" ,rust-aho-corasick_0_7_18)
+       ("rust-memchr" ,rust-memchr_2_4_0)
+       ("rust-regex-syntax" ,rust-regex-syntax_0_6_25))))
     (home-page "https://github.com/rust-lang/regex")
     (synopsis "An implementation of regular expressions for Rust. This implementation uses\nfinite automata and guarantees linear time matching on all inputs.")
     (description
       (beautify-description "An implementation of regular expressions for Rust. This implementation uses\nfinite automata and guarantees linear time matching on all inputs."))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-regex-syntax_0_6_22
+(define-public rust-regex-syntax_0_6_25
   (package
     (name "rust-regex-syntax")
-    (version "0.6.22")
+    (version "0.6.25")
     (source
       (origin
         (method url-fetch)
@@ -1327,7 +1445,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "10b56ylil35jkb4nwqxm8hbyx3zq7fws0wpydjln165s8xql3sxm"))))
+            "16y87hz1bxmmz6kk360cxwfm3jnbsxb3x4zw9x1gzz7khic2i5zl"))))
     (build-system cargo-build-system)
     (home-page "https://github.com/rust-lang/regex")
     (synopsis "A regular expression parser.")
@@ -1352,9 +1470,9 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-base64" ,rust-base64_0_10_1)        
-       ("rust-bitflags" ,rust-bitflags_1_2_1)        
-       ("rust-serde" ,rust-serde_1_0_123))))
+      (("rust-base64" ,rust-base64_0_10_1)
+       ("rust-bitflags" ,rust-bitflags_1_2_1)
+       ("rust-serde" ,rust-serde_1_0_126))))
     (home-page "https://github.com/ron-rs/ron")
     (synopsis "Rusty Object Notation")
     (description
@@ -1362,10 +1480,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-rug_1_11_0
+(define-public rust-rug_1_12_0
   (package
     (name "rust-rug")
-    (version "1.11.0")
+    (version "1.12.0")
     (source
       (origin
         (method url-fetch)
@@ -1374,13 +1492,13 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0idw05zz1i2l747arvhz3b3nxj1dggk24qvymj5f9a2hlh6x0f75"))))
+            "095zhdi645dc1z55z1qygbdridpxi7k1fv925z8ifk9c943mxxrj"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-az" ,rust-az_1_1_0)        
-       ("rust-gmp-mpfr-sys" ,rust-gmp-mpfr-sys_1_4_2)        
-       ("rust-libc" ,rust-libc_0_2_86))))
+      (("rust-az" ,rust-az_1_1_1)
+       ("rust-gmp-mpfr-sys" ,rust-gmp-mpfr-sys_1_4_5)
+       ("rust-libc" ,rust-libc_0_2_97))))
     (home-page "None")
     (synopsis "Arbitrary-precision integers, rational, floating-point and complex numbers based on GMP, MPFR and MPC")
     (description
@@ -1428,10 +1546,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-serde_1_0_123
+(define-public rust-serde_1_0_126
   (package
     (name "rust-serde")
-    (version "1.0.123")
+    (version "1.0.126")
     (source
       (origin
         (method url-fetch)
@@ -1440,21 +1558,21 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1bk9733mgiv5sg8yb19y8mc85fb2aaqp1k02v10alavj688idmcj"))))
+            "00vdk7y3j8h2xv28a2i2ad1d19g5iwrdknbq8yp79v6axamhaxgc"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-serde_derive" ,rust-serde_derive_1_0_123))))
+      (("rust-serde_derive" ,rust-serde_derive_1_0_126))))
     (home-page "https://serde.rs")
     (synopsis "A generic serialization/deserialization framework")
     (description
       (beautify-description "A generic serialization/deserialization framework"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-serde_derive_1_0_123
+(define-public rust-serde_derive_1_0_126
   (package
     (name "rust-serde_derive")
-    (version "1.0.123")
+    (version "1.0.126")
     (source
       (origin
         (method url-fetch)
@@ -1463,23 +1581,23 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0ccg4m7ww6mfs5vjdbdifri2kf1wyd4difjnqnraph2gssaw54ck"))))
+            "0hsdh39qj0g187nwndfzg67q4qajbm5g6x0fr5xarblmk2y7sfln"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-syn" ,rust-syn_1_0_60))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-syn" ,rust-syn_1_0_73))))
     (home-page "https://serde.rs")
     (synopsis "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]")
     (description
       (beautify-description "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-serde_json_1_0_62
+(define-public rust-serde_json_1_0_64
   (package
     (name "rust-serde_json")
-    (version "1.0.62")
+    (version "1.0.64")
     (source
       (origin
         (method url-fetch)
@@ -1488,13 +1606,13 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "11hlwc4glh244sk6ncnvj3n01pi538iv2qygyxyfllj5g59n277a"))))
+            "0y9gk3yikncrc0zajmwc0pidr7zfwafawb4gidf6mqyskzf9g7kr"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-itoa" ,rust-itoa_0_4_7)        
-       ("rust-ryu" ,rust-ryu_1_0_5)        
-       ("rust-serde" ,rust-serde_1_0_123))))
+      (("rust-itoa" ,rust-itoa_0_4_7)
+       ("rust-ryu" ,rust-ryu_1_0_5)
+       ("rust-serde" ,rust-serde_1_0_126))))
     (home-page "None")
     (synopsis "A JSON serialization file format")
     (description
@@ -1542,10 +1660,10 @@
       (beautify-description "Implementations of string similarity metrics. Includes Hamming, Levenshtein,\nOSA, Damerau-Levenshtein, Jaro, Jaro-Winkler, and S\u00f8rensen-Dice."))
     (license (spdx-string->license "MIT"))))
 
-(define-public rust-syn_1_0_60
+(define-public rust-syn_1_0_73
   (package
     (name "rust-syn")
-    (version "1.0.60")
+    (version "1.0.73")
     (source
       (origin
         (method url-fetch)
@@ -1554,13 +1672,13 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1080gw6mlja7yl26crya3k403wjdp7v3wx9mxcmpcnlar9z5j067"))))
+            "1ixw4lscc7009ibaic8g5bvnc94hdcr62ksjk3jjl38363zqj57p"))))
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-proc-macro2" ,rust-proc-macro2_1_0_24)        
-       ("rust-quote" ,rust-quote_1_0_9)        
-       ("rust-unicode-xid" ,rust-unicode-xid_0_2_1))))
+      (("rust-proc-macro2" ,rust-proc-macro2_1_0_27)
+       ("rust-quote" ,rust-quote_1_0_9)
+       ("rust-unicode-xid" ,rust-unicode-xid_0_2_2))))
     (home-page "None")
     (synopsis "Parser for Rust source code")
     (description
@@ -1613,30 +1731,6 @@
       (beautify-description "Powerful library for word wrapping, indenting, and dedenting strings"))
     (license (spdx-string->license "MIT"))))
 
-(define-public rust-thread_local_1_1_3
-  (package
-    (name "rust-thread_local")
-    (version "1.1.3")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "thread_local" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "1gccp3grndpi6dyhzylz4hkqnkzc1xyri98n0xwwhnn90i7d4640"))))
-    (build-system cargo-build-system)
-    (arguments
-    `(#:cargo-inputs
-      (("rust-once_cell" ,rust-once_cell_1_5_2))))
-    (home-page "None")
-    (synopsis "Per-object thread-local storage")
-    (description
-      (beautify-description "Per-object thread-local storage"))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
-
 (define-public rust-unicase_2_6_0
   (package
     (name "rust-unicase")
@@ -1653,7 +1747,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-version_check" ,rust-version_check_0_9_2))))
+      (("rust-version_check" ,rust-version_check_0_9_3))))
     (home-page "None")
     (synopsis "A case-insensitive wrapper around strings.")
     (description
@@ -1703,10 +1797,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-unicode-xid_0_2_1
+(define-public rust-unicode-xid_0_2_2
   (package
     (name "rust-unicode-xid")
-    (version "0.2.1")
+    (version "0.2.2")
     (source
       (origin
         (method url-fetch)
@@ -1715,7 +1809,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "0r6mknipyy9vpz8mwmxvkx65ff2ha1n2pxqjj6f46lcn8yrhpzpp"))))
+            "1wrkgcw557v311dkdb6n2hrix9dm2qdsb1zpw7pn79l03zb85jwc"))))
     (build-system cargo-build-system)
     (home-page "https://github.com/unicode-rs/unicode-xid")
     (synopsis "Determine whether characters have the XID_Start\nor XID_Continue properties according to\nUnicode Standard Annex #31.")
@@ -1764,10 +1858,10 @@
     (license `((spdx-string->license "MIT")
                (spdx-string->license "Apache-2.0")))))
 
-(define-public rust-version_check_0_9_2
+(define-public rust-version_check_0_9_3
   (package
     (name "rust-version_check")
-    (version "0.9.2")
+    (version "0.9.3")
     (source
       (origin
         (method url-fetch)
@@ -1776,7 +1870,7 @@
           (string-append name "-" version ".tar.gz"))
         (sha256
           (base32
-            "1vbaqdf802qinsq8q20w8w0qn2pv0rkq5p73ijcblrwxcvjp5adm"))))
+            "1zmkcgj2m0pq0l4wnhrp1wl1lygf7x2h5p7pvjwc4719lnlxrv2z"))))
     (build-system cargo-build-system)
     (home-page "None")
     (synopsis "Tiny crate to check the version of the installed/running rustc.")
@@ -1801,7 +1895,7 @@
     (build-system cargo-build-system)
     (arguments
     `(#:cargo-inputs
-      (("rust-winapi-i686-pc-windows-gnu" ,rust-winapi-i686-pc-windows-gnu_0_4_0)        
+      (("rust-winapi-i686-pc-windows-gnu" ,rust-winapi-i686-pc-windows-gnu_0_4_0)
        ("rust-winapi-x86_64-pc-windows-gnu" ,rust-winapi-x86_64-pc-windows-gnu_0_4_0))))
     (home-page "None")
     (synopsis "Raw FFI bindings for all of Windows API.")
