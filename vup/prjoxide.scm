@@ -1110,7 +1110,7 @@
       (beautify-description "Implementation detail of the `paste` crate"))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
 
-(define-public rust-prjoxide_0_1_0
+(define-public rust-prjoxide
   (package
     (name "rust-prjoxide")
     (version "0.1.0")
