@@ -426,7 +426,7 @@
      #t))
 
 (define-public python-nmigen
-  (let ((commit "f7c2b9419f9de450be76a0e9cf681931295df65f"))
+  (let ((commit "e974a31022d8ba1ee67bd49c82a11fa7a0a71145"))
     (package
       (name "python-nmigen")
       (version (string-append "0.3+g" (string-take commit 9)))
@@ -446,7 +446,7 @@
              #t))
          (sha256
           (base32
-           "0cjs9wgmxa76xqmjhsw4fsb2mhgvd85jgs2mrjxqp6fwp8rlgnl1"))))
+           "16181g9mzlpgy8f2wl0dhkxk4aqk58i9a3vqfklg5wphfq1slskm"))))
       (build-system python-build-system)
       (inputs `(("yosys" ,yosys-git)
                 ("symbiyosys" ,symbiyosys)
@@ -471,7 +471,7 @@
 
 
 (define-public python-nmigen-boards
-  (let ((commit "a35d870a994c2919116b2c06166dc127febb1512"))
+  (let ((commit "9d24c51197fdc176dcaeaa0a2156b1cdc75bf1ac"))
     (package
       (name "python-nmigen-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -484,7 +484,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1flbcyb2xz174dgqv2964qra80xj2vbzbqwjb27shvxm6knj9ikf"))))
+           "0p00x6jbs3i7kxncxq5wd9gqn5jf4h0r3kwfkbn4lrihnmklpizs"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools" ,python-setuptools)

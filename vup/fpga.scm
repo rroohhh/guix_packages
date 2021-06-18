@@ -17,7 +17,9 @@
   #:use-module (gnu packages algebra)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
+  #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages serialization)
   #:use-module (vup prjoxide))
 
 
@@ -40,8 +42,8 @@
 
 
 (define-public yosys-git
-  (let ((commit "2f64f96129e09b2efb02d741839549c472fd350a")
-        (version "0.9+3891"))
+  (let ((commit "e2c9580024563be385ac9e892a978be3384990a8")
+        (version "0.9+4081"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
        (inherit guix:yosys)
@@ -53,14 +55,14 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "16v3mdkxpy30hadndmk2yqqc4mwi6g8bww5lvhljpmk716abr7mb"))
+                   "0328sypjf8nw5235h09b81f4j1wbgh586gmz258ivk7q0qqqqisi"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "7afc64b480212c9ac2ce7cb1622731a69a7d212c")
-        (revision "5"))
+  (let ((commit "c495861c19bd0976c88d4964f912abe76f3901c3")
+        (revision "6"))
     (package
       (inherit guix:icestorm)
       (version (string-append "0.0-" revision "-" (string-take commit 9)))
@@ -72,13 +74,13 @@
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "0vxhqs2fampglg3xlfwb35229iv96kvlwp1gyxrdrmlpznhkqdrk")))))))
+                  "1r98scq08kk5lspz53makagjac8f0scmrjyns13srz6z39bq46vw")))))))
 
 (define-public trellis
-  (let ((commit "210a0a72757d57b278ac7397ae6b14729f149b10"))
+  (let ((commit "0e6a3204aa418a5ba3ad1030f9bb8cc359fc0158"))
     (package
       (name "trellis")
-      (version (string-append "1.0-72-" (string-take commit 7)))
+      (version (string-append "1.0-73-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -88,7 +90,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0ghwzqzdnkhnjnvhljkkq4zjzzzp9bwys1askp57f4iqwi17k74c"))))
+                  "0kixwh53v2njhrg6pdl1ha6n9zpkcbxlld378wfqyg6g5vphqwda"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -130,14 +132,14 @@ open Verilog to bitstream toolchain for these devices.")
 (define-public python-apycula
   (package
     (name "python-apycula")
-    (version "0.0.1a6")
+    (version "0.0.1a8")
     (source
       (origin
         (method url-fetch)
         (uri (pypi-uri "Apycula" version))
         (sha256
           (base32
-            "1f59j7x95cmj4fm3jiw9s403v8mc80ly6rrpzysl57lng6f83j3n"))))
+            "1l0cydqk00zr1acbznfm3zxclhxj2sn0ji67rbklk2p70g5ak7ay"))))
     (build-system python-build-system)
     (inputs
      `(("python-setuptools-scm" ,python-setuptools-scm)))
@@ -156,19 +158,20 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "9fc02041fe7bdcbac99e54f30423b2c39b92bb8a"))
+  (let ((commit "0f9a88b2cd84c561df11690c07af12373bf0941f"))
     (package
       (name "nextpnr")
-      (version (string-append "2021.02.15-" (string-take commit 9)))
+      (version (string-append "2021.06.17-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
                       (url "https://github.com/yosyshq/nextpnr")
-                      (commit commit)))
+                      (commit commit)
+                      (recursive? #t)))
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0yj16cpaqxixnl30q662rszy59fkgzzqjrhz3732gl7cvc1wgavd"))))
+                  "0mdf5kg100pd6jxqyzx6yfdzgv1c3fnxypdkwhnc9c04pix3qzl2"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
@@ -178,13 +181,16 @@ open Verilog to bitstream toolchain for these devices.")
                 ("prjoxide" ,rust-prjoxide)
                 ("apicula" ,python-apycula)
                 ("tcl" ,tcl)
+                ("zlib" ,zlib)
+                ("capnproto" ,capnproto)
+                ("pkgconfig" ,pkg-config)
                 ("eigen" ,eigen)))
       (arguments
        `(#:configure-flags (list
-                            "-DARCH=generic;ice40;ecp5;nexus;gowin;fpga_interchange;machxo2"
+                            "-DARCH=generic;ice40;ecp5;nexus;gowin;machxo2"
                             "-DBUILD_TESTS=ON"
                             "-DUSE_OPENMP=ON"
-                            ;; "-DSERIALIZE_CHIPDB=ON" ; high memory requirements
+                            "-DSERIALIZE_CHIPDBS=FALSE" ; high memory requirements
                             (string-append "-DICESTORM_INSTALL_PREFIX=" (assoc-ref %build-inputs "icestorm"))
                             (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis"))
                             (string-append "-DOXIDE_INSTALL_PREFIX=" (assoc-ref %build-inputs "prjoxide"))
