@@ -28,7 +28,7 @@
                       (invoke "qmake"
                               (string-append "INSTALL_PREFIX=" (assoc-ref outputs "out"))))))))
    (inputs
-    `(("qtbase" ,qtbase)
+    `(("qtbase" ,qtbase-5)
       ("zlib" ,zlib)))
    (home-page "https://github.com/shundhammer/qdirstat")
    (synopsis "QDirStat - Qt-based directory statistics (KDirStat without any KDE - from the original KDirStat author)")
