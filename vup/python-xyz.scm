@@ -1,6 +1,7 @@
 (define-module (vup python-xyz)
   #:use-module (guix utils)
   #:use-module (gnu packages assembly)
+  #:use-module (gnu packages web)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages sphinx)
   #:use-module (gnu packages mpi)
@@ -2968,3 +2969,86 @@ simulation, statistical modeling, machine learning and much more.")
     (synopsis "InfluxDB client")
     (description "InfluxDB client")
     (license license:expat)))
+
+(define-public python-randomize
+  (package
+    (name "python-randomize")
+    (version "0.14")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "randomize" version))
+        (sha256
+          (base32
+            "0srvk1rvlppvhpzj7p2dims1nx8hlycrqad0j748d5wgxlsp95zy"))))
+    (build-system python-build-system)
+    (arguments `(#:phases
+                 (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page
+      "https://github.com/nloadholtes/nose-randomize")
+    (synopsis
+      "Randomize the order of the tests within a unittest.TestCase class")
+    (description
+      "Randomize the order of the tests within a unittest.TestCase class")
+    (license license:lgpl2.0)))
+
+(define-public python-rx
+  (package
+    (name "python-rx")
+    (version "3.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "Rx" version))
+        (sha256
+          (base32
+            "076rcgcyqqpr5y7jyg7za6ngfm75qbx0kzfwyyi5sj5a8lmwlmxn"))))
+    (build-system python-build-system)
+    (arguments `(#:phases
+                 (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page "http://reactivex.io")
+    (synopsis "Reactive Extensions (Rx) for Python")
+    (description
+      "Reactive Extensions (Rx) for Python")
+    (license license:expat)))
+
+(define-public python-influxdb-client
+  (package
+    (name "python-influxdb-client")
+    (version "1.18.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "influxdb_client" version))
+        (sha256
+          (base32
+            "0a1q1q4ak56dq5a19bl840bxjcd45jwmm03k0b19a9pkvq5ij0is"))))
+    (build-system python-build-system)
+    (arguments `(#:phases
+                 (modify-phases %standard-phases
+                  (delete 'check))))
+    (propagated-inputs
+      `(("python-certifi" ,python-certifi)
+        ("python-dateutil" ,python-dateutil)
+        ("python-pytz" ,python-pytz)
+        ("python-rx" ,python-rx)
+        ("python-setuptools" ,python-setuptools)
+        ("python-six" ,python-six)
+        ("python-urllib3" ,python-urllib3)))
+    (native-inputs
+      `(("python-coverage" ,python-coverage)
+        ("python-httpretty" ,python-httpretty)
+        ("python-nose" ,python-nose)
+        ("python-pluggy" ,python-pluggy)
+        ("python-psutil" ,python-psutil)
+        ("python-py" ,python-py)
+        ("python-pytest" ,python-pytest)
+        ("python-randomize" ,python-randomize)))
+    (home-page
+      "https://github.com/influxdata/influxdb-client-python")
+    (synopsis "InfluxDB 2.0 Python client library")
+    (description
+      "InfluxDB 2.0 Python client library")
+    (license #f)))
