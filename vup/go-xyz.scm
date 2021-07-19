@@ -50,7 +50,7 @@
     (arguments
      '(#:install-plan
        '(("rtsp-simple-server" "bin/rtsp-simple-server")
-         ("rtsp-simple-server.yml" "etc/rtsp-simple-server"))))
+         ("rtsp-simple-server.yml" "etc/rtsp-simple-server.yml"))))
     (home-page
       "https://github.com/aler9/rtsp-simple-server")
     (synopsis "ready-to-use RTSP / RTMP / HLS server and proxy that allows to read, publish and proxy video and audio streams")

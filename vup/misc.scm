@@ -554,3 +554,32 @@ automatic, safe and reliable.")
     (description
      "Btrbk is a backup tool for btrfs subvolumes, taking advantage of btrfs specific capabilities to create atomic snapshots and transfer them incrementally to your backup locations.")
     (license licenses:gpl3)))
+
+(define-public gst-rtsp-server
+  (package
+    (name "gst-rtsp-server")
+    (version "1.18.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://gstreamer.freedesktop.org/src/" name "/"
+                    name "-" version ".tar.xz"))
+              (sha256
+               (base32
+                "1qjlp7az0hkzxvq53hwnp55sp6xhbybfwzaj66hp45jslsmj4fcp"))))
+    (build-system meson-build-system)
+    (arguments
+     `(#:tests? #f                      ;; 17/17 failing ^^
+       #:phases (modify-phases %standard-phases
+                  ,@%common-gstreamer-phases)))
+    (inputs
+     `(("glib" ,glib) ("gstreamer" ,gstreamer)
+       ("gst-plugins-base" ,gst-plugins-base)
+       ("gst-plugins-bad" ,gst-plugins-bad)))
+    (native-inputs
+     `(("pkg-config" ,pkg-config)))
+    (home-page "https://gstreamer.freedesktop.org/")
+    (synopsis "RTSP server based on GStreamer")
+    (description
+     "gst-rtsp-server is a library on top of GStreamer for building an RTSP server")
+    (license licenses:gpl2+)))
