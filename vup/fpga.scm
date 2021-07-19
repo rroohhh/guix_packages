@@ -175,7 +175,7 @@ open Verilog to bitstream toolchain for these devices.")
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
-                ("qtbase" ,qtbase)
+                ("qtbase" ,qtbase-5)
                 ("trellis" ,trellis)
                 ("icestorm" ,icestorm)
                 ("prjoxide" ,rust-prjoxide)
@@ -190,6 +190,7 @@ open Verilog to bitstream toolchain for these devices.")
                             "-DARCH=generic;ice40;ecp5;nexus;gowin;machxo2"
                             "-DBUILD_TESTS=ON"
                             "-DUSE_OPENMP=ON"
+                            "-DBUILD_GUI=ON"
                             "-DSERIALIZE_CHIPDBS=FALSE" ; high memory requirements
                             (string-append "-DICESTORM_INSTALL_PREFIX=" (assoc-ref %build-inputs "icestorm"))
                             (string-append "-DTRELLIS_INSTALL_PREFIX=" (assoc-ref %build-inputs "trellis"))
