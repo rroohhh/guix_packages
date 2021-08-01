@@ -48,8 +48,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.50 "1.51.0"
-           "0ixqkqglv3isxbvl4ldr4byrkx692wghsz3fasy1pn5kr2prnsvs")))
+         (rust-bootstrapped-package rust-1.52 "1.53.0"
+           "1f95p259dfp5ca118bg107rj3rqwlswy65dxn3hg8sqgl4wwmxsw")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -69,10 +69,10 @@
                  (substitute* "config.toml"
                    (("submodules = false")
                     "submodules = false
-sanitizers = true
+sanitizers = false
 profiler = true
 extended = true
-tools = [\"cargo\", \"rls\", \"clippy\", \"miri\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
+tools = [\"cargo\", \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
                  #t))
              (replace 'install
                (lambda* (#:key outputs #:allow-other-keys)
