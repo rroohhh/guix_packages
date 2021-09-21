@@ -50,7 +50,7 @@
             (append (list (origin
                            (method url-fetch)
                            (uri "https://raw.githubusercontent.com/flatwhatson/guix-channel/master/flat/packages/patches/emacs-native-comp-exec-path.patch")
-                           (sha256 "0rfi90b4rvjksrl7fycisayyfs4wj1ybnd7dynairar8fxz5bmw3")))
+                           (sha256 "1jjiydazc6nz75h4lkr3ni4bhgwnhbbbgkblgaxaxg2ibxsaw4s5")))
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
@@ -125,19 +125,19 @@
    (emacs-with-native-comp emacs-next gcc-10 'full-aot)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "167"
+   #:pkg-revision "185"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "b6e0b66e0edfcf339b37cd4ddc99a56dee1df213"
-   #:checksum "1pd2xiz2nmry20dvfgbzihkbbhb78d5b61pfwqrlzr5bck13cs98"))
+   #:git-commit "3dabd272101bc82980a3cfdb748039c3228c762c"
+   #:checksum "1iwcj41k67kxydmw007za7l4fcwdx0vm8wnas72jm6fdfrfchg57"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
    (emacs-with-native-comp emacs-next-pgtk gcc-10 'full-aot)
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "189"
+   #:pkg-revision "207"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "78575c53fc8c78de1494822f9f6680e2a21308d6"
-   #:checksum "026xkjshnbhwyvhf5k526q8fs4shvxxbw081m3ggpyd7fb1glbzg"))
+   #:git-commit "08bb4f5301e01181ca71e9fbd0a65218fc39b46d"
+   #:checksum "0mjam2whncy6400mwifnpn53wzvfrfkcjap5nk8n6cj2g5j1p06k"))
 
 emacs-pgtk-native-comp
