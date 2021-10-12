@@ -5,6 +5,7 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages serialization)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages sqlite)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages curl)
@@ -21,10 +22,10 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public horizon
-  (let ((commit "02c56ccb84cd4c2c0ad7e8c42041a5e646995953"))
+  (let ((commit "02edcc308d096721537df8d011b78c3b0f7a1fba"))
     (package
       (name "horizon")
-      (version (string-append "1.4.0+" (string-take commit 7)))
+      (version (string-append "2.1.0+" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -34,15 +35,15 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "059bcqyfc02m19x277bvb4ddmf48p8ybd0x5rqi1xkgpggf88x4j"))))
+                  "0gx89ai4prwz4b4qj4ylbhfcnpj9p1k5w7av4f5484hq99i3vw9a"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
                 ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
-                ("boost" ,boost) ("opencascade" ,opencascade-oce) ("cppzmq" ,cppzmq)
+                ("boost" ,boost) ("opencascade" ,opencascade-occt) ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
-                ("gdk-pixbuf" ,gdk-pixbuf+svg)))
+                ("gdk-pixbuf" ,gdk-pixbuf+svg) ("gcc" ,gcc-11)))
       (arguments
        `(#:make-flags (list "GOLD=" "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
          #:phases (modify-phases %standard-phases
