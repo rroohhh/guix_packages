@@ -352,7 +352,7 @@
        ("gtk+" ,gtk+)
        ("gtk+-2" ,gtk+-2)
        ("hunspell" ,hunspell)
-       ("icu4c" ,icu4c-69)
+       ("icu4c" ,icu4c)
        ("jemalloc" ,jemalloc)
        ("libcanberra" ,libcanberra)
        ("libevent" ,libevent)
@@ -440,5 +440,3 @@ MOZ_ENABLE_WAYLAND=1 exec ~a $@\n"
                          out "/share/applications/firefox.desktop")
              ((firefox) out))
            #t))))))
-
-firefox/wayland
