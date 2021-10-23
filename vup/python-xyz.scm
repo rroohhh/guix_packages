@@ -435,63 +435,6 @@
      (setenv "SETUPTOOLS_SCM_PRETEND_VERSION" ,v)
      #t))
 
-(define-public python-markupsafe-1
-  (package
-    (name "python-markupsafe")
-    (version "1.1.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "MarkupSafe" version))
-       (sha256
-        (base32
-         "0sqipg4fk7xbixqd8kq6rlkxj664d157bdwbh93farcphf92x1r9"))))
-    (build-system python-build-system)
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (replace 'check
-                    (lambda* (#:key tests? #:allow-other-keys)
-                      (when tests?
-                        (invoke "pytest" "-vv")))))))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)))
-    (home-page "https://github.com/mitsuhiko/markupsafe")
-    (synopsis "XML/HTML/XHTML markup safe string implementation for Python")
-    (description
-     "Markupsafe provides an XML/HTML/XHTML markup safe string implementation
-for Python.")
-    (license license:bsd-3)))
-
-(define-public python-jinja2-2
-  (package
-    (name "python-jinja2")
-    (version "2.11.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "Jinja2" version))
-       (sha256
-        (base32
-         "1iiklf3wns67y5lfcacxma5vxfpb7h2a67xbghs01s0avqrq9md6"))))
-    (build-system python-build-system)
-    (arguments
-     '(#:phases (modify-phases %standard-phases
-                  (replace 'check
-                    (lambda* (#:key tests? #:allow-other-keys)
-                      (if tests?
-                          (invoke "pytest" "-vv")
-                          (format #t "test suite not run~%")))))))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)))
-    (propagated-inputs
-     `(("python-markupsafe" ,python-markupsafe-1)))
-    (home-page "http://jinja.pocoo.org/")
-    (synopsis "Python template engine")
-    (description
-     "Jinja2 is a small but fast and easy to use stand-alone template engine
-written in pure Python.")
-    (license license:bsd-3)))
-
 (define-public python-nmigen
   (let ((commit "e974a31022d8ba1ee67bd49c82a11fa7a0a71145"))
     (package
@@ -522,14 +465,18 @@ written in pure Python.")
                 ("python-wheel" ,python-wheel)
                 ("python-setuptools" ,python-setuptools)))
       (propagated-inputs
-       `(("python-jinja2" ,python-jinja2-2)
+       `(("python-jinja2" ,python-jinja2)
          ("python-pyvcd" ,python-pyvcd)
          ("python-importlib-resources" ,python-importlib-resources)
          ("python-pyvcd" ,python-pyvcd)))
       (arguments
        `(#:phases (modify-phases %standard-phases
                     (add-before 'build 'set-setuptools-scm-version
-                      ,(setuptools-scm-version-setter version)))))
+                      ,(setuptools-scm-version-setter version))
+                    (add-after 'unpack 'relax-requirements
+                     (lambda _
+                       (substitute* "setup.py"
+                         (("Jinja2~=2.11") "Jinja2>=2.11")))))))
       (home-page "https://nmigen.info/nmigen/")
       (synopsis
        "Python toolbox for building complex digital hardware")
@@ -3119,3 +3066,5 @@ simulation, statistical modeling, machine learning and much more.")
     (description
       "InfluxDB 2.0 Python client library")
     (license #f)))
+
+python-nmigen
