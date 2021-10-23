@@ -14,13 +14,17 @@
   #:use-module (gnu packages shells)
   #:use-module (gnu packages qt)
   #:use-module (gnu packages tcl)
+  #:use-module (gnu packages flex)
+  #:use-module (gnu packages bison)
+  #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages algebra)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages serialization)
-  #:use-module (vup prjoxide))
+  #:use-module (vup prjoxide)
+  #:use-module (vup python-xyz))
 
 
 ;; kept in lockstep with yosys upstream for reproducability
@@ -40,11 +44,49 @@
                  (base32
                   "0z1kp223kix7i4r7mbj2bzawkdzc55nsgc41m85dmbajl9fsj1m0")))))))
 
+(define-public iverilog-11
+  (package
+    (name "iverilog")
+    (version "11.0")
+    (source (origin
+              (method url-fetch)
+              (uri
+               (string-append "ftp://ftp.icarus.com/pub/eda/verilog/v11/"
+                              "verilog-" version ".tar.gz"))
+              (sha256
+               (base32
+                "1mamlrkpb2gb00g7xdddaknrvwi4jr4ng6cfjhwngzk3ddhqaiym"))))
+    (build-system gnu-build-system)
+    (native-inputs
+     `(("flex" ,flex)
+       ("bison" ,bison)
+       ("ghostscript" ,ghostscript)))   ; ps2pdf
+    (arguments
+     `(#:make-flags (list "CC=gcc")))
+    (home-page "http://iverilog.icarus.com/")
+    (synopsis "FPGA Verilog simulation and synthesis tool")
+    (description "Icarus Verilog is a Verilog simulation and synthesis tool.
+It operates as a compiler, compiling source code written in Verilog
+(IEEE-1364) into some target format.
+For batch simulation, the compiler can generate an intermediate form
+called vvp assembly.
+This intermediate form is executed by @command{vvp}.
+For synthesis, the compiler generates netlists in the desired format.")
+    ;; GPL2 only because of:
+    ;; - ./driver/iverilog.man.in
+    ;; - ./iverilog-vpi.man.in
+    ;; - ./tgt-fpga/iverilog-fpga.man
+    ;; - ./vvp/vvp.man.in
+    ;; Otherwise would be GPL2+.
+    ;; You have to accept both GPL2 and LGPL2.1+.
+    (license (list license:gpl2 license:lgpl2.1+))))
+
 
 (define-public yosys-git
-  (let ((commit "e2c9580024563be385ac9e892a978be3384990a8")
-        (version "0.9+4081"))
-    ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
+  (let ((commit "52ba31b1c023b571868a396adfe1f43a0f71e867")
+        (version "0.10+46"))
+    ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))
+                                     ("iverilog" . ,(const iverilog-11))))
      (package
        (inherit guix:yosys)
        (version (string-append version "+" (string-take commit 9)))
@@ -55,14 +97,14 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "0328sypjf8nw5235h09b81f4j1wbgh586gmz258ivk7q0qqqqisi"))
+                   "0myjyfhv3h5id1srlc1xfaqpd2lcm5j5zchrziq7snpsiicpbh8a"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "c495861c19bd0976c88d4964f912abe76f3901c3")
-        (revision "6"))
+  (let ((commit "83b8ef947f77723f602b706eac16281e37de278c")
+        (revision "7"))
     (package
       (inherit guix:icestorm)
       (version (string-append "0.0-" revision "-" (string-take commit 9)))
@@ -74,13 +116,13 @@
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "1r98scq08kk5lspz53makagjac8f0scmrjyns13srz6z39bq46vw")))))))
+                  "1r62gv43yz6zqg5cy4069s875pfkgi1lvp3fi646cz0i3gicdims")))))))
 
 (define-public trellis
-  (let ((commit "0e6a3204aa418a5ba3ad1030f9bb8cc359fc0158"))
+  (let ((commit "03e0070f263fbe31c247de61d259544722786210"))
     (package
       (name "trellis")
-      (version (string-append "1.0-73-" (string-take commit 7)))
+      (version (string-append "1.1-0-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -90,7 +132,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0kixwh53v2njhrg6pdl1ha6n9zpkcbxlld378wfqyg6g5vphqwda"))))
+                  "0ccbph19i491rwf1kq7zwwm7qz5l2s0p2gf33nwm2dv2lzx69rg0"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -132,14 +174,14 @@ open Verilog to bitstream toolchain for these devices.")
 (define-public python-apycula
   (package
     (name "python-apycula")
-    (version "0.0.1a8")
+    (version "0.0.1a11")
     (source
       (origin
         (method url-fetch)
         (uri (pypi-uri "Apycula" version))
         (sha256
           (base32
-            "1l0cydqk00zr1acbznfm3zxclhxj2sn0ji67rbklk2p70g5ak7ay"))))
+            "0fwk1pgphpgj0lazjy40ii08xq2qi6bvrfc30rwfj52yff1s9akn"))))
     (build-system python-build-system)
     (inputs
      `(("python-setuptools-scm" ,python-setuptools-scm)))
@@ -147,7 +189,7 @@ open Verilog to bitstream toolchain for these devices.")
       `(("python-crcmod" ,python-crcmod)
         ("python-numpy" ,python-numpy)
         ("python-openpyxl" ,python-openpyxl)
-        ("python-pandas" ,python-pandas)
+        ("python-pandas" ,python-pandas-fixed)
         ("python-pillow" ,python-pillow)))
     (arguments `(#:phases (modify-phases %standard-phases
                             (delete 'check))))
@@ -158,10 +200,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "0f9a88b2cd84c561df11690c07af12373bf0941f"))
+  (let ((commit "80a14592a0c4632462c61d1bd46835f2159f5ae9"))
     (package
       (name "nextpnr")
-      (version (string-append "2021.06.17-" (string-take commit 9)))
+      (version (string-append "2021.10.22-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -171,7 +213,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0mdf5kg100pd6jxqyzx6yfdzgv1c3fnxypdkwhnc9c04pix3qzl2"))))
+                  "1hbad0jyaxj3fkdnkbvbp6lx480ajrq527awng8mj5s8k7jdwxqp"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)

@@ -10,7 +10,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public libpoly
-  (let ((version "0.1.8"))
+  (let ((version "0.1.11"))
     (package
       (name "libpoly")
       (version version)
@@ -22,7 +22,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1n3gijksnl2ybznq4lkwm2428f82423sxq18gnb2g1kiwqlzdaa3"))))
+                  "0qylmg30rklvg00a0h1b3pb52cj9ki98yd27cylihjhq2klh3dmy"))))
       (inputs `(("python" ,python-2)
                 ("gmp" ,gmp)))
       (build-system cmake-build-system)
@@ -31,8 +31,29 @@
       (description "C library for manipulating polynomials")
       (license license:lgpl3))))
 
+(define-public cudd
+  (let ((version "3.0.0"))
+    (package
+      (name "cudd")
+      (version version)
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/ivmai/cudd")
+                      (commit (string-append "cudd-" version))))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "0hyw9q42ir92vcaa7bwv6f631n85rfsxp463rnmklniq1wf6dyn9"))))
+      (build-system gnu-build-system)
+      (arguments `(#:make-flags (list "CFLAGS=-Wall -Wextra -g -O3 -fPIC" "CXXFLAGS=-Wall -Wextra -g -O3 -fPIC" "LDFLAGS=-fPIC")))
+      (home-page "https://github.com/ivmai/cudd")
+      (synopsis "CUDD: CU Decision Diagram package")
+      (description "CUDD: CU Decision Diagram package")
+      (license license:bsd-3))))
+
 (define-public yices
-  (let ((version "2.6.1"))
+  (let ((version "2.6.3"))
     (package
       (name "yices")
       (version version)
@@ -44,11 +65,12 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "04vf468spsh00jh7gj94cjnq8kjyfwy9l6r4z7l2pm0zgwkqgyhm"))))
+                  "01fi818lbkwilfcf1dz2dpxkcc1kh8ls0sl5aynyx9pwfn2v03zl"))))
       (inputs `(("autoconf" ,autoconf)
                 ("automake" ,automake)
                 ("gmp" ,gmp)
                 ("libpoly" ,libpoly)
+                ("cudd" ,cudd)
                 ("gperf" ,gperf)))
       (arguments
        `(#:make-flags `("LDCONFIG=true")

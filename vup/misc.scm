@@ -184,41 +184,63 @@
       (description "Uses the X-Resource extension to provide 'top' like statistics")
       (license licenses:gpl2+))))
 
+(define-public libsigrokdecode-master
+  (package
+    (inherit libsigrokdecode)
+    (version "0.5.3-02aa01a")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://repo.or.cz/libsigrokdecode.git")
+                    (commit "02aa01ad5f05f2730309200abda0ac75d3721e1d")
+                    (recursive? #t)))
+              (file-name (git-file-name "libsigrok" version))
+              (sha256
+               (base32 "054p2sja32d5shlbsvrpaw3pq7gg4n03327ml1dn53pjnsl0wbjz"))))
+    (native-inputs (append (package-native-inputs libsigrokdecode)
+                       `(("autoconf" ,autoconf)
+                         ("automake" ,automake)
+                         ("libtool" ,libtool))))))
+
 (define-public libsigrok-master
   (package
     (inherit libsigrok)
-    (version "0.5.2-1c5d5905")
+    (version "0.5.3-e972674d")
     (source (origin
               (method git-fetch)
               (uri (git-reference
                     (url "https://repo.or.cz/libsigrok.git")
-                    (commit "1c5d5905a44f8e3abbb9327cb47e80d09eb2dc6a")
-                    (recursive? #t))) ; for prjtrellis-db
+                    (commit "e972674d0b30b98dcc354b707a80b6bfc1aeb532")
+                    (recursive? #t)))
               (file-name (git-file-name "libsigrok" version))
               (sha256
-               (base32 "07wvy06a1w8dir6d8ha7crcvnpayv7z4y2wpjmz6k0y50wdbbm5q"))))
-    (inputs
-     `(("python" ,python)
-       ("zlib" ,zlib)
-       ("autoconf" ,autoconf)
-       ("automake" ,automake)
-       ("libtool" ,libtool)))))
+               (base32 "0sp9y0wb6caw6d69h0z10hd6vgjgmi8z1a93i3yjbzxx8a48iyzg"))))
+    (inputs (append (package-inputs libsigrok)
+                `(("glibmm" ,glibmm-2.64))))
+    (native-inputs (append (package-native-inputs libsigrok)
+                    `(("autoconf" ,autoconf)
+                      ("automake" ,automake)
+                      ("libtool" ,libtool))))))
+
 
 (define-public pulseview-libsigrok-master
   (package
     (inherit
      ((package-input-rewriting/spec
-       `(("libsigrok" . ,(const libsigrok-master)))) pulseview))
-    (version (string-append (package-version pulseview) "-89b7b94a0"))
+       `(("libsigrok" . ,(const libsigrok-master))
+         ("libsigrokdecode" . ,(const libsigrokdecode-master)))) pulseview))
+    (version (string-append (package-version pulseview) "-a6fa4d47"))
     (source
      (origin
        (method git-fetch)
        (uri (git-reference
              (url "git://sigrok.org/pulseview.git")
-             (commit "89b7b94a048ec53e82f38412a4b65cabb609f395")))
+             (commit "a6fa4d477d783478935a78c1b70596e38ae8ca64")))
        (file-name (git-file-name (package-name pulseview) version))
        (sha256
-        (base32 "1vvkm30gw8wy8a3j73npzn0fybqskhx3mv3wb13zlhyvy3k1hmvz"))))))
+        (base32 "1j5g8w74zmskq1r0rj68yz4xqv4z9j91v2hwr3i2jyk4g3yfxvd3"))))
+    (inputs (append (package-inputs pulseview)
+              `(("glibmm" ,glibmm-2.64))))))
 
 (define-public ofono
   (package

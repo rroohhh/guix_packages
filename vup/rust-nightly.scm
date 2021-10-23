@@ -92,7 +92,7 @@ tools = [\"cargo\", \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"r
                  (generate-all-checksums "vendor")
                  (generate-all-checksums "src/tools")
                  #t))
-            (replace 'mkdir-prefix-paths
+            (add-before 'install 'mkdir-prefix-paths
               (lambda* (#:key outputs #:allow-other-keys)
                 ;; As result of https://github.com/rust-lang/rust/issues/36989
                 ;; `prefix' directory should exist before `install' call

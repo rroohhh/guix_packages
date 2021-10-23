@@ -19,10 +19,15 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages tbb)
   #:use-module ((guix licenses) #:prefix license:))
 
+(define-public opencascade-occt-fixed
+  ((package-input-rewriting/spec `(("tbb" . ,(const tbb-for-salmon)))) opencascade-occt))
+
+
 (define-public horizon
-  (let ((commit "02edcc308d096721537df8d011b78c3b0f7a1fba"))
+  (let ((commit "1c4eea61f590549ea29d801215f2e15fe532fa70"))
     (package
       (name "horizon")
       (version (string-append "2.1.0+" (string-take commit 7)))
@@ -35,13 +40,13 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0gx89ai4prwz4b4qj4ylbhfcnpj9p1k5w7av4f5484hq99i3vw9a"))))
+                  "0wf29rziniradjphik43fymrvrnhlm18gv0n153wqrz90c7apnsx"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
-                ("sqlite" ,sqlite) ("gtkmm" ,gtkmm) ("curl" ,curl) ("glib" ,glib)
+                ("sqlite" ,sqlite) ("gtkmm" ,gtkmm-3) ("curl" ,curl) ("glib" ,glib)
                 ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
-                ("boost" ,boost) ("opencascade" ,opencascade-occt) ("cppzmq" ,cppzmq)
+                ("boost" ,boost) ("opencascade" ,opencascade-occt-fixed) ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
                 ("gdk-pixbuf" ,gdk-pixbuf+svg) ("gcc" ,gcc-11)))
       (arguments
@@ -62,3 +67,6 @@
       (description "Horizon EDA is an Electronic Design Automation package supporting an integrated end-to-end workflow for printed circuit board design including parts management and schematic entry.")
       (home-page "https://horizon-eda.org/")
       (license license:gpl3))))
+
+
+horizon
