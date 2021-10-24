@@ -30,7 +30,7 @@
                   "1j22mz2aijmvlwcgxfh87v30l5c1wpc78s9p573x0331ccv4cw13"))))
       (inputs `(("pkg-config" ,pkg-config) ("zlib" ,zlib) ("libpng" ,libpng)
                 ("freetype" ,freetype) ("cairo" ,cairo) ("opengl" ,mesa)
-                ("josn-c" ,json-c) ("libspnav" ,libspnav) ("gtkmm" ,gtkmm)
+                ("josn-c" ,json-c) ("libspnav" ,libspnav) ("gtkmm" ,gtkmm-3)
                 ("gettext" ,gnu-gettext)))
       (build-system cmake-build-system)
       (arguments
