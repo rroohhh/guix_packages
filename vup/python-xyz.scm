@@ -109,6 +109,63 @@
         (base32
          "0h5rsh8cpq9mh6kzr5xgcmyqyl8ym5r6i9m6g770k1vw1l4p5cy5"))))))
 
+(define-public python-mpmath-fixed
+ (package
+  (name "python-mpmath")
+  (version "1.1.0")
+  (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "mpmath" version))
+            (sha256
+             (base32
+              "1xlrcja213jpfhw25q1jl5pl10w1a2cc68x1c4mkicxsbzhan5zw"))))
+  (build-system python-build-system)
+  (native-inputs
+   `(("python-pytest" ,python-pytest)))
+  (arguments
+   '(#:phases
+     (modify-phases %standard-phases
+       (replace 'check
+         (lambda _
+           (invoke "python" "mpmath/tests/runtests.py" "-local"))))))
+  (home-page "https://mpmath.org")
+  (synopsis "Arbitrary-precision floating-point arithmetic in python")
+  (description
+    "@code{mpmath} can be used as an arbitrary-precision substitute for
+Python's float/complex types and math/cmath modules, but also does much
+more advanced mathematics.")
+  (license license:bsd-3)))
+
+(define-public python-sympy-fixed
+  (package
+    (name "python-sympy")
+    (version "1.7.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "sympy" version))
+       (sha256
+        (base32 "0bkb4jf24yv5i4kjpsmg1xjjccfhqyi0syv0p0xvhdbmx5hr5pm3"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (replace 'check
+           (lambda* (#:key outputs #:allow-other-keys)
+             (invoke
+               (or (which "python3") (which "python"))
+               "-c" "import sympy; sympy.test(\"/core\")"))))))
+    (propagated-inputs
+     `(("python-mpmath" ,python-mpmath-fixed)))
+    (home-page "https://www.sympy.org/")
+    (synopsis "Python library for symbolic mathematics")
+    (description
+     "SymPy is a Python library for symbolic mathematics.  It aims to become a
+full-featured computer algebra system (CAS) while keeping the code as simple
+as possible in order to be comprehensible and easily extensible.")
+    (license license:bsd-3)))
+
+
 (define-public python-orthopy
   (package
     (name "python-orthopy")
@@ -124,7 +181,8 @@
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy)))
+       ("python-sympy" ,python-sympy-fixed)
+       ("python-importlib-metadata" ,python-importlib-metadata)))
     (native-inputs
      `(("python-setuptools" ,python-setuptools42)
        ("python-wheel" ,python-wheel)))
@@ -154,7 +212,7 @@
      `(("python-numpy" ,python-numpy)
        ("python-orthopy" ,python-orthopy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy)))
+       ("python-sympy" ,python-sympy-fixed)))
     (native-inputs
      `(("python-setuptools" ,python-setuptools42)
        ("python-wheel" ,python-wheel)))
