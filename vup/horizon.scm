@@ -23,7 +23,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public opencascade-occt-fixed
-  ((package-input-rewriting/spec `(("tbb" . ,(const tbb-for-salmon)))) opencascade-occt))
+  ((package-input-rewriting/spec `(("tbb" . ,(const tbb-2020)))) opencascade-occt))
 
 
 (define-public horizon
