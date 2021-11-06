@@ -9,6 +9,7 @@
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system maven)
   #:use-module (guix build-system meson)
+  #:use-module (guix build-system glib-or-gtk)
   #:use-module (guix build-system ant)
   #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
@@ -32,6 +33,8 @@
   #:use-module (gnu packages gl)
   #:use-module (gnu packages hardware)
   #:use-module (gnu packages mingw)
+  #:use-module (gnu packages webkit)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages efi)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages check)
@@ -605,3 +608,30 @@ automatic, safe and reliable.")
     (description
      "gst-rtsp-server is a library on top of GStreamer for building an RTSP server")
     (license licenses:gpl2+)))
+
+(define-public whatsapp-for-linux
+  (let ((commit "1.3.0"))
+    (package
+      (name "whatsapp-for-linux")
+      (version (string-append commit))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/eneshecan/whatsapp-for-linux")
+                      (commit (string-append "v" commit))
+                      (recursive? #t)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "1dsqzai59k4x69dzc46r94vnpvhr85fg8iwdapczza4r767h5nam"))))
+      (build-system cmake-build-system)
+      (arguments '(#:phases
+                   (modify-phases %standard-phases
+                     (delete 'check))))
+      (inputs `(("gtkmm" ,gtkmm-3) ("webkitgtk" ,webkitgtk) ("libappindicator" ,libappindicator)
+                ("glib:bin" ,glib "bin")))
+      (native-inputs `(("pkg-config" ,pkg-config)))
+      (synopsis "An unofficial WhatsApp desktop application for Linux.")
+      (description "An unofficial WhatsApp desktop application for Linux.")
+      (home-page "https://github.com/eneshecan/whatsapp-for-linux")
+      (license licenses:gpl3))))
