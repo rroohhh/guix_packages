@@ -46,73 +46,73 @@
      (alist-replace "cargo-bootstrap" (list base-rust "cargo")
                     (alist-replace "rustc-bootstrap" (list base-rust)
                                    (package-native-inputs base-rust))))))
-(define-public rust-nightly
-  (let ((base-rust
-         (rust-bootstrapped-package rust-1.52 "1.53.0"
-           "1f95p259dfp5ca118bg107rj3rqwlswy65dxn3hg8sqgl4wwmxsw")))
-    (package
-      (inherit base-rust)
-      (name "rust-nightly")
-      (outputs '("out" "doc"))
-      (source
-        (origin
-          (inherit (package-source base-rust))
-          (snippet #f)))
-      (inputs (append (package-inputs base-rust) `(("ninja" ,ninja))))
-      (arguments
-       (substitute-keyword-arguments (package-arguments base-rust)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             (delete 'check) ;; TODO(robin): remove again, just delete for testing
-             (add-after 'configure 'enable-extended
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (substitute* "config.toml"
-                   (("submodules = false")
-                    "submodules = false
-sanitizers = false
-profiler = true
-extended = true
-tools = [\"cargo\", \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
-                 #t))
-             (replace 'install
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (invoke "./x.py" "install")))
-             (delete 'patch-cargo-checksums)
-             (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
-               ;; Generate checksums after patching generated files (in
-               ;; particular, vendor/jemalloc/rep/Makefile).
-               (lambda* _
-                 (use-modules (guix build cargo-utils))
-                 (substitute* "Cargo.lock"
-                   (("(checksum = )\".*\"" all name)
-                    (string-append name "\"" ,%cargo-reference-hash "\"")))
-                 (substitute* "src/tools/rust-analyzer/Cargo.lock"
-                   (("(checksum = )\".*\"" all name)
-                    (string-append name "\"" ,%cargo-reference-hash "\"")))
-                 (generate-all-checksums "vendor")
-                 (generate-all-checksums "src/tools")
-                 #t))
-            (add-before 'install 'mkdir-prefix-paths
-              (lambda* (#:key outputs #:allow-other-keys)
-                ;; As result of https://github.com/rust-lang/rust/issues/36989
-                ;; `prefix' directory should exist before `install' call
-                (mkdir-p (assoc-ref outputs "out"))
-                #t))
-            (replace 'delete-install-logs
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (define (delete-manifest-file out-path file)
-                   (delete-file (string-append out-path "/lib/rustlib/" file)))
+;; (define-public rust-nightly
+;;   (let ((base-rust
+;;          (rust-bootstrapped-package rust-1.52 "1.53.0"
+;;            "1f95p259dfp5ca118bg107rj3rqwlswy65dxn3hg8sqgl4wwmxsw")))
+;;     (package
+;;       (inherit base-rust)
+;;       (name "rust-nightly")
+;;       (outputs '("out" "doc"))
+;;       (source
+;;         (origin
+;;           (inherit (package-source base-rust))
+;;           (snippet #f)))
+;;       (inputs (append (package-inputs base-rust) `(("ninja" ,ninja))))
+;;       (arguments
+;;        (substitute-keyword-arguments (package-arguments base-rust)
+;;          ((#:phases phases)
+;;           `(modify-phases ,phases
+;;              (delete 'check) ;; TODO(robin): remove again, just delete for testing
+;;              (add-after 'configure 'enable-extended
+;;                (lambda* (#:key outputs #:allow-other-keys)
+;;                  (substitute* "config.toml"
+;;                    (("submodules = false")
+;;                     "submodules = false
+;; sanitizers = false
+;; profiler = true
+;; extended = true
+;; tools = [\"cargo\", \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
+;;                  #t))
+;;              (replace 'install
+;;                (lambda* (#:key outputs #:allow-other-keys)
+;;                  (invoke "./x.py" "install")))
+;;              (delete 'patch-cargo-checksums)
+;;              (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
+;;                ;; Generate checksums after patching generated files (in
+;;                ;; particular, vendor/jemalloc/rep/Makefile).
+;;                (lambda* _
+;;                  (use-modules (guix build cargo-utils))
+;;                  (substitute* "Cargo.lock"
+;;                    (("(checksum = )\".*\"" all name)
+;;                     (string-append name "\"" ,%cargo-reference-hash "\"")))
+;;                  (substitute* "src/tools/rust-analyzer/Cargo.lock"
+;;                    (("(checksum = )\".*\"" all name)
+;;                     (string-append name "\"" ,%cargo-reference-hash "\"")))
+;;                  (generate-all-checksums "vendor")
+;;                  (generate-all-checksums "src/tools")
+;;                  #t))
+;;             (add-before 'install 'mkdir-prefix-paths
+;;               (lambda* (#:key outputs #:allow-other-keys)
+;;                 ;; As result of https://github.com/rust-lang/rust/issues/36989
+;;                 ;; `prefix' directory should exist before `install' call
+;;                 (mkdir-p (assoc-ref outputs "out"))
+;;                 #t))
+;;             (replace 'delete-install-logs
+;;                (lambda* (#:key outputs #:allow-other-keys)
+;;                  (define (delete-manifest-file out-path file)
+;;                    (delete-file (string-append out-path "/lib/rustlib/" file)))
 
-                 (let ((out (assoc-ref outputs "out")))
-                   (for-each
-                     (lambda (file) (delete-manifest-file out file))
-                     '("install.log"
-                       "manifest-rust-docs"
-                       ,(string-append "manifest-rust-std-"
-                                       (nix-system->gnu-triplet-for-rust))
-                       "manifest-rustc"))
-                   #t)))
-            (add-after 'configure 'switch-to-nightly
-              (lambda _
-                (substitute* "config.toml"
-                             (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
+;;                  (let ((out (assoc-ref outputs "out")))
+;;                    (for-each
+;;                      (lambda (file) (delete-manifest-file out file))
+;;                      '("install.log"
+;;                        "manifest-rust-docs"
+;;                        ,(string-append "manifest-rust-std-"
+;;                                        (nix-system->gnu-triplet-for-rust))
+;;                        "manifest-rustc"))
+;;                    #t)))
+;;             (add-after 'configure 'switch-to-nightly
+;;               (lambda _
+;;                 (substitute* "config.toml"
+;;                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
