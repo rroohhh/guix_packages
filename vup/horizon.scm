@@ -48,7 +48,7 @@
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
                 ("boost" ,boost) ("opencascade" ,opencascade-occt-fixed) ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
-                ("gdk-pixbuf" ,gdk-pixbuf+svg) ("gcc" ,gcc-11)))
+                ("librsvg" ,librsvg) ("gcc" ,gcc-11)))
       (arguments
        `(#:make-flags (list "GOLD=" "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
          #:phases (modify-phases %standard-phases
