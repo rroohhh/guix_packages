@@ -423,7 +423,7 @@ built-in registry server of Docker.")
        ("xz" ,xz)))
     (native-inputs
      `(("eudev" ,eudev)      ; TODO: Should be propagated by lvm2 (.pc -> .pc)
-       ("go" ,go-1.16)
+       ("go" ,go-1.14)
        ("gotestsum" ,gotestsum)
        ("pkg-config" ,pkg-config)))
     (synopsis "Docker container component library, and daemon")
