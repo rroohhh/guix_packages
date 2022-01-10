@@ -616,12 +616,12 @@ as possible in order to be comprehensible and easily extensible.")
        (origin
          (method git-fetch)
          (uri (git-reference
-               (url "https://github.com/amaranth-lang/amaranth")
+               (url "https://github.com/amaranth-lang/amaranth-soc")
                (commit commit)))
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0afmnfs1ms7p1r4c1nc0sfvlcq36zjwaim7775v5i2vajck3020c"))))
+           "106r0gdd3mv21pq099x0ifgg9jw0rmnphhx4swksazgvcbrskj3l"))))
       (build-system python-build-system)
       (inputs
        `(("python-setuptools-scm" ,python-setuptools-scm)
@@ -694,7 +694,7 @@ as possible in order to be comprehensible and easily extensible.")
      `(("python-setuptools-scm" ,python-setuptools-scm)
        ("python-wheel" ,python-wheel)
        ("python-toml" ,python-toml)
-       ("python-asttokens" ,python-asttokens))) ; for tests
+       ("python-asttokens" ,python-asttokens)))
     (home-page
      "https://github.com/alexmojaki/executing")
     (synopsis
