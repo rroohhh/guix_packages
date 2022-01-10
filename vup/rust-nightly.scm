@@ -48,8 +48,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.55.0"
-           "07l28f7grdmi65naq71pbmvdd61hwcpi40ry7kp7dy7m233rldxj")))
+         (rust-bootstrapped-package rust-1.56 "1.57.0"
+           "06jw8ka2p3kls8p0gd4p0chhhb1ia1mlvj96zn78n7qvp71zjiim")))
     (package
       (inherit base-rust)
       (name "rust-nightly")

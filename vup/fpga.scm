@@ -29,7 +29,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "4f5f73d18b137930fb3048c0b385c82fa078db38")
+  (let ((commit "f6fa2ddcfc89099726d60386befba874c7ac1e0d")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -42,7 +42,7 @@
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "0z1kp223kix7i4r7mbj2bzawkdzc55nsgc41m85dmbajl9fsj1m0")))))))
+                  "1nskfzwshb77vy90ih9nqji3912xvqfjyhir3azljbx4kwywrfyj")))))))
 
 (define-public iverilog-11
   (package
@@ -83,8 +83,8 @@ For synthesis, the compiler generates netlists in the desired format.")
 
 
 (define-public yosys-git
-  (let ((commit "52ba31b1c023b571868a396adfe1f43a0f71e867")
-        (version "0.10+46"))
+  (let ((commit "0feba821a8aeeea3f5b027df9badb320cb7dc5fa")
+        (version "0.12+57"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))
                                      ("iverilog" . ,(const iverilog-11))))
      (package
@@ -97,13 +97,13 @@ For synthesis, the compiler generates netlists in the desired format.")
                        (commit commit)))
                  (sha256
                   (base32
-                   "0myjyfhv3h5id1srlc1xfaqpd2lcm5j5zchrziq7snpsiicpbh8a"))
+                   "0q44373bp4r88c1lp5yj9bzjgc4yyw4ddlr1v52kzj10f2pil0fd"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "83b8ef947f77723f602b706eac16281e37de278c")
+  (let ((commit "3b7b1991318860997ef589112b3debb24eb4912d")
         (revision "7"))
     (package
       (inherit guix:icestorm)
@@ -116,10 +116,10 @@ For synthesis, the compiler generates netlists in the desired format.")
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "1r62gv43yz6zqg5cy4069s875pfkgi1lvp3fi646cz0i3gicdims")))))))
+                  "017hfir4pda22qd3hams60ql8siy651a1gcgc0qvi09fhqz43jsf")))))))
 
 (define-public trellis
-  (let ((commit "03e0070f263fbe31c247de61d259544722786210"))
+  (let ((commit "2f06397673bbca3da11928d538b8ab7d01c944c6"))
     (package
       (name "trellis")
       (version (string-append "1.1-0-" (string-take commit 7)))
@@ -132,7 +132,7 @@ For synthesis, the compiler generates netlists in the desired format.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0ccbph19i491rwf1kq7zwwm7qz5l2s0p2gf33nwm2dv2lzx69rg0"))))
+                  "1zwki0p06pfnf2q37lm68vh1kjcbni23lawg0c30676i2a8w1nns"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -174,14 +174,14 @@ open Verilog to bitstream toolchain for these devices.")
 (define-public python-apycula
   (package
     (name "python-apycula")
-    (version "0.0.1a11")
+    (version "0.2a2")
     (source
       (origin
         (method url-fetch)
         (uri (pypi-uri "Apycula" version))
         (sha256
           (base32
-            "0fwk1pgphpgj0lazjy40ii08xq2qi6bvrfc30rwfj52yff1s9akn"))))
+            "16afs288zrgnmi7rv1730c7g1j7ic8dgsjb0p7rdi9v1c1h6iid5"))))
     (build-system python-build-system)
     (inputs
      `(("python-setuptools-scm" ,python-setuptools-scm)))
@@ -200,10 +200,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "80a14592a0c4632462c61d1bd46835f2159f5ae9"))
+  (let ((commit "3d24583b914bac37d9c22931e6fcee2e1408b284"))
     (package
       (name "nextpnr")
-      (version (string-append "2021.10.22-" (string-take commit 9)))
+      (version (string-append "0.1-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -213,7 +213,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1hbad0jyaxj3fkdnkbvbp6lx480ajrq527awng8mj5s8k7jdwxqp"))))
+                  "1qv315zppjl87cv86mqwdwpg0grxzafy64fal5dw059981vhl15n"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)

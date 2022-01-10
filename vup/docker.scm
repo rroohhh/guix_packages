@@ -1,4 +1,4 @@
-;filepta;; GNU Guix --- Functional package management for GNU
+;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2016 David Thompson <davet@gnu.org>
 ;;; Copyright © 2018 Efraim Flashner <efraim@flashner.co.il>
 ;;; Copyright © 2019, 2020 Tobias Geerinckx-Rice <me@tobias.gr>
@@ -54,7 +54,7 @@
 
 ;; Note - when changing Docker versions it is important to update the versions
 ;; of several associated packages (docker-libnetwork and go-sctp).
-(define %docker-version "20.10.11")
+(define %docker-version "20.10.6")
 
 
 ;;; Private package that shouldn't be used directly; its purposes is to be
@@ -134,7 +134,7 @@ built-in registry server of Docker.")
              (commit (string-append "v" version))))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "1h1r66j57l073iba6hwrhcz779vaym68l1gfycdiw2d2gglfrdgr"))))
+        (base32 "1l4ra9bsvydaxd2fy7dgxp7ynpp0mrlwvcdhxiafw596559ab6qk"))))
        ;; (patches
        ;;  (search-patches "docker-fix-tests.patch"))))
     (build-system gnu-build-system)
@@ -446,7 +446,7 @@ provisioning etc.")
             (commit (string-append "v" version))))
       (file-name (git-file-name name version))
       (sha256
-       (base32 "0dmmxn9ahyq2yq935fvp1b6ka6s43ih9nh6wwx8v6rjg7y35rb1n"))))
+       (base32 "15kknb26vyzjgqmn8r81a1sy1i5br6bvngqd5xljihppnxvp2gvl"))))
     (build-system go-build-system)
     (arguments
      `(#:import-path "github.com/docker/cli"
