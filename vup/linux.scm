@@ -64,7 +64,7 @@
       (license license:gpl2)
       (home-page "https://kernel.org/"))))
 
-(define linux-firmware-version "20201118")
+(define linux-firmware-version "20211216")
 (define (linux-firmware-source version)
   (origin
     (method git-fetch)
@@ -75,7 +75,7 @@
     (file-name (git-file-name "linux-firmware" (string-take version 8)))
     (sha256
      (base32
-      "107p7h13gncsxqhixqq9zmmswvs910sck54ab10s4m5cafvnaf94"))))
+      "1hsrmn890l0f7lwnb92kd96aqqgqm41w2px1ak8k0k644sswz523"))))
 
 (define-public radeon-firmware-nonfree
   (package
@@ -430,5 +430,3 @@ zfs-fuse.
 On Guix System, you will need to invoke the included shell scripts as
 @code{job} definitions in your @code{operating-system} declaration.")
     (license license:gpl2+)))
-
-zfs
