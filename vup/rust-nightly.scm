@@ -92,20 +92,21 @@ tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"
                  (generate-all-checksums "vendor")
                  (generate-all-checksums "src/tools")
                  #t))
-            (replace 'delete-install-logs
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (define (delete-manifest-file out-path file)
-                   (delete-file (string-append out-path "/lib/rustlib/" file)))
+             (delete 'delete-install-logs)
+            ;; (replace 'delete-install-logs
+            ;;    (lambda* (#:key outputs #:allow-other-keys)
+            ;;      (define (delete-manifest-file out-path file)
+            ;;        (delete-file (string-append out-path "/lib/rustlib/" file)))
 
-                 (let ((out (assoc-ref outputs "out")))
-                   (for-each
-                     (lambda (file) (delete-manifest-file out file))
-                     '("install.log"
-                       "manifest-rust-docs"
-                       ,(string-append "manifest-rust-std-"
-                                       (nix-system->gnu-triplet-for-rust))
-                       "manifest-rustc"))
-                   #t)))
+            ;;      (let ((out (assoc-ref outputs "out")))
+            ;;        (for-each
+            ;;          (lambda (file) (delete-manifest-file out file))
+            ;;          '("install.log"
+            ;;            "manifest-rust-docs"
+            ;;            ,(string-append "manifest-rust-std-"
+            ;;                            (nix-system->gnu-triplet-for-rust))
+            ;;            "manifest-rustc"))
+            ;;        #t)))
             (add-after 'configure 'switch-to-nightly
               (lambda _
                 (substitute* "config.toml"
