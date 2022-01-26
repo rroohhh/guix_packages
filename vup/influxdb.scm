@@ -47,7 +47,7 @@
      (origin
        (method url-fetch)
        (uri (string-append "https://dl.influxdata.com/telegraf/releases/telegraf-" (string-replace-substring version "-" "~") "_linux_amd64.tar.gz"))
-       (file-name (git-file-name name version))
+       (file-name (string-append name "-" version ".tar.gz"))
        (sha256
         (base32 "10vf1jh9ay5zxfbpn5c78h6g7bf1356hn5d2xd824pcbnjz19pmk"))))
     (build-system copy-build-system)
