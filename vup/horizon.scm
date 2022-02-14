@@ -27,7 +27,7 @@
 
 
 (define-public horizon
-  (let ((commit "1c4eea61f590549ea29d801215f2e15fe532fa70"))
+  (let ((commit "a29d84f0506a775bdc1f8d1f96295aacb4599c2f"))
     (package
       (name "horizon")
       (version (string-append "2.1.0+" (string-take commit 7)))
@@ -40,7 +40,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0wf29rziniradjphik43fymrvrnhlm18gv0n153wqrz90c7apnsx"))))
+                  "16v9h8vh5h530n1zbbp2iirjnxd8xda52jd0y6g1kmmmhy2c3500"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm-3) ("curl" ,curl) ("glib" ,glib)
