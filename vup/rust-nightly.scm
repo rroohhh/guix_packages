@@ -53,7 +53,7 @@
     (package
       (inherit base-rust)
       (name "rust-nightly")
-      (outputs '("out" "doc"))
+      (outputs '("out" "doc" "cargo" "rustfmt"))
       (source
         (origin
           (inherit (package-source base-rust))
@@ -76,7 +76,17 @@ tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"
                  #t))
              (replace 'install
                (lambda* (#:key outputs #:allow-other-keys)
-                 (invoke "./x.py" "install")))
+                 (invoke "./x.py" "install")
+                 (substitute* "config.toml"
+                   ;; Adjust the prefix to the 'cargo' output.
+                   (("prefix = \"[^\"]*\"")
+                    (format #f "prefix = ~s" (assoc-ref outputs "cargo"))))
+                 (invoke "./x.py" "install" "cargo")
+                 (substitute* "config.toml"
+                   ;; Adjust the prefix to the 'rustfmt' output.
+                   (("prefix = \"[^\"]*\"")
+                    (format #f "prefix = ~s" (assoc-ref outputs "rustfmt"))))
+                 (invoke "./x.py" "install" "rustfmt")))
              (delete 'patch-cargo-checksums)
              (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
                ;; Generate checksums after patching generated files (in
