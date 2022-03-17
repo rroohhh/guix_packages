@@ -59,6 +59,7 @@
   #:use-module (gnu packages xml)
   #:use-module (gnu packages boost)
   #:use-module (gnu packages samba)
+  #:use-module (gnu packages vulkan)
   #:use-module (vup mesa))
 
 (define-public mbuffer
@@ -635,3 +636,63 @@ automatic, safe and reliable.")
       (description "An unofficial WhatsApp desktop application for Linux.")
       (home-page "https://github.com/eneshecan/whatsapp-for-linux")
       (license licenses:gpl3))))
+
+(define-public glslang-11.8
+  (package
+    (inherit glslang)
+    (version "11.8.0")
+    (source
+     (origin
+      (method git-fetch)
+      (uri (git-reference
+            (url "https://github.com/KhronosGroup/glslang")
+            (commit version)))
+      (sha256
+       (base32 "0xxi792f0lkxvvm9c2zaidhi078cb2hbq7rikflr0vxygir4xi10"))
+      (file-name (git-file-name (package-name glslang) version))))))
+
+
+(define-public spirv-headers-2022
+  (package
+    (inherit spirv-headers)
+    (version "1.3.204.1")
+    (source
+     (origin
+      (method git-fetch)
+      (uri (git-reference
+            (url "https://github.com/KhronosGroup/SPIRV-Headers")
+            (commit (string-append "sdk-" version))))
+      (sha256
+       (base32 "1pd2gzq4sh67qffc91apq7z3fi8fhwcfbwzfzgpfb3vb7q54kkwj"))
+      (file-name (git-file-name (package-name spirv-headers) version))))))
+
+
+(define-public spirv-tools-2022
+  (package
+    (inherit spirv-tools)
+    (version "2022.1")
+    (source
+     (origin
+      (method git-fetch)
+      (uri (git-reference
+            (url "https://github.com/KhronosGroup/SPIRV-Tools")
+            (commit (string-append "v" version))))
+      (sha256
+       (base32 "1k2nl8drdskfnr1n3avhgdmlnjrbqdn0aw9ph1cdcaj0h4ng625s"))
+      (file-name (git-file-name (package-name spirv-tools) version))))
+    (inputs (modify-inputs (package-inputs spirv-tools) (prepend spirv-headers-2022)))))
+
+
+(define-public shaderc-2022
+  (package
+    (inherit shaderc)
+    (version "2022.1")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/google/shaderc")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name "shaderc" version))
+              (sha256
+               (base32 "0v4mvrw8gl3xxr4d7qlfmgmprbyj9xc50wgk1lpm5icxkjyb0rr9"))))
+    (inputs (modify-inputs (package-inputs shaderc) (prepend glslang-11.8) (prepend spirv-tools-2022) (prepend spirv-headers-2022)))))
