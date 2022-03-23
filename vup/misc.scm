@@ -680,7 +680,7 @@ automatic, safe and reliable.")
       (sha256
        (base32 "1k2nl8drdskfnr1n3avhgdmlnjrbqdn0aw9ph1cdcaj0h4ng625s"))
       (file-name (git-file-name (package-name spirv-tools) version))))
-    (inputs (modify-inputs (package-inputs spirv-tools) (prepend spirv-headers-2022)))))
+    (inputs (modify-inputs (package-inputs spirv-tools) (replace "spirv-headers" spirv-headers-2022)))))
 
 
 (define-public shaderc-2022
@@ -695,4 +695,4 @@ automatic, safe and reliable.")
               (file-name (git-file-name "shaderc" version))
               (sha256
                (base32 "0v4mvrw8gl3xxr4d7qlfmgmprbyj9xc50wgk1lpm5icxkjyb0rr9"))))
-    (inputs (modify-inputs (package-inputs shaderc) (prepend glslang-11.8) (prepend spirv-tools-2022) (prepend spirv-headers-2022)))))
+    (inputs (modify-inputs (package-inputs shaderc) (replace "glslang" glslang-11.8) (replace "spirv-tools" spirv-tools-2022) (replace "spirv-headers" spirv-headers-2022)))))

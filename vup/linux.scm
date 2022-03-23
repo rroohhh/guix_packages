@@ -48,7 +48,7 @@
          "linux-" version ".tar.xz")))
 
 (define-public linux-nonfree
-  (let* ((version "5.15.10"))
+  (let* ((version "5.17"))
     (package
       (inherit linux-libre)
       (name "linux-nonfree")
@@ -58,7 +58,7 @@
                 (uri (linux-nonfree-urls version))
                 (sha256
                  (base32
-                  "0jsv8lialjwp91qg9c9rh8rhn49a70ryyhzl19bxq3fhz1fwyks8"))))
+                  "1cdi43x4c3l4chznh57gm55szycj4wjlxl1dss1ilnfvvmhyypsm"))))
       (synopsis "Mainline Linux kernel, nonfree binary blobs included.")
       (description "Linux is a kernel.")
       (license license:gpl2)
@@ -155,6 +155,14 @@
     (source (package-source linux-nonfree))
     (license (package-license linux-nonfree))))
 
+(define-public cpupower-nonfree
+  (package
+    (inherit cpupower)
+    (name "cpupower-nonfree")
+    (version (package-version linux-nonfree))
+    (source (package-source linux-nonfree))
+    (license (package-license linux-nonfree))))
+
 (define-public iwlwifi-firmware-nonfree
   (package
     (name "iwlwifi-firmware-nonfree")
@@ -208,7 +216,7 @@
 (define-public zfs
   (package
     (name "zfs")
-    (version "2.1.1")
+    (version "2.1.3")
     (outputs '("out" "module" "src"))
     (source
       (origin
@@ -217,7 +225,7 @@
                             "/download/zfs-" version
                             "/zfs-" version ".tar.gz"))
         (sha256
-         (base32 "1zsc0zkz5cci6pxc0kwzn3xg72qv2fq65phb768y5dgk1784hkxx"))))
+         (base32 "1za3kf67qic210s8hgh1rnq74bwgsx98llynmyf40gvr8x2n86xn"))))
     (build-system linux-module-build-system)
     (arguments
      `(;; The ZFS kernel module should not be downloaded since the license
