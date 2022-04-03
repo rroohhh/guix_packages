@@ -48,8 +48,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.58.0"
-           "0w6pdh87bd87xann6czz95z5bzlw58kbgii2jdmrjbiw5yik3m8a")))
+         (rust-bootstrapped-package rust "1.58.1"
+           "1iq7kj16qfpkx8gvw50d8rf7glbm6s0pj2y1qkrz7mi56vfsyfd8")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -58,7 +58,7 @@
         (origin
           (inherit (package-source base-rust))
           (snippet #f)))
-      (inputs (append (package-inputs base-rust) `(("ninja" ,ninja))))
+      (inputs (append (alist-replace "llvm" (list llvm-13) (package-inputs base-rust)) `(("ninja" ,ninja))))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
@@ -73,7 +73,18 @@ sanitizers = false
 profiler = true
 extended = true
 tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
+                 (substitute* "config.toml"
+                   (("jemalloc=true")
+                    "jemalloc=true
+codegen-backends=[\"llvm\"]
+lld=true
+llvm-tools=true
+"))
                  #t))
+             (add-after 'configure 'fix-lld-compilation
+                (lambda* _
+                  (invoke "cp" "-r" "src/llvm-project/libunwind/include/mach-o/" "src/llvm-project/lld/MachO/")
+                  #t))
              (replace 'install
                (lambda* (#:key outputs #:allow-other-keys)
                  (invoke "./x.py" "install")
