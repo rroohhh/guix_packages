@@ -172,11 +172,14 @@ as possible in order to be comprehensible and easily extensible.")
     (version "0.6.3")
     (source
      (origin
-       (method url-fetch)
-       (uri (pypi-uri "orthopy" version))
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/sigma-py/orthopy")
+             (commit "7a1d9c765e45a2b2620e513bd8b377ae255dd195")))
+       (file-name (git-file-name name version))
        (sha256
         (base32
-         "1c8j9qyzjijf75pxw4bwc3hlaikz8wyvajr512yg3cv8xwlkpvcs"))))
+         "1vc0by82bz5rf3b4lgvximxf1hjz8znd0hzrigfdy7z5rkb4hnm9"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
@@ -3136,3 +3139,42 @@ simulation, statistical modeling, machine learning and much more.")
     (description
       "InfluxDB 2.0 Python client library")
     (license #f)))
+
+(define-public python-zfpy
+  (package
+    (name "python-zfpy")
+    (version "0.5.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "zfpy" version))
+        (sha256
+          (base32 "0ba88k2ldhpqvkyxav7m03ackj5przdprv9cjp9hkia7iafx009x"))))
+    (build-system python-build-system)
+    (inputs (list python-numpy))
+    (home-page
+      "https://computing.llnl.gov/projects/floating-point-compression")
+    (synopsis "zfp compression in Python")
+    (description "zfp compression in Python")
+    (license #f)))
+
+(define-public python-fpzip
+  (package
+    (name "python-fpzip")
+    (version "1.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "fpzip" version))
+        (sha256
+          (base32 "032v7fcc53mcg3w1xvnfi05vali0xsi59i04dlimm8pch80amby8"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-numpy))
+    (home-page "https://github.com/seung-lab/fpzip/")
+    (synopsis
+      "Numpy wrapper for fpzip algorithm (P. Lindstrom & M. Isenburg, 2006)")
+    (description
+      "Numpy wrapper for fpzip algorithm (P.  Lindstrom & M.  Isenburg, 2006)")
+    (license #f)))
+
+

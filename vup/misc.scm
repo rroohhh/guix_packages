@@ -16,6 +16,7 @@
   #:use-module ((gnu packages animation) #:prefix guix:)
   #:use-module (gnu packages audio)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages boost)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages bash)
@@ -38,6 +39,7 @@
   #:use-module (gnu packages efi)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages check)
+  #:use-module (gnu packages swig)
   #:use-module (gnu packages man)
   #:use-module (gnu packages gettext)
   #:use-module (gnu packages gnome)
@@ -46,6 +48,8 @@
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages gstreamer)
   #:use-module (gnu packages glib)
+  #:use-module (gnu packages lua)
+  #:use-module (gnu packages cpp)
   #:use-module (gnu packages python)
   #:use-module (gnu packages ncurses)
   #:use-module (gnu packages freedesktop)
@@ -60,6 +64,8 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages samba)
   #:use-module (gnu packages vulkan)
+  #:use-module (gnu packages imagemagick)
+  #:use-module (gnu packages protobuf)
   #:use-module (vup mesa))
 
 (define-public mbuffer
@@ -426,7 +432,7 @@
 (define-public fwupd
   (package
     (name "fwupd")
-    (version "1.5.5")
+    (version "1.7.6")
     (source
      (origin
        (method git-fetch)
@@ -436,7 +442,7 @@
          (commit version)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "0hrxp3hl1sm0gb1200qwyb330pknxicf5p0x5vgdv8ha4jf9zygc"))
+        (base32 "0hkxp3hl1sm0gb1200qwyb330pknxicf5p0x5vgdv8ha4jf9zygc"))
        (patches '("fwupd-do-not-write-to-var.patch"
                   "fwupd-add-option-for-installation-sysconfdir.patch"
                   "fwupd-installed-tests-path.patch"))))
@@ -695,4 +701,322 @@ automatic, safe and reliable.")
               (file-name (git-file-name "shaderc" version))
               (sha256
                (base32 "0v4mvrw8gl3xxr4d7qlfmgmprbyj9xc50wgk1lpm5icxkjyb0rr9"))))
-    (inputs (modify-inputs (package-inputs shaderc) (replace "glslang" glslang-11.8) (replace "spirv-tools" spirv-tools-2022) (replace "spirv-headers" spirv-headers-2022)))))
+    (inputs 
+      (modify-inputs (package-inputs shaderc)
+                     (replace "glslang" glslang-11.8)
+                     (replace "spirv-tools" spirv-tools-2022)
+                     (replace "spirv-headers" spirv-headers-2022)))))
+
+
+(define-public zfp
+  (let* ((version "0.5.5"))
+    (package
+      (name "zfp")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/LLNL/zfp/releases/download/" version "/zfp-" version ".tar.gz"))
+         (sha256
+          (base32 "1ickfca08ga6scgabf4gmlby894cv67h9hp2rzffbx5ip94bkxzx"))))
+      (inputs (list python python-numpy python-cython))
+      (build-system cmake-build-system)
+      (arguments '(#:configure-flags `("-DBUILD_ZFPY=YES")))
+      (home-page "https://computing.llnl.gov/projects/zfp")
+      (synopsis "zfp: Compressed Floating-Point and Integer Arrays")
+      (description "zfp: Compressed Floating-Point and Integer Arrays")
+      (license licenses:bsd-3))))
+
+(define-public std_compat
+  (let* ((version "0.0.14")
+         (commit "cd2dcc2963c59c76f853f689d4e43b37caea1277"))
+    (package
+      (name "std_compat")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/robertu94/std_compat")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "0a6wcy3pbcv7j48dxkp9m9970yzkrfdy849y6iskbdgc3rn9a51h"))))
+      (build-system cmake-build-system)
+      (arguments '(#:configure-flags `("-DBUILD_TESTING=NO")
+                   #:phases (modify-phases %standard-phases
+                                           (delete 'check))))
+      (home-page "https://github.com/robertu94/std_compat")
+      (synopsis "compatability header for older c++")
+      (description "compatability header for older c++")
+      (license #f))))
+
+(define-public sz
+  (let* ((version "2.1.12.2"))
+    (package
+      (name "sz")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/szcompressor/SZ/releases/download/v" version "/SZ-" version ".tar.gz"))
+         (sha256
+          (base32 "1ikd0sv0mivnd22idp9mby6xgihrda7gy2iyw5b0l6zd3wz2czj2"))))
+      (inputs (list python python-numpy python-cython zlib zstd-cmake))
+      (build-system cmake-build-system)
+      (home-page "https://github.com/szcompressor/SZ")
+      (synopsis "SZ2: Error-bounded Lossy Compressor for HPC Data")
+      (description "SZ2: Error-bounded Lossy Compressor for HPC Data")
+      (license #f))))
+
+(define-public SZauto
+  (let* ((version "1.2.1"))
+    (package
+      (name "SZauto")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/szcompressor/SZauto/releases/download/" version "/SZauto-" version ".tar.gz"))
+         (sha256
+          (base32 "0fmh141swmfqsaghi32rwl0hbpq7g4jajr7q9rl4z1rsvxc8ziam"))))
+      (build-system cmake-build-system)
+      (inputs (list zstd-cmake))
+      (home-page "https://github.com/szcompressor/SZauto")
+      (synopsis "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
+      (description "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
+      (license #f))))
+
+(define-public SZ3
+  (let* ((version "3.1.4"))
+    (package
+      (name "SZ3")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (patches (search-patches "sz3_zstd_cmake.patch"))
+         (uri (string-append "https://github.com/szcompressor/SZ3/archive/refs/tags/v." version ".tar.gz"))
+         (sha256
+          (base32 "0jrzpingv09kb6xigc923y60b6x9vqz7fx39a2gad3c7z17rv3w5"))))
+      (build-system cmake-build-system)
+      (inputs (list zstd-cmake gsl))
+      (home-page "https://github.com/szcompressor/SZ3")
+      (synopsis "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
+      (description "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
+      (license #f))))
+
+(define-public digitroundingZ
+  (let* ((version "0.1")
+         (commit "68555fade9ecb1b123f29436461e02f7acb4f738"))
+    (package
+      (name "digitroundingZ")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/disheng222/digitroundingZ")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "1i8l41k6mm9hfipamhdm1sw35zxwcfh7p64h3chdsq37023hvyl6"))))
+      (build-system cmake-build-system)
+      (inputs (list zlib))
+      (home-page "https://github.com/disheng222/digitroundingZ")
+      (synopsis "The standalone digit rounding compressor which will be convenient for evaluation")
+      (description "The standalone digit rounding compressor which will be convenient for evaluation")
+      (license licenses:lgpl3))))
+
+(define-public bitgroomingZ
+  (let* ((version "0.1")
+         (commit "4816b7f1b92765cac57bd01cd4e3cde1b8bdb65f"))
+    (package
+      (name "bitgroomingZ")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/disheng222/bitgroomingZ")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "1yab8x15067z97559azqns7v57ldzsawgnvyr1nd80qzivyxmbs6"))))
+      (build-system cmake-build-system)
+      (inputs (list zlib))
+      (home-page "https://github.com/disheng222/BitGroomingZ")
+      (synopsis "BGZ: Bit Grooming Compressor")
+      (description "BGZ: Bit Grooming Compressor")
+      (license #f))))
+
+(define-public mgard
+  (let* ((version "1.0.0")
+         (commit "0f6cdf9b59e837547e3298be7187de8df376bb18"))
+    (package
+      (name "mgard")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/CODARcode/MGARD")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "0382ijm5pc8cvrkqzx9hv4g8pzk2r5vbn6gih374r3as04zj9swj"))))
+      (build-system cmake-build-system)
+      (inputs (list zstd-cmake zlib python protobuf pkg-config))
+      (arguments `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")))
+      (home-page "https://github.com/CODARcode/MGARD")
+      (synopsis "MGARD: MultiGrid Adaptive Reduction of Data")
+      (description "MGARD: MultiGrid Adaptive Reduction of Data")
+      (license #f))))
+
+(define-public mgard-0.1
+  (let* ((version "0.1.0")
+         (commit "7d9715e612488731dfa5f8e488e7976539464c3e"))
+    (package
+      (name "mgard")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/CODARcode/MGARD")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "0pyk3p3q2jamc0i84g9pg4m5qgk8ic7b90y1j1fmfqqygb7whzim"))))
+      (build-system cmake-build-system)
+      (inputs (list zstd-cmake zlib python protobuf pkg-config))
+      (arguments `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")
+                   #:phases (modify-phases %standard-phases (delete 'check))))
+      (home-page "https://github.com/CODARcode/MGARD")
+      (synopsis "MGARD: MultiGrid Adaptive Reduction of Data")
+      (description "MGARD: MultiGrid Adaptive Reduction of Data")
+      (license #f))))
+
+(define-public ndzip
+  (let* ((version "0.1")
+         (commit "4e6e38e40af7f44fda05569a976445b226275997"))
+    (package
+      (name "ndzip")
+      (version (string-append version "-" (string-take commit 9)))
+      (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/fknorr/ndzip")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (patches (search-patches "ndzip_install.patch"))
+              (sha256
+               (base32 "0iahng8k6mhdg2xf3ric5zv2wdhcffz9sjvlix7v4cxixl846xi0"))))
+      (build-system cmake-build-system)
+      (inputs (list boost))
+      (arguments `(#:phases (modify-phases %standard-phases (delete 'check))))
+      (home-page "https://github.com/fknorr/ndzip")
+      (synopsis "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (description "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (license licenses:expat))))
+
+(define-public fpzip
+  (let* ((version "1.3.0"))
+    (package
+      (name "fpzip")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/LLNL/fpzip/releases/download/" version "/fpzip-" version ".tar.gz"))
+         (sha256
+          (base32 "0v0ky3sdqwg13k2zvy786kbzrhvp59mrb5s79jmgxqsr8bcgg394"))))
+      (build-system cmake-build-system)
+      (home-page "https://github.com/LLNL/fpzip")
+      (synopsis "Lossless compressor of multidimensional floating-point arrays")
+      (description "Lossless compressor of multidimensional floating-point arrays")
+      (license licenses:bsd-3))))
+
+(define-public sol2
+  (let* ((version "3.2.2"))
+    (package
+      (name "sol2")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/ThePhD/sol2/archive/refs/tags/v" version ".tar.gz"))
+         (sha256
+          (base32 "1nmjlfqfi3fqqwzgqpl48ljsg6z47m1raddcvg91v0n1w3d905ql"))))
+      (build-system cmake-build-system)
+      (arguments `(#:phases (modify-phases %standard-phases (delete 'check))))
+      (home-page "https://github.com/ThePhD/sol2")
+      (synopsis "sol2 is a C++ library binding to Lua")
+      (description "sol2 is a C++ library binding to Lua")
+      (license licenses:expat))))
+
+(define-public zstd-cmake
+  (package
+    (inherit zstd)
+    (build-system cmake-build-system)
+    (outputs '("out"))
+    (arguments `(#:phases (modify-phases %standard-phases
+                            (delete 'check)
+                            (add-before 'configure 'chdir
+                              (lambda* _
+                                (chdir "build/cmake")
+                                #t)))))))
+
+(define-public libpressio
+  (let* ((version "0.83.4"))
+    (package
+      (name "libpressio")
+      (version version)
+      (source (origin
+              (modules '((guix build utils)))
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/robertu94/libpressio")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (patches (search-patches "libpressio_python_install_path.patch"))
+              (snippet
+                '(begin
+                  (substitute* "CMakeLists.txt"
+                    (("CMP0069 NEW)") "SET CMP0069 NEW)
+find_package(\"zstd\")
+")
+                    (("NDZip") "ndzip"))
+                  #t))
+              (sha256
+               (base32 "0hh9y6qj4mr7zgw8p80gd8vxfw2vlwh4gcc6s5s16nj8cjj025zz"))))
+      (build-system cmake-build-system)
+      (arguments 
+        '(#:configure-flags 
+          `("-DBUILD_TESTING=NO"
+            "-DLIBPRESSIO_INTERPROCEDURAL_OPTIMIZATION=YES"
+            "-DLIBPRESSIO_HAS_OPENMP=YES"
+            "-DLIBPRESSIO_HAS_SZ_AUTO=YES"
+            "-DLIBPRESSIO_HAS_ZFP=YES"
+            "-DLIBPRESSIO_HAS_SZ=YES"
+            "-DLIBPRESSIO_HAS_BLOSC=YES"
+            "-DLIBPRESSIO_HAS_MAGICK=YES"
+            "-DLIBPRESSIO_HAS_HDF=YES"
+            "-DLIBPRESSIO_HAS_FPZIP=YES"
+            "-DLIBPRESSIO_HAS_PETSC=YES"
+            "-DLIBPRESSIO_HAS_LUA=YES"
+            "-DLIBPRESSIO_HAS_JSON=YES"
+            "-DBUILD_PYTHON_WRAPPER=YES"
+            "-DLIBPRESSIO_HAS_DIGIT_ROUNDING=YES"
+            "-DLIBPRESSIO_HAS_BIT_GROOMING=YES"
+            "-DLIBPRESSIO_HAS_LINUX=YES"
+            "-DLIBPRESSIO_BUILD_MODE=FULL"
+            "-DLIBPRESSIO_HAS_BZIP2=YES"
+            "-DLIBPRESSIO_HAS_SZ3=YES"
+            "-DLIBPRESSIO_HAS_NETCDF=YES"
+            "-DLIBPRESSIO_HAS_NDZIP=YES"
+            "-DLIBPRESSIO_HAS_MGARD=NO")
+          #:phases (modify-phases %standard-phases (delete 'check))))
+      (inputs (list pkg-config std_compat boost zfp c-blosc hdf5 imagemagick sz
+                    digitroundingZ zlib bitgroomingZ SZauto zstd-cmake
+                    protobuf SZ3 ndzip netcdf fpzip sol2 luajit json-modern-cxx 
+                    python-numpy python swig petsc))
+      (home-page "https://github.com/CODARcode/libpressio")
+      (synopsis "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
+      (description "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
+      (license #f))))
