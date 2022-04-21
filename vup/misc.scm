@@ -4,6 +4,7 @@
   #:use-module ((guix licenses) #:prefix licenses:)
   #:use-module (guix download)
   #:use-module (guix utils)
+  #:use-module (guix build utils)
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
@@ -40,6 +41,7 @@
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages check)
   #:use-module (gnu packages swig)
+  #:use-module (gnu packages vim)
   #:use-module (gnu packages man)
   #:use-module (gnu packages gettext)
   #:use-module (gnu packages gnome)
@@ -55,11 +57,11 @@
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages electronics)
   #:use-module (gnu packages tls)
+  #:use-module (gnu packages libevent)
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages graphics)
   #:use-module (gnu packages pkg-config)
-  #:use-module (gnu packages libusb)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages boost)
   #:use-module (gnu packages samba)
@@ -442,7 +444,7 @@
          (commit version)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "0hkxp3hl1sm0gb1200qwyb330pknxicf5p0x5vgdv8ha4jf9zygc"))
+        (base32 "0k4wcncyaynwzaz96rdf9q60hn0zgjhfjcn83ky108lwcvr5jsf7"))
        (patches '("fwupd-do-not-write-to-var.patch"
                   "fwupd-add-option-for-installation-sysconfdir.patch"
                   "fwupd-installed-tests-path.patch"))))
@@ -1020,3 +1022,81 @@ find_package(\"zstd\")
       (synopsis "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
       (description "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
       (license #f))))
+
+
+(define-public libuv-for-neovim
+  (let* ((version "1.43.0"))
+    (package
+     (inherit libuv)
+     (version version)
+     (source (origin
+               (method url-fetch)
+               (uri (string-append "https://dist.libuv.org/dist/v" version
+                                       "/libuv-v" version ".tar.gz"))
+               (sha256
+                 (base32
+                   "194kwq3jfj9s628kzkchdca534rikjw0xiyas0cjbphqmsvjpmwh")))))))
+
+(define-public lua5.1-luv-for-neovim
+  (let* ((version "1.43.0-0"))
+    (package
+     (inherit lua5.1-luv)
+     (version version)
+     (source (origin
+              ;; The release tarball includes the sources of libuv but does
+              ;; not include the pkg-config files.
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/luvit/luv")
+                    (commit version)))
+              (file-name (git-file-name (package-name lua5.1-luv) version))
+              (sha256
+               (base32
+                "1yzi4bm845vl84wyv2qw4z1n1v285lgwm681swmp84brfy2s7czp"))))
+     (arguments
+       (substitute-keyword-arguments (package-arguments lua5.1-luv)
+         ((#:phases phases)
+           `(modify-phases ,phases
+             (delete 'copy-lua-compat)
+             (add-after 'unpack 'copy-lua-compat
+               (lambda* (#:key inputs #:allow-other-keys)
+                 (copy-recursively (assoc-ref inputs "lua-compat")
+                                   "lua-compat")
+                 (setenv "CPATH"
+                         (string-append (getcwd) "/lua-compat/c-api:"
+                                        (or (getenv "CPATH") "")))
+                 #t))))))
+     (inputs (modify-inputs (package-inputs lua5.1-luv) (replace "libuv" libuv-for-neovim)))
+     (native-inputs
+       (modify-inputs
+         (package-native-inputs lua5.1-luv)
+         (replace "lua-compat"
+           (origin
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/keplerproject/lua-compat-5.3")
+                   (commit "e245d3a18957e43ef902a59a72c8902e2e4435b9")))
+             (file-name "lua-compat-5.3-checkout")
+             (sha256
+              (base32
+                "1caxn228gx48g6kymp9w7kczgxcg0v0cd5ixsx8viybzkd60dcn4")))))))))
+
+(define-public neovim-latest
+  (let* ((version "0.7.0"))
+    (package
+     (inherit neovim)
+     (version version)
+     (source
+      (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/neovim/neovim")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name (package-name neovim) version))
+       (sha256
+        (base32 "1m7xmry66pn27gvk7qj9di83xa1h7zjp4c6ygnf218pqhr08x06g"))))
+     (inputs
+       (modify-inputs
+         (package-inputs neovim)
+         (replace "lua-luv" lua5.1-luv-for-neovim)
+         (replace "libuv" libuv-for-neovim))))))
