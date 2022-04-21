@@ -68,6 +68,7 @@
   #:use-module (gnu packages vulkan)
   #:use-module (gnu packages imagemagick)
   #:use-module (gnu packages protobuf)
+  #:use-module (gnu packages libusb)
   #:use-module (vup mesa))
 
 (define-public mbuffer
