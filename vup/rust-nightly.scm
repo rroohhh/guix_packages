@@ -132,3 +132,7 @@ llvm-tools=true
               (lambda _
                 (substitute* "config.toml"
                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
+
+(define-public rust-nightly-1.59
+ (rust-bootstrapped-package rust-nightly "1.59.0"
+           "1yc5bwcbmbwyvpfq7zvra78l0r8y3lbv60kbr62fzz2vx2pfxj57"))
