@@ -1,0 +1,13 @@
+diff --git a/tools/swig/CMakeLists.txt b/tools/swig/CMakeLists.txt
+index 28279a4..f332217 100644
+--- a/tools/swig/CMakeLists.txt
++++ b/tools/swig/CMakeLists.txt
+@@ -7,7 +7,7 @@ if(SWIG_FOUND AND PYTHON3_FOUND)
+ 
+   set(CMAKE_SWIG_FLAGS "-doxygen")
+   if(NOT LIBPRESSIO_PYTHON_SITELIB)
+-    set(LIBPRESSIO_PYTHON_SITELIB ${Python3_SITELIB} CACHE PATH "path to install python libraries to")
++    set(LIBPRESSIO_PYTHON_SITELIB "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/")
+   endif()
+   function(build_pressio_swig_module)
+     get_filename_component(filelibname ${ARGV0} NAME_WE)
