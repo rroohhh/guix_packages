@@ -64,12 +64,27 @@
          ((#:phases phases)
           `(modify-phases ,phases
              (delete 'check) ;; TODO(robin): remove again, just delete for testing
+             (add-after 'set-paths 'adjust-CPLUS_INCLUDE_PATH
+               (lambda* (#:key inputs #:allow-other-keys)
+                 (let ((gcc (assoc-ref inputs  "gcc")))
+                   ;; Hide GCC's C++ headers so that they do not interfere with
+                   ;; the ones we are attempting to build.
+                   (setenv "CPLUS_INCLUDE_PATH"
+                           (string-join
+                            (cons (string-append
+                                   (assoc-ref inputs "gcc") "/include/c++/x86_64-unknown-linux-gnu")
+                                  (string-split (getenv "CPLUS_INCLUDE_PATH")
+                                                        #\:))
+                            ":"))
+                   (format #true
+                           "environment variable `CPLUS_INCLUDE_PATH' changed to ~a~%"
+                           (getenv "CPLUS_INCLUDE_PATH")))))
              (add-after 'configure 'enable-extended
                (lambda* (#:key outputs #:allow-other-keys)
                  (substitute* "config.toml"
                    (("submodules = false")
                     "submodules = false
-sanitizers = false
+sanitizers = true
 profiler = true
 extended = true
 tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
@@ -87,6 +102,14 @@ llvm-tools=true
                   #t))
              (replace 'install
                (lambda* (#:key outputs #:allow-other-keys)
+                 (let* ((out (assoc-ref outputs "out"))
+                        (sanitizers-dir (string-append (assoc-ref outputs "out") "/lib/rustlib/x86_64-unknown-linux-gnu/lib/"))
+                        (from-dir "build/x86_64-unknown-linux-gnu/native/sanitizers/build/lib/linux/"))
+                     (mkdir-p sanitizers-dir)
+                     (copy-file (string-append from-dir "libclang_rt.asan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.asan.a"))
+                     (copy-file (string-append from-dir "libclang_rt.tsan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.tsan.a"))
+                     (copy-file (string-append from-dir "libclang_rt.msan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.msan.a"))
+                     (copy-file (string-append from-dir "libclang_rt.lsan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.lsan.a")))
                  (invoke "./x.py" "install")
                  (substitute* "config.toml"
                    ;; Adjust the prefix to the 'cargo' output.
