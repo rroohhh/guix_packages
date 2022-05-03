@@ -87,7 +87,7 @@
 sanitizers = true
 profiler = true
 extended = true
-tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
+tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\", \"miri\"]"))
                  (substitute* "config.toml"
                    (("jemalloc=true")
                     "jemalloc=true
