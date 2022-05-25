@@ -1101,3 +1101,27 @@ find_package(\"zstd\")
          (package-inputs neovim)
          (replace "lua-luv" lua5.1-luv-for-neovim)
          (replace "libuv" libuv-for-neovim))))))
+
+
+(define-public ffmpeg-with-rubberband
+  (package
+    (inherit ffmpeg)
+    (arguments
+      (substitute-keyword-arguments (package-arguments ffmpeg)
+        ((#:configure-flags flags)
+         `(cons "--enable-librubberband" ,flags))))
+    (inputs
+      (modify-inputs
+        (package-inputs ffmpeg)
+        (append rubberband)))))
+
+(define-public mpv-with-rubberband
+  (package
+    (inherit mpv)
+    (name "mpv-rubberband")
+    (inputs
+      (modify-inputs
+        (package-inputs mpv)
+        (replace "ffmpeg" ffmpeg-with-rubberband)))))
+
+
