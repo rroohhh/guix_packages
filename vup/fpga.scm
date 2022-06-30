@@ -20,6 +20,7 @@
   #:use-module (gnu packages algebra)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-science)
+  #:use-module (gnu packages python-build)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages serialization)
