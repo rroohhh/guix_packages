@@ -159,3 +159,11 @@ llvm-tools=true
 (define-public rust-nightly-1.59
  (rust-bootstrapped-package rust-nightly "1.59.0"
            "1yc5bwcbmbwyvpfq7zvra78l0r8y3lbv60kbr62fzz2vx2pfxj57"))
+
+(define-public rust-nightly-1.60
+  (let ((base-rust
+         (rust-bootstrapped-package rust-nightly-1.59 "1.60.0"
+           "1drqr0a26x1rb2w3kj0i6abhgbs3jx5qqkrcwbwdlx7n3inq5ji0")))
+    (package
+      (inherit base-rust)
+      (inputs (alist-replace "llvm" (list llvm-14) (package-inputs base-rust))))))
