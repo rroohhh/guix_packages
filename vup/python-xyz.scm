@@ -3178,3 +3178,126 @@ simulation, statistical modeling, machine learning and much more.")
     (license #f)))
 
 
+(define-public python-cocotb
+  (package
+    (name "python-cocotb")
+    (version "1.6.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cocotb" version))
+              (sha256
+               (base32
+                "0jxxw2avvclcz7kwqqji01vz8lzx4h7izri9x0h66vf3dvpvb3s9"))))
+    (build-system python-build-system)
+    (arguments `(#:phases
+                 (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page "https://docs.cocotb.org")
+    (synopsis
+     "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog testbenches in Python.")
+    (description
+     "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog
+testbenches in Python.")
+    (license license:bsd-3)))
+
+(define-public python-scapy
+  (package
+    (name "python-scapy")
+    (version "2.4.5")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "scapy" version))
+              (sha256
+               (base32
+                "14w59jr32585555qdx1a0gxwjv63d4m5p7jscsv9ci3q0hv7ww5w"))))
+    (build-system python-build-system)
+    (arguments `(#:phases
+                 (modify-phases %standard-phases
+                  (delete 'check))))
+    (home-page "https://scapy.net")
+    (synopsis "Scapy: interactive packet manipulation tool")
+    (description "Scapy: interactive packet manipulation tool")
+    (license #f)))
+
+(define-public python-cocotb-test
+  (package
+    (name "python-cocotb-test")
+    (version "0.2.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cocotb-test" version))
+              (sha256
+               (base32
+                "1irvdq2nrgpg2wzi8aqk0cx2s6dqx3b5hv0chgy5pc8yp0pzxi65"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-cocotb python-pytest))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license license:bsd-3)))
+
+(define-public python-cocotb-bus
+  (package
+    (name "python-cocotb-bus")
+    (version "0.2.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cocotb-bus" version))
+              (sha256
+               (base32
+                "13dav1nwwy0mdlkvk4glm5nj1h1fzfrl2yw7r1lq9lha1r5sm5x1"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-cocotb))
+    (home-page "https://github.com/cocotb/cocotb-bus")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+
+(define-public python-cocotbext-axi
+  (package
+    (name "python-cocotbext-axi")
+    (version "0.1.18")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cocotbext-axi" version))
+              (sha256
+               (base32
+                "19nk67ha8kjf1f1rwhdvlw70hq7d2ci0d8dqmnr5zysackyqav8y"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-cocotb python-cocotb-bus))
+    (native-inputs (list python-cocotb-test python-pytest))
+    (home-page "https://github.com/alexforencich/cocotbext-axi")
+    (synopsis "AXI, AXI lite, and AXI stream modules for cocotb")
+    (description "AXI, AXI lite, and AXI stream modules for cocotb")
+    (license license:expat)))
+
+(define-public python-cocotbext-eth
+  (package
+   (name "python-cocotbext-eth")
+   (version "0.1.18")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "cocotbext-eth" version))
+            (sha256
+             (base32
+              "1rb9snrk3zw8sjbqnyz353l0kfaaahqh8vp371489iprm398f8g6"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-cocotb python-cocotbext-axi))
+   (native-inputs (list python-cocotb-test python-pytest))
+   (home-page "https://github.com/alexforencich/cocotbext-eth")
+   (synopsis "Ethernet interface modules for cocotb")
+   (description "Ethernet interface modules for cocotb")
+   (license license:expat)))
+
+
+(define-public python-nbconvert-fixed
+  (package
+   (inherit python-nbconvert)
+   (inputs (modify-inputs (package-inputs python-nbconvert) (append "python-defusedxml" python-defusedxml)))))
+
+(define-public python-jupyter-fixed
+  (package
+   (inherit python-jupyter)
+   (name "jupyter-fixed")
+   (inputs (modify-inputs (package-inputs python-nbconvert) (replace "python-nbconvert" python-nbconvert-fixed)))))
