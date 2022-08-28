@@ -15,6 +15,9 @@
   #:use-module (gnu packages qt)
   #:use-module (gnu packages tcl)
   #:use-module (gnu packages flex)
+  #:use-module (gnu packages gtk)
+  #:use-module (gnu packages glib)
+  #:use-module (gnu packages gperf)
   #:use-module (gnu packages bison)
   #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages algebra)
@@ -243,3 +246,50 @@ open Verilog to bitstream toolchain for these devices.")
       (description "nextpnr aims to be a vendor neutral, timing driven, FOSS FPGA place and route tool.")
       (home-page "https://github.com/yosyshq/nextpnr")
       (license license:isc))))
+
+(define-public gtkwave-gtk3
+  (package
+    (name "gtkwave-gtk3")
+    (version "3.3.111")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (list (string-append "mirror://sourceforge/gtkwave/"
+                                 "gtkwave-gtk3-" version "/"
+                                 "gtkwave-gtk3-" version ".tar.gz")
+                  (string-append "http://gtkwave.sourceforge.net/"
+                                 "gtkwave-gtk3-" version ".tar.gz")))
+       (sha256
+        (base32 "0cv222qhgldfniz6zys52zhrynfsp5v0h8ia857lng7v33vw5qdl"))))
+    (build-system gnu-build-system)
+    (native-inputs
+     (list gperf pkg-config `(,glib "bin")))
+    (inputs
+     `(("tcl" ,tcl)
+       ("tk" ,tk)
+       ("gtk+-3" ,gtk+)))
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+        (add-after 'wrap-python 'wrap-glib-or-gtk
+          (assoc-ref glib-or-gtk:%standard-phases 'glib-or-gtk-wrap)))
+       #:modules ((guix build gnu-build-system)
+                  ((guix build glib-or-gtk-build-system) #:prefix glib-or-gtk:)
+                  (guix build utils))
+       #:imported-modules (,@%gnu-build-system-modules
+                           (guix build glib-or-gtk-build-system))
+       #:configure-flags
+       (list "--enable-gtk3" "--with-gsettings" 
+             (string-append "--with-tcl="
+                            (assoc-ref %build-inputs "tcl")
+                            "/lib")
+             (string-append "--with-tk="
+                            (assoc-ref %build-inputs "tk")
+                            "/lib"))))
+
+    (synopsis "Waveform viewer for FPGA simulator trace files")
+    (description "This package is a waveform viewer for FPGA
+simulator trace files (@dfn{FST}).")
+    (home-page "http://gtkwave.sourceforge.net/")
+    ;; Exception against free government use in tcl_np.c and tcl_np.h.
+    (license (list license:gpl2+ license:expat license:tcl/tk))))
