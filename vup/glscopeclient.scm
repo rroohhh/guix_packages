@@ -5,6 +5,7 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages check)
   #:use-module (gnu packages version-control)
+  #:use-module (gnu packages opencl)
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix build-system cmake)
@@ -36,7 +37,7 @@
      (license #f)))) ; whatever it is
 
 (define-public glscopeclient
-  (let ((commit "dcc655081861ec64840bcc83abc4904f7a568260"))
+  (let ((commit "3686a915f12ee02460d9f50a3fe7db15307720fd"))
     (package
      (name "glscopeclient")
      (version (string-append "0.0-" (string-take commit 9)))
@@ -50,10 +51,12 @@
          (commit commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "0i68q768ir0r29fc78xljggm832srjq2c4pk2dmi2b7s95ddrpja"))))
+        (base32 "037ykay3vj81z16lfygfbpdfh7acqhvm48hkwh8c36jz590k35hc"))))
      (build-system cmake-build-system)
-     (inputs `(("ffts" ,ffts) ("yaml" ,yaml-cpp) ("glew" ,glew) ("gtkmm" ,gtkmm) ("catch2" ,catch-framework2)))
-     (native-inputs `(("pkg-config" ,pkg-config) ("git" ,git)))
+     (inputs `(("ffts" ,ffts) ("yaml" ,yaml-cpp) ("glew" ,glew) ("gtkmm" ,gtkmm-3) ("catch2" ,catch-framework2)
+               ("opencl" ,opencl-icd-loader)))
+               
+     (native-inputs `(("pkg-config" ,pkg-config) ("git" ,git) ("opencl-headers" ,opencl-headers)))
      (arguments
       `(#:configure-flags '("-DCMAKE_BUILD_TYPE=RELEASE")
         #:imported-modules ((guix build glib-or-gtk-build-system)
