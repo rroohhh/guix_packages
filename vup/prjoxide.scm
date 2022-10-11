@@ -51,8 +51,8 @@
     (synopsis "Fast multiple substring searching.")
     (description
       (beautify-description "Fast multiple substring searching."))
-    (license `((spdx-string->license "Unlicense")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Unlicense")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-anyhow_1_0_44
   (package
@@ -140,8 +140,8 @@
     (synopsis "encodes and decodes base64 as bytes or utf8")
     (description
       (beautify-description "encodes and decodes base64 as bytes or utf8"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-bitflags_1_3_2
   (package
@@ -161,8 +161,8 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-byteorder_1_4_3
   (package
@@ -245,8 +245,8 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-clap_3_0_0-beta_2
   (package
@@ -373,8 +373,8 @@
     (synopsis "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.")
     (description
       (beautify-description "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-flate2_1_0_22
   (package
@@ -400,8 +400,8 @@
     (synopsis "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams.")
     (description
       (beautify-description "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-getopts_0_2_21
   (package
@@ -424,8 +424,8 @@
     (synopsis "getopts-like option parsing.")
     (description
       (beautify-description "getopts-like option parsing."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-ghost_0_1_2
   (package
@@ -470,8 +470,8 @@
     (synopsis "Support for matching file paths against Unix shell style patterns.")
     (description
       (beautify-description "Support for matching file paths against Unix shell style patterns."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-hashbrown_0_11_2
   (package
@@ -491,8 +491,8 @@
     (synopsis "A Rust port of Google\u0027s SwissTable hash map")
     (description
       (beautify-description "A Rust port of Google\u0027s SwissTable hash map"))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Apache-2.0")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-heck_0_3_3
   (package
@@ -538,8 +538,8 @@
     (synopsis "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`.")
     (description
       (beautify-description "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-include_dir_0_6_2
   (package
@@ -615,8 +615,8 @@
     (synopsis "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap.")
     (description
       (beautify-description "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap."))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Apache-2.0")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-indoc_0_3_6
   (package
@@ -763,8 +763,8 @@
     (synopsis "Extra iterator adaptors, iterator methods, free functions, and macros.")
     (description
       (beautify-description "Extra iterator adaptors, iterator methods, free functions, and macros."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-itoa_0_4_8
   (package
@@ -804,8 +804,8 @@
     (synopsis "A macro for declaring lazily evaluated statics in Rust.")
     (description
       (beautify-description "A macro for declaring lazily evaluated statics in Rust."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-libc_0_2_104
   (package
@@ -848,8 +848,8 @@
     (synopsis "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std.")
     (description
       (beautify-description "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std."))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Apache-2.0")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-log_0_4_14
   (package
@@ -892,8 +892,8 @@
     (synopsis "Safe interface to memchr.")
     (description
       (beautify-description "Safe interface to memchr."))
-    (license `((spdx-string->license "Unlicense")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Unlicense")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-miniz_oxide_0_4_4
   (package
@@ -940,8 +940,8 @@
     (synopsis "A multimap implementation.")
     (description
       (beautify-description "A multimap implementation."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-num-bigint_0_4_2
   (package
@@ -1058,8 +1058,8 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Apache-2.0")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-parking_lot_core_0_8_5
   (package
@@ -1087,8 +1087,8 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `((spdx-string->license "Apache-2.0")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Apache-2.0")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-paste_0_1_18
   (package
@@ -1478,8 +1478,8 @@
     (synopsis "A regular expression parser.")
     (description
       (beautify-description "A regular expression parser."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-ron_0_5_1
   (package
@@ -1504,8 +1504,8 @@
     (synopsis "Rusty Object Notation")
     (description
       (beautify-description "Rusty Object Notation"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-ryu_1_0_5
   (package
@@ -1545,8 +1545,8 @@
     (synopsis "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies.")
     (description
       (beautify-description "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-serde_1_0_130
   (package
@@ -1639,8 +1639,8 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-strsim_0_10_0
   (package
@@ -1754,8 +1754,8 @@
     (synopsis "A case-insensitive wrapper around strings.")
     (description
       (beautify-description "A case-insensitive wrapper around strings."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-unicode-segmentation_1_8_0
   (package
@@ -1775,8 +1775,8 @@
     (synopsis "This crate provides Grapheme Cluster, Word and Sentence boundaries\naccording to Unicode Standard Annex #29 rules.")
     (description
       (beautify-description "This crate provides Grapheme Cluster, Word and Sentence boundaries\naccording to Unicode Standard Annex #29 rules."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-unicode-width_0_1_9
   (package
@@ -1796,8 +1796,8 @@
     (synopsis "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules.")
     (description
       (beautify-description "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-unicode-xid_0_2_2
   (package
@@ -1857,8 +1857,8 @@
     (synopsis "A simple map based on a vector for small integer keys")
     (description
       (beautify-description "A simple map based on a vector for small integer keys"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-version_check_0_9_3
   (package
@@ -1878,8 +1878,8 @@
     (synopsis "Tiny crate to check the version of the installed/running rustc.")
     (description
       (beautify-description "Tiny crate to check the version of the installed/running rustc."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-winapi_0_3_9
   (package
@@ -1903,8 +1903,8 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-winapi-i686-pc-windows-gnu_0_4_0
   (package
@@ -1924,8 +1924,8 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-winapi-util_0_1_5
   (package
@@ -1948,8 +1948,8 @@
     (synopsis "A dumping ground for high level safe wrappers over winapi.")
     (description
       (beautify-description "A dumping ground for high level safe wrappers over winapi."))
-    (license `((spdx-string->license "Unlicense")
-               (spdx-string->license "MIT")))))
+    (license `(,(spdx-string->license "Unlicense")
+               ,(spdx-string->license "MIT")))))
 
 (define-public rust-winapi-x86_64-pc-windows-gnu_0_4_0
   (package
@@ -1969,8 +1969,8 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 
 rust-prjoxide

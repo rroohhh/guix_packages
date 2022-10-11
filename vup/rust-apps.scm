@@ -53,8 +53,8 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-cfg-if_0_1_10
   (package
@@ -74,8 +74,8 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-chrono_0_4_18
   (package
@@ -102,8 +102,8 @@
     (synopsis "Date and time library for Rust")
     (description
       (beautify-description "Date and time library for Rust"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-clap_2_33_3
   (package
@@ -148,8 +148,8 @@
     (synopsis "Yet another error boilerplate library.")
     (description
       (beautify-description "Yet another error boilerplate library."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-fern_0_5_9
   (package
@@ -264,8 +264,8 @@
     (synopsis "A collection of numeric types and traits for Rust, including bigint,\ncomplex, rational, range iterators, generic integers, and more!")
     (description
       (beautify-description "A collection of numeric types and traits for Rust, including bigint,\ncomplex, rational, range iterators, generic integers, and more!"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-num-integer_0_1_43
   (package
@@ -289,8 +289,8 @@
     (synopsis "Integer traits and functions")
     (description
       (beautify-description "Integer traits and functions"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-num-iter_0_1_41
   (package
@@ -315,8 +315,8 @@
     (synopsis "External iterators for generic mathematics")
     (description
       (beautify-description "External iterators for generic mathematics"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-num-traits_0_2_12
   (package
@@ -339,8 +339,8 @@
     (synopsis "Numeric traits for generic mathematics")
     (description
       (beautify-description "Numeric traits for generic mathematics"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-phf_0_7_24
   (package
@@ -426,8 +426,8 @@
     (synopsis "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust")
     (description
       (beautify-description "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-svgcleaner_0_9_5
   (package
@@ -556,8 +556,8 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-unicode-width_0_1_8
   (package
@@ -577,8 +577,8 @@
     (synopsis "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules.")
     (description
       (beautify-description "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-wasi_0_10_0+wasi-snapshot-preview1
   (package
@@ -622,8 +622,8 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-winapi-i686-pc-windows-gnu_0_4_0
   (package
@@ -643,8 +643,8 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-winapi-x86_64-pc-windows-gnu_0_4_0
   (package
@@ -664,8 +664,8 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-xmlparser_0_1_2
   (package
@@ -1316,39 +1316,36 @@ Argument Parser")
     (description "Flexible concrete Error type built on std::error::Error")
     (license (list license:expat license:asl2.0))))
 
-(define-public rust-ra-multiplex-0.1
+(define-public ra-multiplex-0.2
   (package
-    (name "rust-ra-multiplex")
-    (version "0.1.7")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "ra-multiplex" version))
-        (file-name (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32 "04p7bha7alpm278hw5992kwizqyypm35nm3jv2vaimqcgyaa9rmp"))))
+    (name "ra-multiplex")
+    (version "0.2.0")
+    (source (origin
+              (method url-fetch)
+              (uri (crate-uri "ra-multiplex" version))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "084gm3vfag4pbpi8rpf22agh0ag9sxwljl57vrgg67wbg3q95pdj"))))
     (build-system cargo-build-system)
-    ;; (native-inputs `(("rustc" ,rust-nightly)
-    ;;                  ("cargo" ,rust-nightly))) ;; needs 1.58+
     (arguments
-      `(#:rust ,rust-nightly
-        #:cargo-inputs
-        (("rust-anyhow" ,rust-anyhow-1)
-         ("rust-clap" ,rust-clap-3)
-         ("rust-directories" ,rust-directories-4)
-         ("rust-env-logger" ,rust-env-logger-0.9)
-         ("rust-log" ,rust-log-0.4)
-         ("rust-serde" ,rust-serde-1)
-         ("rust-serde-json" ,rust-serde-json-1)
-         ("rust-tokio" ,rust-tokio-1)
-         ("rust-toml" ,rust-toml-0.5))))
+     `(#:rust ,rust-nightly-1.60
+       #:cargo-inputs (("rust-anyhow" ,rust-anyhow-1)
+                       ("rust-directories" ,rust-directories-4)
+                       ("rust-env-logger" ,rust-env-logger-0.9)
+                       ("rust-log" ,rust-log-0.4)
+                       ("rust-serde" ,rust-serde-1)
+                       ("rust-serde-json" ,rust-serde-json-1)
+                       ("rust-tokio" ,rust-tokio-1)
+                       ("rust-toml" ,rust-toml-0.5))))
     (home-page "https://github.com/pr2502/ra-multiplex")
     (synopsis
-      "share one rust-analyzer server instance between multiple LSP clients to save resources")
+     "share one rust-analyzer server instance between multiple LSP clients to save resources")
     (description
-      "share one rust-analyzer server instance between multiple LSP clients to save
+     "share one rust-analyzer server instance between multiple LSP clients to save
 resources")
     (license license:expat)))
+
 
 (define-public rust-selenium-rs-0.1
   (package
@@ -6865,8 +6862,8 @@ incomplete.")
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `((spdx-string->license "MIT")
-               (spdx-string->license "Apache-2.0")))))
+    (license `(,(spdx-string->license "MIT")
+               ,(spdx-string->license "Apache-2.0")))))
 
 (define-public rust-unicode-xid_0_2_2
   (package
@@ -6887,3 +6884,5 @@ incomplete.")
     (description
       (beautify-description "Determine whether characters have the XID_Start\nor XID_Continue properties according to\nUnicode Standard Annex #31."))
     (license (spdx-string->license "MIT OR Apache-2.0"))))
+
+ra-multiplex-0.2
