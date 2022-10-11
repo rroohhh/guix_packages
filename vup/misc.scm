@@ -646,10 +646,14 @@ automatic, safe and reliable.")
       (home-page "https://github.com/eneshecan/whatsapp-for-linux")
       (license licenses:gpl3))))
 
-(define-public glslang-11.8
+(define-public glslang-11.11
   (package
     (inherit glslang)
-    (version "11.8.0")
+    (version "11.11.0")
+    (arguments
+     (substitute-keyword-arguments (package-arguments glslang)
+       ((#:configure-flags flags)
+        `(cons "-DENABLE_GLSLANG_INSTALL=Yes" ,flags))))
     (source
      (origin
       (method git-fetch)
@@ -657,14 +661,14 @@ automatic, safe and reliable.")
             (url "https://github.com/KhronosGroup/glslang")
             (commit version)))
       (sha256
-       (base32 "0xxi792f0lkxvvm9c2zaidhi078cb2hbq7rikflr0vxygir4xi10"))
+       (base32 "03jnaj90q2cg2hjdsg96ashz28dw5hcsg9rvf60bp2mphzzsklpq"))
       (file-name (git-file-name (package-name glslang) version))))))
 
 
 (define-public spirv-headers-2022
   (package
     (inherit spirv-headers)
-    (version "1.3.204.1")
+    (version "1.3.224.1")
     (source
      (origin
       (method git-fetch)
@@ -672,30 +676,33 @@ automatic, safe and reliable.")
             (url "https://github.com/KhronosGroup/SPIRV-Headers")
             (commit (string-append "sdk-" version))))
       (sha256
-       (base32 "1pd2gzq4sh67qffc91apq7z3fi8fhwcfbwzfzgpfb3vb7q54kkwj"))
+       (base32 "0v4aimhn57lpwr12arz920wnxmnx39dj1qamppc5nfnh3ahlb259"))
       (file-name (git-file-name (package-name spirv-headers) version))))))
 
 
 (define-public spirv-tools-2022
   (package
     (inherit spirv-tools)
-    (version "2022.1")
+    (version "2022.2")
     (source
      (origin
-      (method git-fetch)
-      (uri (git-reference
-            (url "https://github.com/KhronosGroup/SPIRV-Tools")
-            (commit (string-append "v" version))))
-      (sha256
-       (base32 "1k2nl8drdskfnr1n3avhgdmlnjrbqdn0aw9ph1cdcaj0h4ng625s"))
-      (file-name (git-file-name (package-name spirv-tools) version))))
-    (inputs (modify-inputs (package-inputs spirv-tools) (replace "spirv-headers" spirv-headers-2022)))))
-
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/KhronosGroup/SPIRV-Tools")
+             (commit (string-append "v" version))))
+       (sha256
+        (base32 "10k8al954kq4py2xpbxqj2nnspbx436d7dnhi44iyk2f4983x08f"))
+       (file-name (git-file-name (package-name spirv-tools) version))))
+    (inputs (modify-inputs (package-inputs spirv-tools) (replace "spirv-headers" spirv-headers-2022)))
+    (arguments
+     (substitute-keyword-arguments (package-arguments spirv-tools)
+       ((#:configure-flags flags)
+        `(cons "-DSPIRV_WERROR=No" ,flags))))))
 
 (define-public shaderc-2022
   (package
     (inherit shaderc)
-    (version "2022.1")
+    (version "2022.2")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -703,13 +710,55 @@ automatic, safe and reliable.")
                     (commit (string-append "v" version))))
               (file-name (git-file-name "shaderc" version))
               (sha256
-               (base32 "0v4mvrw8gl3xxr4d7qlfmgmprbyj9xc50wgk1lpm5icxkjyb0rr9"))))
+               (base32 "09cmds47pzv2s8n3ig7rqmr5lx1746vhqfx4g63gjnvan792xr8l"))))
     (inputs 
       (modify-inputs (package-inputs shaderc)
-                     (replace "glslang" glslang-11.8)
+                     (replace "glslang" glslang-11.11)
                      (replace "spirv-tools" spirv-tools-2022)
                      (replace "spirv-headers" spirv-headers-2022)))))
 
+(define-public vulkan-headers-upstream
+  (package
+    (inherit vulkan-headers)
+    (version "1.3.226")
+    (name (package-name vulkan-headers))
+    (source
+     (origin
+       (inherit (package-source vulkan-headers))
+       (uri (git-reference
+             (url "https://github.com/KhronosGroup/Vulkan-Headers")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "09nd22399q18245avwhn0i6vl647iq3m5vbf8vgcmq5cb6036n38"))))))
+
+(define-public vulkan-hpp
+  (package
+    (name "vulkan-hpp")
+    (version "1.3.226")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/KhronosGroup/Vulkan-Hpp")
+                    (commit (string-append "v" version))
+                    (recursive? #t)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32 "0rp824p09sxfsq8f2x2xx02aljpr2rnyhbsj0m83j49i2jkmclcp"))))
+    (build-system cmake-build-system)
+    (arguments
+     `(#:phases (modify-phases %standard-phases (delete 'check)
+                               (add-after 'unpack 'remove-w-error
+                                 (lambda _
+                                   (substitute* "CMakeLists.txt" (("-Werror") ""))
+                                   #t)))
+       #:configure-flags (list "-DVULKAN_HPP_INSTALL=Yes"
+                               (string-append  "-DCMAKE_INSTALL_INCLUDEDIR=" (assoc-ref %outputs "out") "/include"))))
+    (home-page "https://github.com/KhronosGroup/Vulkan-Hpp")
+    (synopsis "Open-Source Vulkan C++ API")
+    (description "Vulkan-Hpp: C++ Bindings for Vulkan")
+    (license licenses:asl2.0)))
 
 (define-public zfp
   (let* ((version "0.5.5"))
