@@ -2236,7 +2236,7 @@
     (synopsis "Rust crate for the Fuchsia cryptographically secure pseudorandom number generator")
     (description
       (beautify-description "Rust crate for the Fuchsia cryptographically secure pseudorandom number generator"))
-    (license #t)))
+    (license #f)))
 
 (define rust-fuchsia-zircon_0_3_3
   (package
@@ -6394,7 +6394,7 @@
     (synopsis "Safe, fast, small crypto using Rust.")
     (description
       (beautify-description "Safe, fast, small crypto using Rust."))
-    (license #t)))
+    (license #f)))
 
 (define rust-rmp_0_8_11
   (package
