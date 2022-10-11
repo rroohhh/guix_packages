@@ -3,13 +3,12 @@
  #:use-module (gnu packages perl)
  #:use-module (guix build-system cargo)
  #:use-module (guix build-system copy)
- #:use-module (guix licenses)
  #:use-module (guix gexp)
  #:use-module (guix packages)
  #:use-module (guix download)
+ #:use-module ((guix import utils) #:select (beautify-description))
  #:use-module (guix git-download)
- #:use-module ((guix import utils)
-               #:select (beautify-description spdx-string->license)))
+ #:use-module ((guix licenses) #:prefix license:))
 
 (define rust-addr2line_0_17_0
   (package
@@ -32,7 +31,7 @@
     (synopsis "A cross-platform symbolication library written in Rust, using `gimli`")
     (description
       (beautify-description "A cross-platform symbolication library written in Rust, using `gimli`"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-adler_1_0_2
   (package
@@ -52,7 +51,7 @@
     (synopsis "A simple clean-room implementation of the Adler-32 checksum")
     (description
       (beautify-description "A simple clean-room implementation of the Adler-32 checksum"))
-    (license (spdx-string->license "0BSD OR MIT OR Apache-2.0"))))
+    (license license:asl2.0)))
 
 (define rust-aead_0_4_3
   (package
@@ -75,7 +74,7 @@
     (synopsis "Traits for Authenticated Encryption with Associated Data (AEAD) algorithms,\nsuch as AES-GCM as ChaCha20Poly1305, which provide a high-level API")
     (description
       (beautify-description "Traits for Authenticated Encryption with Associated Data (AEAD) algorithms,\nsuch as AES-GCM as ChaCha20Poly1305, which provide a high-level API"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-aes_0_7_5
   (package
@@ -102,7 +101,7 @@
     (synopsis "Pure Rust implementation of the Advanced Encryption Standard (a.k.a. Rijndael)")
     (description
       (beautify-description "Pure Rust implementation of the Advanced Encryption Standard (a.k.a. Rijndael)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-aes-gcm_0_9_4
   (package
@@ -130,7 +129,7 @@
     (synopsis "Pure Rust implementation of the AES-GCM (Galois/Counter Mode)\nAuthenticated Encryption with Associated Data (AEAD) Cipher\nwith optional architecture-specific hardware acceleration")
     (description
       (beautify-description "Pure Rust implementation of the AES-GCM (Galois/Counter Mode)\nAuthenticated Encryption with Associated Data (AEAD) Cipher\nwith optional architecture-specific hardware acceleration"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-aho-corasick_0_7_18
   (package
@@ -153,8 +152,8 @@
     (synopsis "Fast multiple substring searching.")
     (description
       (beautify-description "Fast multiple substring searching."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-alloc-no-stdlib_2_0_3
   (package
@@ -174,7 +173,7 @@
     (synopsis "A dynamic allocator that may be used with or without the stdlib. This allows a package with nostd to allocate memory dynamically and be used either with a custom allocator, items on the stack, or by a package that wishes to simply use Box\u003c\u003e. It also provides options to use calloc or a mutable global variable for pre-zeroed memory")
     (description
       (beautify-description "A dynamic allocator that may be used with or without the stdlib. This allows a package with nostd to allocate memory dynamically and be used either with a custom allocator, items on the stack, or by a package that wishes to simply use Box\u003c\u003e. It also provides options to use calloc or a mutable global variable for pre-zeroed memory"))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-alloc-stdlib_0_2_1
   (package
@@ -197,7 +196,7 @@
     (synopsis "A dynamic allocator example that may be used with the stdlib")
     (description
       (beautify-description "A dynamic allocator example that may be used with the stdlib"))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-ansi_term_0_12_1
   (package
@@ -220,7 +219,7 @@
     (synopsis "Library for ANSI terminal colours and styles (bold, underline)")
     (description
       (beautify-description "Library for ANSI terminal colours and styles (bold, underline)"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-async-compression_0_3_13
   (package
@@ -248,7 +247,7 @@
     (synopsis "Adaptors between compression crates and Rust\u0027s modern asynchronous IO types.")
     (description
       (beautify-description "Adaptors between compression crates and Rust\u0027s modern asynchronous IO types."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-async-stream_0_3_3
   (package
@@ -272,7 +271,7 @@
     (synopsis "Asynchronous streams using async \u0026 await notation")
     (description
       (beautify-description "Asynchronous streams using async \u0026 await notation"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-async-stream-impl_0_3_3
   (package
@@ -297,7 +296,7 @@
     (synopsis "proc macros for async-stream crate")
     (description
       (beautify-description "proc macros for async-stream crate"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-async-trait_0_1_53
   (package
@@ -322,7 +321,7 @@
     (synopsis "Type erasure for async trait methods")
     (description
       (beautify-description "Type erasure for async trait methods"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-async_once_0_2_6
   (package
@@ -342,7 +341,7 @@
     (synopsis "async once tool for lazy_static")
     (description
       (beautify-description "async once tool for lazy_static"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-atomic_0_5_1
   (package
@@ -365,8 +364,8 @@
     (synopsis "Generic Atomic\u003cT\u003e wrapper type")
     (description
       (beautify-description "Generic Atomic\u003cT\u003e wrapper type"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-atty_0_2_14
   (package
@@ -391,7 +390,7 @@
     (synopsis "A simple interface for querying atty")
     (description
       (beautify-description "A simple interface for querying atty"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-autocfg_1_1_0
   (package
@@ -411,7 +410,7 @@
     (synopsis "Automatic cfg for Rust compiler features")
     (description
       (beautify-description "Automatic cfg for Rust compiler features"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-backtrace_0_3_65
   (package
@@ -440,8 +439,8 @@
     (synopsis "A library to acquire a stack trace (backtrace) at runtime in a Rust program.")
     (description
       (beautify-description "A library to acquire a stack trace (backtrace) at runtime in a Rust program."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-base-x_0_2_10
   (package
@@ -461,7 +460,7 @@
     (synopsis "Encode/decode any base")
     (description
       (beautify-description "Encode/decode any base"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-base64_0_13_0
   (package
@@ -481,8 +480,8 @@
     (synopsis "encodes and decodes base64 as bytes or utf8")
     (description
       (beautify-description "encodes and decodes base64 as bytes or utf8"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-binascii_0_1_4
   (package
@@ -502,7 +501,7 @@
     (synopsis "Useful no-std binascii operations including base64, base32 and base16 (hex)")
     (description
       (beautify-description "Useful no-std binascii operations including base64, base32 and base16 (hex)"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-bitflags_1_3_2
   (package
@@ -522,8 +521,8 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-block-buffer_0_7_3
   (package
@@ -549,7 +548,7 @@
     (synopsis "Buffer type for block processing of data")
     (description
       (beautify-description "Buffer type for block processing of data"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-block-buffer_0_9_0
   (package
@@ -572,7 +571,7 @@
     (synopsis "Buffer type for block processing of data")
     (description
       (beautify-description "Buffer type for block processing of data"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-block-buffer_0_10_2
   (package
@@ -595,7 +594,7 @@
     (synopsis "Buffer type for block processing of data")
     (description
       (beautify-description "Buffer type for block processing of data"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-block-padding_0_1_5
   (package
@@ -618,7 +617,7 @@
     (synopsis "Padding and unpadding of messages divided into blocks.")
     (description
       (beautify-description "Padding and unpadding of messages divided into blocks."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-brotli_3_3_4
   (package
@@ -643,8 +642,8 @@
     (synopsis "A brotli compressor and decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. All included code is safe.")
     (description
       (beautify-description "A brotli compressor and decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. All included code is safe."))
-    (license `(,(spdx-string->license "BSD-3-Clause")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:bsd-3
+               license:expat))))
 
 (define rust-brotli-decompressor_2_3_2
   (package
@@ -668,8 +667,8 @@
     (synopsis "A brotli decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. Alternatively, --features=unsafe turns off array bounds checks and memory initialization but provides a safe interface for the caller.  Without adding the --features=unsafe argument, all included code is safe. For compression in addition to this library, download https://github.com/dropbox/rust-brotli")
     (description
       (beautify-description "A brotli decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. Alternatively, --features=unsafe turns off array bounds checks and memory initialization but provides a safe interface for the caller.  Without adding the --features=unsafe argument, all included code is safe. For compression in addition to this library, download https://github.com/dropbox/rust-brotli"))
-    (license `(,(spdx-string->license "BSD-3-Clause")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:bsd-3
+               license:expat))))
 
 (define rust-bumpalo_3_9_1
   (package
@@ -689,8 +688,8 @@
     (synopsis "A fast bump allocation arena for Rust.")
     (description
       (beautify-description "A fast bump allocation arena for Rust."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-byte-tools_0_3_1
   (package
@@ -710,7 +709,7 @@
     (synopsis "Bytes related utility functions")
     (description
       (beautify-description "Bytes related utility functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-byteorder_1_4_3
   (package
@@ -730,7 +729,7 @@
     (synopsis "Library for reading/writing numbers in big-endian and little-endian.")
     (description
       (beautify-description "Library for reading/writing numbers in big-endian and little-endian."))
-    (license (spdx-string->license "Unlicense OR MIT"))))
+    (license license:expat)))
 
 (define rust-bytes_0_4_12
   (package
@@ -754,7 +753,7 @@
     (synopsis "Types and traits for working with bytes")
     (description
       (beautify-description "Types and traits for working with bytes"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-bytes_1_1_0
   (package
@@ -774,7 +773,7 @@
     (synopsis "Types and traits for working with bytes")
     (description
       (beautify-description "Types and traits for working with bytes"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-cached_0_34_0
   (package
@@ -806,7 +805,7 @@
     (synopsis "Generic cache implementations and simplified function memoization")
     (description
       (beautify-description "Generic cache implementations and simplified function memoization"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-cached_proc_macro_0_12_0
   (package
@@ -832,7 +831,7 @@
     (synopsis "Generic cache implementations and simplified function memoization")
     (description
       (beautify-description "Generic cache implementations and simplified function memoization"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-cached_proc_macro_types_0_1_0
   (package
@@ -852,7 +851,7 @@
     (synopsis "Generic cache implementations and simplified function memoization")
     (description
       (beautify-description "Generic cache implementations and simplified function memoization"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-cc_1_0_73
   (package
@@ -872,8 +871,8 @@
     (synopsis "A build-time dependency for Cargo build scripts to assist in invoking the native\nC compiler to compile native C code into a static archive to be linked into Rust\ncode.")
     (description
       (beautify-description "A build-time dependency for Cargo build scripts to assist in invoking the native\nC compiler to compile native C code into a static archive to be linked into Rust\ncode."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-cfg-if_0_1_10
   (package
@@ -893,8 +892,8 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-cfg-if_1_0_0
   (package
@@ -914,8 +913,8 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-chashmap_2_2_2
   (package
@@ -939,7 +938,7 @@
     (synopsis "Fast, concurrent hash maps with extensive API.")
     (description
       (beautify-description "Fast, concurrent hash maps with extensive API."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-chrono_0_4_19
   (package
@@ -967,8 +966,8 @@
     (synopsis "Date and time library for Rust")
     (description
       (beautify-description "Date and time library for Rust"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-chrono-tz_0_6_1
   (package
@@ -994,8 +993,8 @@
     (synopsis "TimeZone implementations for rust-chrono from the IANA database")
     (description
       (beautify-description "TimeZone implementations for rust-chrono from the IANA database"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-chrono-tz-build_0_0_2
   (package
@@ -1020,8 +1019,8 @@
     (synopsis "internal build script for chrono-tz")
     (description
       (beautify-description "internal build script for chrono-tz"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-cipher_0_3_0
   (package
@@ -1044,7 +1043,7 @@
     (synopsis "Traits for describing block ciphers and stream ciphers")
     (description
       (beautify-description "Traits for describing block ciphers and stream ciphers"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-const_fn_0_4_9
   (package
@@ -1064,7 +1063,7 @@
     (synopsis "An attribute for easy generation of const functions with conditional compilations.")
     (description
       (beautify-description "An attribute for easy generation of const functions with conditional compilations."))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-cookie_0_15_1
   (package
@@ -1089,7 +1088,7 @@
     (synopsis "HTTP cookie parsing and cookie jar management. Supports signed and private\n(encrypted, authenticated) jars.")
     (description
       (beautify-description "HTTP cookie parsing and cookie jar management. Supports signed and private\n(encrypted, authenticated) jars."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-cookie_0_16_0
   (package
@@ -1121,7 +1120,7 @@
     (synopsis "HTTP cookie parsing and cookie jar management. Supports signed and private\n(encrypted, authenticated) jars.")
     (description
       (beautify-description "HTTP cookie parsing and cookie jar management. Supports signed and private\n(encrypted, authenticated) jars."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-cookie_store_0_15_1
   (package
@@ -1151,8 +1150,8 @@
     (synopsis "Implementation of Cookie storage and retrieval")
     (description
       (beautify-description "Implementation of Cookie storage and retrieval"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-cookie_store_0_16_0
   (package
@@ -1182,8 +1181,8 @@
     (synopsis "Implementation of Cookie storage and retrieval")
     (description
       (beautify-description "Implementation of Cookie storage and retrieval"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-core-foundation_0_9_3
   (package
@@ -1207,8 +1206,8 @@
     (synopsis "Bindings to Core Foundation for macOS")
     (description
       (beautify-description "Bindings to Core Foundation for macOS"))
-    (license `(,(spdx-string->license "MIT ")
-               ,(spdx-string->license " Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-core-foundation-sys_0_8_3
   (package
@@ -1228,8 +1227,8 @@
     (synopsis "Bindings to Core Foundation for macOS")
     (description
       (beautify-description "Bindings to Core Foundation for macOS"))
-    (license `(,(spdx-string->license "MIT ")
-               ,(spdx-string->license " Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-cpufeatures_0_2_2
   (package
@@ -1252,7 +1251,7 @@
     (synopsis "Lightweight runtime CPU feature detection for x86/x86_64 and aarch64 with\nno_std support and support for mobile targets including Android and iOS")
     (description
       (beautify-description "Lightweight runtime CPU feature detection for x86/x86_64 and aarch64 with\nno_std support and support for mobile targets including Android and iOS"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-crc32fast_1_3_2
   (package
@@ -1275,7 +1274,7 @@
     (synopsis "Fast, SIMD-accelerated CRC32 (IEEE) checksum computation")
     (description
       (beautify-description "Fast, SIMD-accelerated CRC32 (IEEE) checksum computation"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-cron_0_11_0
   (package
@@ -1300,7 +1299,7 @@
     (synopsis "A cron expression parser and schedule explorer.")
     (description
       (beautify-description "A cron expression parser and schedule explorer."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-crossbeam-utils_0_8_8
   (package
@@ -1324,7 +1323,7 @@
     (synopsis "Utilities for concurrent programming")
     (description
       (beautify-description "Utilities for concurrent programming"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-crypto-common_0_1_3
   (package
@@ -1348,7 +1347,7 @@
     (synopsis "Common cryptographic traits")
     (description
       (beautify-description "Common cryptographic traits"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-crypto-mac_0_11_1
   (package
@@ -1372,7 +1371,7 @@
     (synopsis "Trait for Message Authentication Code (MAC) algorithms")
     (description
       (beautify-description "Trait for Message Authentication Code (MAC) algorithms"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ctr_0_8_0
   (package
@@ -1395,7 +1394,7 @@
     (synopsis "CTR block modes of operation")
     (description
       (beautify-description "CTR block modes of operation"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ctrlc_3_2_2
   (package
@@ -1419,8 +1418,8 @@
     (synopsis "Easy Ctrl-C handler for Rust projects")
     (description
       (beautify-description "Easy Ctrl-C handler for Rust projects"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-darling_0_13_4
   (package
@@ -1444,7 +1443,7 @@
     (synopsis "A proc-macro library for reading attributes into structs when\nimplementing custom derives.")
     (description
       (beautify-description "A proc-macro library for reading attributes into structs when\nimplementing custom derives."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-darling_core_0_13_4
   (package
@@ -1472,7 +1471,7 @@
     (synopsis "Helper crate for proc-macro library for reading attributes into structs when\nimplementing custom derives. Use https://crates.io/crates/darling in your code.")
     (description
       (beautify-description "Helper crate for proc-macro library for reading attributes into structs when\nimplementing custom derives. Use https://crates.io/crates/darling in your code."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-darling_macro_0_13_4
   (package
@@ -1497,7 +1496,7 @@
     (synopsis "Internal support for a proc-macro library for reading attributes into structs when\nimplementing custom derives. Use https://crates.io/crates/darling in your code.")
     (description
       (beautify-description "Internal support for a proc-macro library for reading attributes into structs when\nimplementing custom derives. Use https://crates.io/crates/darling in your code."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-dashmap_5_3_3
   (package
@@ -1522,7 +1521,7 @@
     (synopsis "Blazing fast concurrent HashMap for Rust.")
     (description
       (beautify-description "Blazing fast concurrent HashMap for Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-data-encoding_2_3_2
   (package
@@ -1542,7 +1541,7 @@
     (synopsis "Efficient and customizable data-encoding functions like base64, base32, and hex")
     (description
       (beautify-description "Efficient and customizable data-encoding functions like base64, base32, and hex"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-data-url_0_1_1
   (package
@@ -1565,7 +1564,7 @@
     (synopsis "Processing of data: URL according to WHATWG\u2019s Fetch Standard")
     (description
       (beautify-description "Processing of data: URL according to WHATWG\u2019s Fetch Standard"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-devise_0_3_1
   (package
@@ -1589,8 +1588,8 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-devise_codegen_0_3_1
   (package
@@ -1614,8 +1613,8 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-devise_core_0_3_1
   (package
@@ -1642,8 +1641,8 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-diesel_1_4_8
   (package
@@ -1674,7 +1673,7 @@
     (synopsis "A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL")
     (description
       (beautify-description "A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-diesel_derives_1_4_1
   (package
@@ -1699,7 +1698,7 @@
     (synopsis "You should not use this crate directly, it is internal to Diesel.")
     (description
       (beautify-description "You should not use this crate directly, it is internal to Diesel."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-diesel_migrations_1_4_0
   (package
@@ -1723,7 +1722,7 @@
     (synopsis "Migration management for diesel")
     (description
       (beautify-description "Migration management for diesel"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-digest_0_8_1
   (package
@@ -1746,7 +1745,7 @@
     (synopsis "Traits for cryptographic hash functions")
     (description
       (beautify-description "Traits for cryptographic hash functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-digest_0_9_0
   (package
@@ -1769,7 +1768,7 @@
     (synopsis "Traits for cryptographic hash functions")
     (description
       (beautify-description "Traits for cryptographic hash functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-digest_0_10_3
   (package
@@ -1794,7 +1793,7 @@
     (synopsis "Traits for cryptographic hash functions")
     (description
       (beautify-description "Traits for cryptographic hash functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-dirs_4_0_0
   (package
@@ -1817,7 +1816,7 @@
     (synopsis "A tiny low-level library that provides platform-specific standard locations of directories for config, cache and other data on Linux, Windows, macOS and Redox by leveraging the mechanisms defined by the XDG base/user directory specifications on Linux, the Known Folder API on Windows, and the Standard Directory guidelines on macOS.")
     (description
       (beautify-description "A tiny low-level library that provides platform-specific standard locations of directories for config, cache and other data on Linux, Windows, macOS and Redox by leveraging the mechanisms defined by the XDG base/user directory specifications on Linux, the Known Folder API on Windows, and the Standard Directory guidelines on macOS."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-dirs-sys_0_3_7
   (package
@@ -1842,7 +1841,7 @@
     (synopsis "System-level helper functions for the dirs and directories crates.")
     (description
       (beautify-description "System-level helper functions for the dirs and directories crates."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-discard_1_0_4
   (package
@@ -1862,7 +1861,7 @@
     (synopsis "Discard trait which allows for intentionally leaking memory")
     (description
       (beautify-description "Discard trait which allows for intentionally leaking memory"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-dotenvy_0_15_1
   (package
@@ -1885,7 +1884,7 @@
     (synopsis "A well-maintained fork of the `dotenv` crate")
     (description
       (beautify-description "A well-maintained fork of the `dotenv` crate"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-either_1_6_1
   (package
@@ -1905,8 +1904,8 @@
     (synopsis "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.")
     (description
       (beautify-description "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-email-encoding_0_1_0
   (package
@@ -1929,7 +1928,7 @@
     (synopsis "Low level email encoding RFCs implementations")
     (description
       (beautify-description "Low level email encoding RFCs implementations"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-encoding_rs_0_8_31
   (package
@@ -1952,7 +1951,7 @@
     (synopsis "A Gecko-oriented implementation of the Encoding Standard")
     (description
       (beautify-description "A Gecko-oriented implementation of the Encoding Standard"))
-    (license (spdx-string->license "(Apache-2.0 OR MIT) AND BSD-3-Clause"))))
+    (license license:asl2.0)))
 
 (define rust-enum-as-inner_0_3_4
   (package
@@ -1978,8 +1977,8 @@
     (synopsis "A proc-macro for deriving inner field accessor functions on enums.")
     (description
       (beautify-description "A proc-macro for deriving inner field accessor functions on enums."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-error-chain_0_12_4
   (package
@@ -2002,8 +2001,8 @@
     (synopsis "Yet another error boilerplate library.")
     (description
       (beautify-description "Yet another error boilerplate library."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-fake-simd_0_1_2
   (package
@@ -2023,8 +2022,8 @@
     (synopsis "Crate for mimicking simd crate on stable Rust")
     (description
       (beautify-description "Crate for mimicking simd crate on stable Rust"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-fastrand_1_7_0
   (package
@@ -2047,7 +2046,7 @@
     (synopsis "A simple and fast random number generator")
     (description
       (beautify-description "A simple and fast random number generator"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-fern_0_6_1
   (package
@@ -2071,7 +2070,7 @@
     (synopsis "Simple, efficient logging")
     (description
       (beautify-description "Simple, efficient logging"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-figment_0_10_6
   (package
@@ -2099,7 +2098,7 @@
     (synopsis "A configuration library so con-free, it\u0027s unreal.")
     (description
       (beautify-description "A configuration library so con-free, it\u0027s unreal."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-flate2_1_0_23
   (package
@@ -2125,8 +2124,8 @@
     (synopsis "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams.")
     (description
       (beautify-description "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-fnv_1_0_7
   (package
@@ -2146,8 +2145,8 @@
     (synopsis "Fowler\u2013Noll\u2013Vo hash function")
     (description
       (beautify-description "Fowler\u2013Noll\u2013Vo hash function"))
-    (license `(,(spdx-string->license "Apache-2.0 ")
-               ,(spdx-string->license " MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-foreign-types_0_3_2
   (package
@@ -2170,8 +2169,8 @@
     (synopsis "A framework for Rust wrappers over C APIs")
     (description
       (beautify-description "A framework for Rust wrappers over C APIs"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-foreign-types-shared_0_1_1
   (package
@@ -2191,8 +2190,8 @@
     (synopsis "An internal crate used by foreign-types")
     (description
       (beautify-description "An internal crate used by foreign-types"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-form_urlencoded_1_0_1
   (package
@@ -2216,8 +2215,8 @@
     (synopsis "Parser and serializer for the application/x-www-form-urlencoded syntax, as used by HTML forms.")
     (description
       (beautify-description "Parser and serializer for the application/x-www-form-urlencoded syntax, as used by HTML forms."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-fuchsia-cprng_0_1_1
   (package
@@ -2237,7 +2236,7 @@
     (synopsis "Rust crate for the Fuchsia cryptographically secure pseudorandom number generator")
     (description
       (beautify-description "Rust crate for the Fuchsia cryptographically secure pseudorandom number generator"))
-    (license (spdx-string->license "non-standard"))))
+    (license #t)))
 
 (define rust-fuchsia-zircon_0_3_3
   (package
@@ -2261,7 +2260,7 @@
     (synopsis "Rust bindings for the Zircon kernel")
     (description
       (beautify-description "Rust bindings for the Zircon kernel"))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-fuchsia-zircon-sys_0_3_3
   (package
@@ -2281,7 +2280,7 @@
     (synopsis "Low-level Rust bindings for the Zircon kernel")
     (description
       (beautify-description "Low-level Rust bindings for the Zircon kernel"))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-futures_0_3_21
   (package
@@ -2310,7 +2309,7 @@
     (synopsis "An implementation of futures and streams featuring zero allocations,\ncomposability, and iterator-like interfaces.")
     (description
       (beautify-description "An implementation of futures and streams featuring zero allocations,\ncomposability, and iterator-like interfaces."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-channel_0_3_21
   (package
@@ -2334,7 +2333,7 @@
     (synopsis "Channels for asynchronous communication using futures-rs.")
     (description
       (beautify-description "Channels for asynchronous communication using futures-rs."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-core_0_3_21
   (package
@@ -2354,7 +2353,7 @@
     (synopsis "The core traits and types in for the `futures` library.")
     (description
       (beautify-description "The core traits and types in for the `futures` library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-executor_0_3_21
   (package
@@ -2379,7 +2378,7 @@
     (synopsis "Executors for asynchronous tasks based on the futures-rs library.")
     (description
       (beautify-description "Executors for asynchronous tasks based on the futures-rs library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-io_0_3_21
   (package
@@ -2399,7 +2398,7 @@
     (synopsis "The `AsyncRead`, `AsyncWrite`, `AsyncSeek`, and `AsyncBufRead` traits for the futures-rs library.")
     (description
       (beautify-description "The `AsyncRead`, `AsyncWrite`, `AsyncSeek`, and `AsyncBufRead` traits for the futures-rs library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-macro_0_3_21
   (package
@@ -2424,7 +2423,7 @@
     (synopsis "The futures-rs procedural macro implementations.")
     (description
       (beautify-description "The futures-rs procedural macro implementations."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-sink_0_3_21
   (package
@@ -2444,7 +2443,7 @@
     (synopsis "The asynchronous `Sink` trait for the futures-rs library.")
     (description
       (beautify-description "The asynchronous `Sink` trait for the futures-rs library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-task_0_3_21
   (package
@@ -2464,7 +2463,7 @@
     (synopsis "Tools for working with tasks.")
     (description
       (beautify-description "Tools for working with tasks."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-futures-timer_3_0_2
   (package
@@ -2484,8 +2483,8 @@
     (synopsis "Timeouts for futures.")
     (description
       (beautify-description "Timeouts for futures."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-futures-util_0_3_21
   (package
@@ -2517,7 +2516,7 @@
     (synopsis "Common utilities and extension traits for the futures-rs library.")
     (description
       (beautify-description "Common utilities and extension traits for the futures-rs library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-generator_0_7_0
   (package
@@ -2544,8 +2543,8 @@
     (synopsis "Stackfull Generator Library in Rust")
     (description
       (beautify-description "Stackfull Generator Library in Rust"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-generic-array_0_12_4
   (package
@@ -2568,7 +2567,7 @@
     (synopsis "Generic types implementing functionality of arrays")
     (description
       (beautify-description "Generic types implementing functionality of arrays"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-generic-array_0_14_5
   (package
@@ -2592,7 +2591,7 @@
     (synopsis "Generic types implementing functionality of arrays")
     (description
       (beautify-description "Generic types implementing functionality of arrays"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-getrandom_0_1_16
   (package
@@ -2617,7 +2616,7 @@
     (synopsis "A small cross-platform library for retrieving random data from system source")
     (description
       (beautify-description "A small cross-platform library for retrieving random data from system source"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-getrandom_0_2_6
   (package
@@ -2642,7 +2641,7 @@
     (synopsis "A small cross-platform library for retrieving random data from system source")
     (description
       (beautify-description "A small cross-platform library for retrieving random data from system source"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ghash_0_4_4
   (package
@@ -2666,7 +2665,7 @@
     (synopsis "Universal hash over GF(2^128) useful for constructing a Message Authentication Code (MAC),\nas in the AES-GCM authenticated encryption cipher.")
     (description
       (beautify-description "Universal hash over GF(2^128) useful for constructing a Message Authentication Code (MAC),\nas in the AES-GCM authenticated encryption cipher."))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-gimli_0_26_1
   (package
@@ -2686,8 +2685,8 @@
     (synopsis "A library for reading and writing the DWARF debugging format.")
     (description
       (beautify-description "A library for reading and writing the DWARF debugging format."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-glob_0_3_0
   (package
@@ -2707,8 +2706,8 @@
     (synopsis "Support for matching file paths against Unix shell style patterns.")
     (description
       (beautify-description "Support for matching file paths against Unix shell style patterns."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-governor_0_4_2
   (package
@@ -2739,7 +2738,7 @@
     (synopsis "A rate-limiting implementation in Rust")
     (description
       (beautify-description "A rate-limiting implementation in Rust"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-h2_0_3_13
   (package
@@ -2773,7 +2772,7 @@
     (synopsis "An HTTP/2 client and server")
     (description
       (beautify-description "An HTTP/2 client and server"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-half_1_8_2
   (package
@@ -2793,7 +2792,7 @@
     (synopsis "Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types.")
     (description
       (beautify-description "Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-handlebars_4_2_2
   (package
@@ -2822,7 +2821,7 @@
     (synopsis "Handlebars templating implemented in Rust.")
     (description
       (beautify-description "Handlebars templating implemented in Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-hashbrown_0_11_2
   (package
@@ -2842,8 +2841,8 @@
     (synopsis "A Rust port of Google\u0027s SwissTable hash map")
     (description
       (beautify-description "A Rust port of Google\u0027s SwissTable hash map"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-hashbrown_0_12_1
   (package
@@ -2863,7 +2862,7 @@
     (synopsis "A Rust port of Google\u0027s SwissTable hash map")
     (description
       (beautify-description "A Rust port of Google\u0027s SwissTable hash map"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-heck_0_4_0
   (package
@@ -2883,7 +2882,7 @@
     (synopsis "heck is a case conversion library.")
     (description
       (beautify-description "heck is a case conversion library."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-hermit-abi_0_1_19
   (package
@@ -2906,8 +2905,8 @@
     (synopsis "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`.")
     (description
       (beautify-description "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-hkdf_0_12_3
   (package
@@ -2930,7 +2929,7 @@
     (synopsis "HMAC-based Extract-and-Expand Key Derivation Function (HKDF)")
     (description
       (beautify-description "HMAC-based Extract-and-Expand Key Derivation Function (HKDF)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-hmac_0_11_0
   (package
@@ -2954,7 +2953,7 @@
     (synopsis "Generic implementation of Hash-based Message Authentication Code (HMAC)")
     (description
       (beautify-description "Generic implementation of Hash-based Message Authentication Code (HMAC)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-hmac_0_12_1
   (package
@@ -2977,7 +2976,7 @@
     (synopsis "Generic implementation of Hash-based Message Authentication Code (HMAC)")
     (description
       (beautify-description "Generic implementation of Hash-based Message Authentication Code (HMAC)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-hostname_0_3_1
   (package
@@ -3002,7 +3001,7 @@
     (synopsis "Cross-platform system\u0027s host name functions")
     (description
       (beautify-description "Cross-platform system\u0027s host name functions"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-html5gum_0_4_0
   (package
@@ -3025,7 +3024,7 @@
     (synopsis "A WHATWG-compliant HTML5 tokenizer and tag soup parser.")
     (description
       (beautify-description "A WHATWG-compliant HTML5 tokenizer and tag soup parser."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-http_0_2_7
   (package
@@ -3050,7 +3049,7 @@
     (synopsis "A set of types for representing HTTP requests and responses.")
     (description
       (beautify-description "A set of types for representing HTTP requests and responses."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-http-body_0_4_4
   (package
@@ -3075,7 +3074,7 @@
     (synopsis "Trait representing an asynchronous, streaming, HTTP request or response body.")
     (description
       (beautify-description "Trait representing an asynchronous, streaming, HTTP request or response body."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-httparse_1_7_1
   (package
@@ -3095,8 +3094,8 @@
     (synopsis "A tiny, safe, speedy, zero-copy HTTP/1.x parser.")
     (description
       (beautify-description "A tiny, safe, speedy, zero-copy HTTP/1.x parser."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-httpdate_1_0_2
   (package
@@ -3116,8 +3115,8 @@
     (synopsis "HTTP date parsing and formatting")
     (description
       (beautify-description "HTTP date parsing and formatting"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-hyper_0_14_18
   (package
@@ -3156,7 +3155,7 @@
     (synopsis "A fast and correct HTTP library.")
     (description
       (beautify-description "A fast and correct HTTP library."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-hyper-tls_0_5_0
   (package
@@ -3184,8 +3183,8 @@
     (synopsis "Default TLS implementation for use with hyper")
     (description
       (beautify-description "Default TLS implementation for use with hyper"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-ident_case_1_0_1
   (package
@@ -3205,8 +3204,8 @@
     (synopsis "Utility for applying case rules to Rust identifiers.")
     (description
       (beautify-description "Utility for applying case rules to Rust identifiers."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-idna_0_1_5
   (package
@@ -3231,8 +3230,8 @@
     (synopsis "IDNA (Internationalizing Domain Names in Applications) and Punycode.")
     (description
       (beautify-description "IDNA (Internationalizing Domain Names in Applications) and Punycode."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-idna_0_2_3
   (package
@@ -3257,8 +3256,8 @@
     (synopsis "IDNA (Internationalizing Domain Names in Applications) and Punycode.")
     (description
       (beautify-description "IDNA (Internationalizing Domain Names in Applications) and Punycode."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-indexmap_1_8_1
   (package
@@ -3283,8 +3282,8 @@
     (synopsis "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap.")
     (description
       (beautify-description "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-inlinable_string_0_1_15
   (package
@@ -3304,8 +3303,8 @@
     (synopsis "The `inlinable_string` crate provides the `InlinableString` type -- an owned, grow-able UTF-8 string that stores small strings inline and avoids heap-allocation -- and the `StringExt` trait which abstracts string operations over both `std::string::String` and `InlinableString` (or even your own custom string type).")
     (description
       (beautify-description "The `inlinable_string` crate provides the `InlinableString` type -- an owned, grow-able UTF-8 string that stores small strings inline and avoids heap-allocation -- and the `StringExt` trait which abstracts string operations over both `std::string::String` and `InlinableString` (or even your own custom string type)."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-instant_0_1_12
   (package
@@ -3328,7 +3327,7 @@
     (synopsis "A partial replacement for std::time::Instant that works on WASM too.")
     (description
       (beautify-description "A partial replacement for std::time::Instant that works on WASM too."))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-iovec_0_1_4
   (package
@@ -3351,8 +3350,8 @@
     (synopsis "Portable buffer type for scatter/gather I/O operations")
     (description
       (beautify-description "Portable buffer type for scatter/gather I/O operations"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-ipconfig_0_2_2
   (package
@@ -3378,8 +3377,8 @@
     (synopsis "Get network adapters information and network configuration for windows.")
     (description
       (beautify-description "Get network adapters information and network configuration for windows."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-ipnet_2_5_0
   (package
@@ -3399,7 +3398,7 @@
     (synopsis "Provides types and useful methods for working with IPv4 and IPv6 network addresses, commonly called IP prefixes. The new `IpNet`, `Ipv4Net`, and `Ipv6Net` types build on the existing `IpAddr`, `Ipv4Addr`, and `Ipv6Addr` types already provided in Rust\u0027s standard library and align to their design to stay consistent. The module also provides useful traits that extend `Ipv4Addr` and `Ipv6Addr` with methods for `Add`, `Sub`, `BitAnd`, and `BitOr` operations. The module only uses stable feature so it is guaranteed to compile using the stable toolchain.")
     (description
       (beautify-description "Provides types and useful methods for working with IPv4 and IPv6 network addresses, commonly called IP prefixes. The new `IpNet`, `Ipv4Net`, and `Ipv6Net` types build on the existing `IpAddr`, `Ipv4Addr`, and `Ipv6Addr` types already provided in Rust\u0027s standard library and align to their design to stay consistent. The module also provides useful traits that extend `Ipv4Addr` and `Ipv6Addr` with methods for `Add`, `Sub`, `BitAnd`, and `BitOr` operations. The module only uses stable feature so it is guaranteed to compile using the stable toolchain."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-itoa_1_0_1
   (package
@@ -3419,7 +3418,7 @@
     (synopsis "Fast functions for printing integer primitives to an io::Write")
     (description
       (beautify-description "Fast functions for printing integer primitives to an io::Write"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-jetscii_0_5_2
   (package
@@ -3439,7 +3438,7 @@
     (synopsis "A tiny library to efficiently search strings and byte slices for sets of ASCII characters or bytes.")
     (description
       (beautify-description "A tiny library to efficiently search strings and byte slices for sets of ASCII characters or bytes."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-job_scheduler_1_2_1-tarball
   (package
@@ -3464,8 +3463,8 @@
     (synopsis "A simple cron-like job scheduling library for Rust.")
     (description
       (beautify-description "A simple cron-like job scheduling library for Rust."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-job_scheduler_1_2_1
   (package
@@ -3491,8 +3490,8 @@
     (synopsis "A simple cron-like job scheduling library for Rust.")
     (description
       (beautify-description "A simple cron-like job scheduling library for Rust."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-js-sys_0_3_57
   (package
@@ -3515,8 +3514,8 @@
     (synopsis "Bindings for all JS global objects and functions in all JS environments like\nNode.js and browsers, built on `#[wasm_bindgen]` using the `wasm-bindgen` crate.")
     (description
       (beautify-description "Bindings for all JS global objects and functions in all JS environments like\nNode.js and browsers, built on `#[wasm_bindgen]` using the `wasm-bindgen` crate."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-jsonwebtoken_8_1_0
   (package
@@ -3544,7 +3543,7 @@
     (synopsis "Create and decode JWTs in a strongly typed way.")
     (description
       (beautify-description "Create and decode JWTs in a strongly typed way."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-kernel32-sys_0_2_2
   (package
@@ -3568,7 +3567,7 @@
     (synopsis "Contains function definitions for the Windows API library kernel32. See winapi for types and constants.")
     (description
       (beautify-description "Contains function definitions for the Windows API library kernel32. See winapi for types and constants."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-lazy_static_1_4_0
   (package
@@ -3588,8 +3587,8 @@
     (synopsis "A macro for declaring lazily evaluated statics in Rust.")
     (description
       (beautify-description "A macro for declaring lazily evaluated statics in Rust."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-lazycell_1_3_0
   (package
@@ -3609,8 +3608,8 @@
     (synopsis "A library providing a lazily filled Cell struct")
     (description
       (beautify-description "A library providing a lazily filled Cell struct"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-lettre_0_10_0-rc_6
   (package
@@ -3646,7 +3645,7 @@
     (synopsis "Email client")
     (description
       (beautify-description "Email client"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-libc_0_2_125
   (package
@@ -3666,7 +3665,7 @@
     (synopsis "Raw FFI bindings to platform libraries like libc.")
     (description
       (beautify-description "Raw FFI bindings to platform libraries like libc."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-libmimalloc-sys_0_1_25
   (package
@@ -3689,7 +3688,7 @@
     (synopsis "Sys crate wrapping the mimalloc allocator")
     (description
       (beautify-description "Sys crate wrapping the mimalloc allocator"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-libsqlite3-sys_0_22_2
   (package
@@ -3714,7 +3713,7 @@
     (synopsis "Native bindings to the libsqlite3 library")
     (description
       (beautify-description "Native bindings to the libsqlite3 library"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-linked-hash-map_0_5_4
   (package
@@ -3734,8 +3733,8 @@
     (synopsis "A HashMap wrapper that holds key-value pairs in insertion order")
     (description
       (beautify-description "A HashMap wrapper that holds key-value pairs in insertion order"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-lock_api_0_4_7
   (package
@@ -3759,7 +3758,7 @@
     (synopsis "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std.")
     (description
       (beautify-description "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-log_0_4_17
   (package
@@ -3782,7 +3781,7 @@
     (synopsis "A lightweight logging facade for Rust")
     (description
       (beautify-description "A lightweight logging facade for Rust"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-loom_0_5_4
   (package
@@ -3811,7 +3810,7 @@
     (synopsis "Permutation testing for concurrent code")
     (description
       (beautify-description "Permutation testing for concurrent code"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-lru-cache_0_1_2
   (package
@@ -3834,8 +3833,8 @@
     (synopsis "A cache that holds a limited number of key-value pairs")
     (description
       (beautify-description "A cache that holds a limited number of key-value pairs"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-mach_0_3_2
   (package
@@ -3858,7 +3857,7 @@
     (synopsis "A Rust interface to the user-space API of the Mach 3.0 kernel that underlies OSX.")
     (description
       (beautify-description "A Rust interface to the user-space API of the Mach 3.0 kernel that underlies OSX."))
-    (license (spdx-string->license "BSD-2-Clause"))))
+    (license license:bsd-2)))
 
 (define rust-maplit_1_0_2
   (package
@@ -3878,8 +3877,8 @@
     (synopsis "Collection \u201cliteral\u201d macros for HashMap, HashSet, BTreeMap, and BTreeSet.")
     (description
       (beautify-description "Collection \u201cliteral\u201d macros for HashMap, HashSet, BTreeMap, and BTreeSet."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-match_cfg_0_1_0
   (package
@@ -3899,8 +3898,8 @@
     (synopsis "A convenience macro to ergonomically define an item depending on a large number\nof `#[cfg]` parameters. Structured like match statement, the first matching\nbranch is the item that gets emitted.")
     (description
       (beautify-description "A convenience macro to ergonomically define an item depending on a large number\nof `#[cfg]` parameters. Structured like match statement, the first matching\nbranch is the item that gets emitted."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-matchers_0_1_0
   (package
@@ -3923,7 +3922,7 @@
     (synopsis "Regex matching on character and byte streams.")
     (description
       (beautify-description "Regex matching on character and byte streams."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-matches_0_1_9
   (package
@@ -3943,7 +3942,7 @@
     (synopsis "A macro to evaluate, as a boolean, whether an expression matches a pattern.")
     (description
       (beautify-description "A macro to evaluate, as a boolean, whether an expression matches a pattern."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-maybe-uninit_2_0_0
   (package
@@ -3963,7 +3962,7 @@
     (synopsis "MaybeUninit for friends of backwards compatibility")
     (description
       (beautify-description "MaybeUninit for friends of backwards compatibility"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-memchr_2_5_0
   (package
@@ -3983,8 +3982,8 @@
     (synopsis "Safe interface to memchr.")
     (description
       (beautify-description "Safe interface to memchr."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-migrations_internals_1_4_1
   (package
@@ -4007,7 +4006,7 @@
     (synopsis "Internal implementation of diesels migration mechanism")
     (description
       (beautify-description "Internal implementation of diesels migration mechanism"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-migrations_macros_1_4_2
   (package
@@ -4033,7 +4032,7 @@
     (synopsis "Codegeneration macros for diesels embedded migrations")
     (description
       (beautify-description "Codegeneration macros for diesels embedded migrations"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-mimalloc_0_1_29
   (package
@@ -4056,7 +4055,7 @@
     (synopsis "Performance and security oriented drop-in allocator")
     (description
       (beautify-description "Performance and security oriented drop-in allocator"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-mime_0_3_16
   (package
@@ -4076,8 +4075,8 @@
     (synopsis "Strongly Typed Mimes")
     (description
       (beautify-description "Strongly Typed Mimes"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-minimal-lexical_0_2_1
   (package
@@ -4097,8 +4096,8 @@
     (synopsis "Fast float parsing conversion routines.")
     (description
       (beautify-description "Fast float parsing conversion routines."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-miniz_oxide_0_5_1
   (package
@@ -4121,7 +4120,7 @@
     (synopsis "DEFLATE compression and decompression library rewritten in Rust based on miniz")
     (description
       (beautify-description "DEFLATE compression and decompression library rewritten in Rust based on miniz"))
-    (license (spdx-string->license "MIT OR Zlib OR Apache-2.0"))))
+    (license license:asl2.0)))
 
 (define rust-mio_0_6_23
   (package
@@ -4154,7 +4153,7 @@
     (synopsis "Lightweight non-blocking IO")
     (description
       (beautify-description "Lightweight non-blocking IO"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-mio_0_8_3
   (package
@@ -4180,7 +4179,7 @@
     (synopsis "Lightweight non-blocking IO")
     (description
       (beautify-description "Lightweight non-blocking IO"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-mio-extras_2_0_6
   (package
@@ -4206,7 +4205,7 @@
     (synopsis "Extra components for use with Mio")
     (description
       (beautify-description "Extra components for use with Mio"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-miow_0_2_2
   (package
@@ -4232,8 +4231,8 @@
     (synopsis "A zero overhead I/O library for Windows, focusing on IOCP and Async I/O\nabstractions.")
     (description
       (beautify-description "A zero overhead I/O library for Windows, focusing on IOCP and Async I/O\nabstractions."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-multer_2_0_2
   (package
@@ -4267,7 +4266,7 @@
     (synopsis "An async parser for `multipart/form-data` content-type in Rust.")
     (description
       (beautify-description "An async parser for `multipart/form-data` content-type in Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-mysqlclient-sys_0_2_5
   (package
@@ -4291,7 +4290,7 @@
     (synopsis "Auto-generated rust bindings for libmysqlclient")
     (description
       (beautify-description "Auto-generated rust bindings for libmysqlclient"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-native-tls_0_2_10
   (package
@@ -4323,8 +4322,8 @@
     (synopsis "A wrapper over a platform\u0027s native TLS implementation")
     (description
       (beautify-description "A wrapper over a platform\u0027s native TLS implementation"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-net2_0_2_37
   (package
@@ -4349,8 +4348,8 @@
     (synopsis "Extensions to the standard library\u0027s networking types as proposed in RFC 1158.")
     (description
       (beautify-description "Extensions to the standard library\u0027s networking types as proposed in RFC 1158."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-nix_0_24_1
   (package
@@ -4375,7 +4374,7 @@
     (synopsis "Rust friendly bindings to *nix APIs")
     (description
       (beautify-description "Rust friendly bindings to *nix APIs"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-no-std-compat_0_4_1
   (package
@@ -4395,7 +4394,7 @@
     (synopsis "A `#![no_std]` compatibility layer that will make porting your crate to no_std *easy*.")
     (description
       (beautify-description "A `#![no_std]` compatibility layer that will make porting your crate to no_std *easy*."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-nom_7_1_1
   (package
@@ -4419,7 +4418,7 @@
     (synopsis "A byte-oriented, zero-copy, parser combinators library")
     (description
       (beautify-description "A byte-oriented, zero-copy, parser combinators library"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-nonzero_ext_0_3_0
   (package
@@ -4439,7 +4438,7 @@
     (synopsis "Extensions and additional traits for non-zero integer types")
     (description
       (beautify-description "Extensions and additional traits for non-zero integer types"))
-    (license (spdx-string->license "Apache-2.0"))))
+    (license license:asl2.0)))
 
 (define rust-num-bigint_0_4_3
   (package
@@ -4464,7 +4463,7 @@
     (synopsis "Big integer implementation for Rust")
     (description
       (beautify-description "Big integer implementation for Rust"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-num-derive_0_3_3
   (package
@@ -4489,7 +4488,7 @@
     (synopsis "Numeric syntax extensions")
     (description
       (beautify-description "Numeric syntax extensions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-num-integer_0_1_45
   (package
@@ -4513,7 +4512,7 @@
     (synopsis "Integer traits and functions")
     (description
       (beautify-description "Integer traits and functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-num-traits_0_2_15
   (package
@@ -4536,7 +4535,7 @@
     (synopsis "Numeric traits for generic mathematics")
     (description
       (beautify-description "Numeric traits for generic mathematics"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-num_cpus_1_13_1
   (package
@@ -4560,7 +4559,7 @@
     (synopsis "Get the number of CPUs on a machine.")
     (description
       (beautify-description "Get the number of CPUs on a machine."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-num_threads_0_1_6
   (package
@@ -4583,7 +4582,7 @@
     (synopsis "A minimal library that determines the number of running threads for the current process.")
     (description
       (beautify-description "A minimal library that determines the number of running threads for the current process."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-object_0_28_4
   (package
@@ -4606,7 +4605,7 @@
     (synopsis "A unified interface for reading and writing object file formats.")
     (description
       (beautify-description "A unified interface for reading and writing object file formats."))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-once_cell_1_10_0
   (package
@@ -4626,7 +4625,7 @@
     (synopsis "Single assignment cells and lazy values.")
     (description
       (beautify-description "Single assignment cells and lazy values."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-opaque-debug_0_2_3
   (package
@@ -4646,7 +4645,7 @@
     (synopsis "Macro for opaque Debug trait implementation")
     (description
       (beautify-description "Macro for opaque Debug trait implementation"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-opaque-debug_0_3_0
   (package
@@ -4666,7 +4665,7 @@
     (synopsis "Macro for opaque Debug trait implementation")
     (description
       (beautify-description "Macro for opaque Debug trait implementation"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-openssl_0_10_40
   (package
@@ -4695,7 +4694,7 @@
     (synopsis "OpenSSL bindings")
     (description
       (beautify-description "OpenSSL bindings"))
-    (license (spdx-string->license "Apache-2.0"))))
+    (license license:asl2.0)))
 
 (define rust-openssl-macros_0_1_0
   (package
@@ -4720,8 +4719,8 @@
     (synopsis "Internal macros used by the openssl crate.")
     (description
       (beautify-description "Internal macros used by the openssl crate."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-openssl-probe_0_1_5
   (package
@@ -4741,8 +4740,8 @@
     (synopsis "Tool for helping to find SSL certificate locations on the system for OpenSSL")
     (description
       (beautify-description "Tool for helping to find SSL certificate locations on the system for OpenSSL"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-openssl-src_111_18_0+1_1_1n
   (package
@@ -4765,8 +4764,8 @@
     (synopsis "Source of OpenSSL and logic to build it.")
     (description
       (beautify-description "Source of OpenSSL and logic to build it."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-openssl-sys_0_9_73
   (package
@@ -4794,7 +4793,7 @@
     (synopsis "FFI bindings to OpenSSL")
     (description
       (beautify-description "FFI bindings to OpenSSL"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-owning_ref_0_3_3
   (package
@@ -4817,7 +4816,7 @@
     (synopsis "A library for creating references that carry their owner with them.")
     (description
       (beautify-description "A library for creating references that carry their owner with them."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-parity-ws_0_11_1
   (package
@@ -4849,7 +4848,7 @@
     (synopsis "Lightweight, event-driven WebSockets for Rust.")
     (description
       (beautify-description "Lightweight, event-driven WebSockets for Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-parking_lot_0_4_8
   (package
@@ -4873,8 +4872,8 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-parking_lot_0_11_2
   (package
@@ -4899,8 +4898,8 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-parking_lot_0_12_0
   (package
@@ -4924,8 +4923,8 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-parking_lot_core_0_2_14
   (package
@@ -4951,8 +4950,8 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-parking_lot_core_0_8_5
   (package
@@ -4980,8 +4979,8 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-parking_lot_core_0_9_3
   (package
@@ -5008,7 +5007,7 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-parse-zoneinfo_0_3_0
   (package
@@ -5031,7 +5030,7 @@
     (synopsis "Parse zoneinfo files from the IANA database")
     (description
       (beautify-description "Parse zoneinfo files from the IANA database"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-paste_1_0_7
   (package
@@ -5051,7 +5050,7 @@
     (synopsis "Macros for all your token pasting needs")
     (description
       (beautify-description "Macros for all your token pasting needs"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-pear_0_2_3
   (package
@@ -5076,8 +5075,8 @@
     (synopsis "A pear is a fruit.")
     (description
       (beautify-description "A pear is a fruit."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pear_codegen_0_2_3
   (package
@@ -5103,8 +5102,8 @@
     (synopsis "A (codegen) pear is a fruit.")
     (description
       (beautify-description "A (codegen) pear is a fruit."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pem_1_0_2
   (package
@@ -5127,7 +5126,7 @@
     (synopsis "Parse and encode PEM-encoded data.")
     (description
       (beautify-description "Parse and encode PEM-encoded data."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-percent-encoding_1_0_1
   (package
@@ -5147,8 +5146,8 @@
     (synopsis "Percent encoding and decoding")
     (description
       (beautify-description "Percent encoding and decoding"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-percent-encoding_2_1_0
   (package
@@ -5168,8 +5167,8 @@
     (synopsis "Percent encoding and decoding")
     (description
       (beautify-description "Percent encoding and decoding"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pest_2_1_3
   (package
@@ -5192,8 +5191,8 @@
     (synopsis "The Elegant Parser")
     (description
       (beautify-description "The Elegant Parser"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pest_derive_2_1_0
   (package
@@ -5217,8 +5216,8 @@
     (synopsis "pest\u0027s derive macro")
     (description
       (beautify-description "pest\u0027s derive macro"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pest_generator_2_1_3
   (package
@@ -5245,8 +5244,8 @@
     (synopsis "pest code generator")
     (description
       (beautify-description "pest code generator"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pest_meta_2_1_3
   (package
@@ -5271,8 +5270,8 @@
     (synopsis "pest meta language parser and validator")
     (description
       (beautify-description "pest meta language parser and validator"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-phf_0_10_1
   (package
@@ -5295,7 +5294,7 @@
     (synopsis "Runtime support for perfect hash function data structures")
     (description
       (beautify-description "Runtime support for perfect hash function data structures"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-phf_codegen_0_10_0
   (package
@@ -5319,7 +5318,7 @@
     (synopsis "Codegen library for PHF types")
     (description
       (beautify-description "Codegen library for PHF types"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-phf_generator_0_10_0
   (package
@@ -5343,7 +5342,7 @@
     (synopsis "PHF generation logic")
     (description
       (beautify-description "PHF generation logic"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-phf_shared_0_10_0
   (package
@@ -5367,7 +5366,7 @@
     (synopsis "Support code shared by PHF libraries")
     (description
       (beautify-description "Support code shared by PHF libraries"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-pico-args_0_4_2
   (package
@@ -5387,7 +5386,7 @@
     (synopsis "An ultra simple CLI arguments parser.")
     (description
       (beautify-description "An ultra simple CLI arguments parser."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-pin-project-lite_0_2_9
   (package
@@ -5407,7 +5406,7 @@
     (synopsis "A lightweight version of pin-project written with declarative macros.")
     (description
       (beautify-description "A lightweight version of pin-project written with declarative macros."))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-pin-utils_0_1_0
   (package
@@ -5427,7 +5426,7 @@
     (synopsis "Utilities for pinning")
     (description
       (beautify-description "Utilities for pinning"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-pkg-config_0_3_25
   (package
@@ -5447,7 +5446,7 @@
     (synopsis "A library to run the pkg-config system tool at build time in order to be used in\nCargo build scripts.")
     (description
       (beautify-description "A library to run the pkg-config system tool at build time in order to be used in\nCargo build scripts."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-polyval_0_5_3
   (package
@@ -5473,7 +5472,7 @@
     (synopsis "POLYVAL is a GHASH-like universal hash over GF(2^128) useful for constructing\na Message Authentication Code (MAC)")
     (description
       (beautify-description "POLYVAL is a GHASH-like universal hash over GF(2^128) useful for constructing\na Message Authentication Code (MAC)"))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-ppv-lite86_0_2_16
   (package
@@ -5493,8 +5492,8 @@
     (synopsis "Implementation of the crypto-simd API for x86")
     (description
       (beautify-description "Implementation of the crypto-simd API for x86"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-pq-sys_0_4_6
   (package
@@ -5517,7 +5516,7 @@
     (synopsis "Auto-generated rust bindings for libpq")
     (description
       (beautify-description "Auto-generated rust bindings for libpq"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-proc-macro-hack_0_5_19
   (package
@@ -5537,7 +5536,7 @@
     (synopsis "Procedural functionlike!() macros using only Macros 1.1")
     (description
       (beautify-description "Procedural functionlike!() macros using only Macros 1.1"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-proc-macro2_1_0_38
   (package
@@ -5560,7 +5559,7 @@
     (synopsis "A substitute implementation of the compiler\u0027s `proc_macro` API to decouple\ntoken-based libraries from the procedural macro use case.")
     (description
       (beautify-description "A substitute implementation of the compiler\u0027s `proc_macro` API to decouple\ntoken-based libraries from the procedural macro use case."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-proc-macro2-diagnostics_0_9_1
   (package
@@ -5587,8 +5586,8 @@
     (synopsis "Diagnostics for proc-macro2.")
     (description
       (beautify-description "Diagnostics for proc-macro2."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-psl-types_2_0_10
   (package
@@ -5608,8 +5607,8 @@
     (synopsis "Common types for the public suffix implementation crates")
     (description
       (beautify-description "Common types for the public suffix implementation crates"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-publicsuffix_2_1_1
   (package
@@ -5635,8 +5634,8 @@
     (synopsis "Extract root domain and suffix from a domain name")
     (description
       (beautify-description "Extract root domain and suffix from a domain name"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-quanta_0_9_3
   (package
@@ -5666,7 +5665,7 @@
     (synopsis "high-speed timing library")
     (description
       (beautify-description "high-speed timing library"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-quick-error_1_2_3
   (package
@@ -5686,8 +5685,8 @@
     (synopsis "A macro which makes error types pleasant to write.")
     (description
       (beautify-description "A macro which makes error types pleasant to write."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-quick-error_2_0_1
   (package
@@ -5707,8 +5706,8 @@
     (synopsis "A macro which makes error types pleasant to write.")
     (description
       (beautify-description "A macro which makes error types pleasant to write."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-quickcheck_1_0_3
   (package
@@ -5731,8 +5730,8 @@
     (synopsis "Automatic property based testing with shrinking.")
     (description
       (beautify-description "Automatic property based testing with shrinking."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-quote_1_0_18
   (package
@@ -5755,7 +5754,7 @@
     (synopsis "Quasi-quoting macro quote!(...)")
     (description
       (beautify-description "Quasi-quoting macro quote!(...)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-quoted_printable_0_4_5
   (package
@@ -5775,7 +5774,7 @@
     (synopsis "A simple encoder/decoder for quoted-printable data")
     (description
       (beautify-description "A simple encoder/decoder for quoted-printable data"))
-    (license (spdx-string->license "0BSD"))))
+    (license license:bsd-0)))
 
 (define rust-r2d2_0_8_9
   (package
@@ -5800,8 +5799,8 @@
     (synopsis "A generic connection pool")
     (description
       (beautify-description "A generic connection pool"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rand_0_4_6
   (package
@@ -5828,8 +5827,8 @@
     (synopsis "Random number generators and other randomness functionality.")
     (description
       (beautify-description "Random number generators and other randomness functionality."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rand_0_7_3
   (package
@@ -5857,7 +5856,7 @@
     (synopsis "Random number generators and other randomness functionality.")
     (description
       (beautify-description "Random number generators and other randomness functionality."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_0_8_5
   (package
@@ -5882,7 +5881,7 @@
     (synopsis "Random number generators and other randomness functionality.")
     (description
       (beautify-description "Random number generators and other randomness functionality."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_chacha_0_2_2
   (package
@@ -5906,7 +5905,7 @@
     (synopsis "ChaCha random number generator")
     (description
       (beautify-description "ChaCha random number generator"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_chacha_0_3_1
   (package
@@ -5930,7 +5929,7 @@
     (synopsis "ChaCha random number generator")
     (description
       (beautify-description "ChaCha random number generator"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_core_0_3_1
   (package
@@ -5953,8 +5952,8 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rand_core_0_4_2
   (package
@@ -5974,8 +5973,8 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rand_core_0_5_1
   (package
@@ -5998,7 +5997,7 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_core_0_6_3
   (package
@@ -6021,7 +6020,7 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rand_hc_0_2_0
   (package
@@ -6044,8 +6043,8 @@
     (synopsis "HC128 random number generator")
     (description
       (beautify-description "HC128 random number generator"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-raw-cpuid_10_3_0
   (package
@@ -6068,7 +6067,7 @@
     (synopsis "A library to parse the x86 CPUID instruction, written in rust with no external dependencies. The implementation closely resembles the Intel CPUID manual description. The library does only depend on libcore.")
     (description
       (beautify-description "A library to parse the x86 CPUID instruction, written in rust with no external dependencies. The implementation closely resembles the Intel CPUID manual description. The library does only depend on libcore."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-rdrand_0_4_0
   (package
@@ -6091,7 +6090,7 @@
     (synopsis "An implementation of random number generator based on rdrand and rdseed instructions")
     (description
       (beautify-description "An implementation of random number generator based on rdrand and rdseed instructions"))
-    (license (spdx-string->license "ISC"))))
+    (license license:isc)))
 
 (define rust-redox_syscall_0_2_13
   (package
@@ -6114,7 +6113,7 @@
     (synopsis "A Rust library to access raw Redox system calls")
     (description
       (beautify-description "A Rust library to access raw Redox system calls"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-redox_users_0_4_3
   (package
@@ -6139,7 +6138,7 @@
     (synopsis "A Rust library to access Redox users and groups functionality")
     (description
       (beautify-description "A Rust library to access Redox users and groups functionality"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-ref-cast_1_0_7
   (package
@@ -6162,7 +6161,7 @@
     (synopsis "Safely cast \u0026T to \u0026U where the struct U contains a single field of type T.")
     (description
       (beautify-description "Safely cast \u0026T to \u0026U where the struct U contains a single field of type T."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ref-cast-impl_1_0_7
   (package
@@ -6187,7 +6186,7 @@
     (synopsis "Derive implementation for ref_cast::RefCast.")
     (description
       (beautify-description "Derive implementation for ref_cast::RefCast."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-regex_1_5_5
   (package
@@ -6212,7 +6211,7 @@
     (synopsis "An implementation of regular expressions for Rust. This implementation uses\nfinite automata and guarantees linear time matching on all inputs.")
     (description
       (beautify-description "An implementation of regular expressions for Rust. This implementation uses\nfinite automata and guarantees linear time matching on all inputs."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-regex-automata_0_1_10
   (package
@@ -6235,8 +6234,8 @@
     (synopsis "Automata construction and matching using regular expressions.")
     (description
       (beautify-description "Automata construction and matching using regular expressions."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-regex-syntax_0_6_25
   (package
@@ -6256,8 +6255,8 @@
     (synopsis "A regular expression parser.")
     (description
       (beautify-description "A regular expression parser."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-remove_dir_all_0_5_3
   (package
@@ -6280,8 +6279,8 @@
     (synopsis "A safe, reliable implementation of remove_dir_all for Windows")
     (description
       (beautify-description "A safe, reliable implementation of remove_dir_all for Windows"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-reqwest_0_11_10
   (package
@@ -6339,8 +6338,8 @@
     (synopsis "higher level HTTP client library")
     (description
       (beautify-description "higher level HTTP client library"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-resolv-conf_0_7_0
   (package
@@ -6364,8 +6363,8 @@
     (synopsis "The resolv.conf file parser")
     (description
       (beautify-description "The resolv.conf file parser"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-ring_0_16_20
   (package
@@ -6395,7 +6394,7 @@
     (synopsis "Safe, fast, small crypto using Rust.")
     (description
       (beautify-description "Safe, fast, small crypto using Rust."))
-    (license (spdx-string->license "non-standard"))))
+    (license #t)))
 
 (define rust-rmp_0_8_11
   (package
@@ -6420,7 +6419,7 @@
     (synopsis "Pure Rust MessagePack serialization implementation")
     (description
       (beautify-description "Pure Rust MessagePack serialization implementation"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-rmpv_1_0_0
   (package
@@ -6444,7 +6443,7 @@
     (synopsis "Value variant for RMP")
     (description
       (beautify-description "Value variant for RMP"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-rocket_0_5_0-rc_2
   (package
@@ -6497,7 +6496,7 @@
     (synopsis "Web framework for nightly with a focus on ease-of-use, expressibility, and speed.")
     (description
       (beautify-description "Web framework for nightly with a focus on ease-of-use, expressibility, and speed."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rocket_codegen_0_5_0-rc_2
   (package
@@ -6527,7 +6526,7 @@
     (synopsis "Procedural macros for the Rocket web framework.")
     (description
       (beautify-description "Procedural macros for the Rocket web framework."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rocket_http_0_5_0-rc_2
   (package
@@ -6571,7 +6570,7 @@
     (synopsis "Types, traits, and parsers for HTTP requests, responses, and headers.")
     (description
       (beautify-description "Types, traits, and parsers for HTTP requests, responses, and headers."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-rustc-demangle_0_1_21
   (package
@@ -6591,8 +6590,8 @@
     (synopsis "Rust compiler symbol demangling.")
     (description
       (beautify-description "Rust compiler symbol demangling."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rustc_version_0_2_3
   (package
@@ -6615,8 +6614,8 @@
     (synopsis "A library for querying the version of a installed rustc compiler")
     (description
       (beautify-description "A library for querying the version of a installed rustc compiler"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-rustls_0_20_4
   (package
@@ -6642,9 +6641,9 @@
     (synopsis "Rustls is a modern TLS library written in Rust.")
     (description
       (beautify-description "Rustls is a modern TLS library written in Rust."))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "ISC")
-               (spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:isc
+               license:expat))))
 
 (define rust-rustls-pemfile_1_0_0
   (package
@@ -6667,9 +6666,9 @@
     (synopsis "Basic .pem file parser for keys and certificates")
     (description
       (beautify-description "Basic .pem file parser for keys and certificates"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "ISC")
-               (spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:isc
+               license:expat))))
 
 (define rust-rustversion_1_0_6
   (package
@@ -6689,7 +6688,7 @@
     (synopsis "Conditional compilation according to rustc compiler version")
     (description
       (beautify-description "Conditional compilation according to rustc compiler version"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ryu_1_0_9
   (package
@@ -6709,7 +6708,7 @@
     (synopsis "Fast floating point to string conversion")
     (description
       (beautify-description "Fast floating point to string conversion"))
-    (license (spdx-string->license "Apache-2.0 OR BSL-1.0"))))
+    (license license:asl2.0)))
 
 (define rust-same-file_1_0_6
   (package
@@ -6732,8 +6731,8 @@
     (synopsis "A simple crate for determining whether two file paths point to the same file.")
     (description
       (beautify-description "A simple crate for determining whether two file paths point to the same file."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-schannel_0_1_19
   (package
@@ -6757,7 +6756,7 @@
     (synopsis "Schannel bindings for rust, allowing SSL/TLS (e.g. https) without openssl")
     (description
       (beautify-description "Schannel bindings for rust, allowing SSL/TLS (e.g. https) without openssl"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-scheduled-thread-pool_0_2_5
   (package
@@ -6780,8 +6779,8 @@
     (synopsis "A scheduled thread pool")
     (description
       (beautify-description "A scheduled thread pool"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-scoped-tls_1_0_0
   (package
@@ -6801,8 +6800,8 @@
     (synopsis "Library implementation of the standard library\u0027s old `scoped_thread_local!`\nmacro for providing scoped access to thread local storage (TLS) so any type can\nbe stored into TLS.")
     (description
       (beautify-description "Library implementation of the standard library\u0027s old `scoped_thread_local!`\nmacro for providing scoped access to thread local storage (TLS) so any type can\nbe stored into TLS."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-scopeguard_1_1_0
   (package
@@ -6822,8 +6821,8 @@
     (synopsis "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies.")
     (description
       (beautify-description "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-sct_0_7_0
   (package
@@ -6847,9 +6846,9 @@
     (synopsis "Certificate transparency SCT verification library")
     (description
       (beautify-description "Certificate transparency SCT verification library"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "ISC")
-               (spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:isc
+               license:expat))))
 
 (define rust-security-framework_2_6_1
   (package
@@ -6876,7 +6875,7 @@
     (synopsis "Security.framework bindings for macOS and iOS")
     (description
       (beautify-description "Security.framework bindings for macOS and iOS"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-security-framework-sys_2_6_1
   (package
@@ -6900,7 +6899,7 @@
     (synopsis "Apple `Security.framework` low-level FFI bindings")
     (description
       (beautify-description "Apple `Security.framework` low-level FFI bindings"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-semver_0_9_0
   (package
@@ -6923,8 +6922,8 @@
     (synopsis "Parser and evaluator for Cargo\u0027s flavor of Semantic Versioning")
     (description
       (beautify-description "Parser and evaluator for Cargo\u0027s flavor of Semantic Versioning"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-semver-parser_0_7_0
   (package
@@ -6944,8 +6943,8 @@
     (synopsis "Parsing of the semver spec.")
     (description
       (beautify-description "Parsing of the semver spec."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-serde_1_0_137
   (package
@@ -6968,7 +6967,7 @@
     (synopsis "A generic serialization/deserialization framework")
     (description
       (beautify-description "A generic serialization/deserialization framework"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-serde_cbor_0_11_2
   (package
@@ -6992,8 +6991,8 @@
     (synopsis "CBOR support for serde.")
     (description
       (beautify-description "CBOR support for serde."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-serde_derive_1_0_137
   (package
@@ -7018,7 +7017,7 @@
     (synopsis "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]")
     (description
       (beautify-description "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-serde_json_1_0_81
   (package
@@ -7043,7 +7042,7 @@
     (synopsis "A JSON serialization file format")
     (description
       (beautify-description "A JSON serialization file format"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-serde_urlencoded_0_7_1
   (package
@@ -7069,8 +7068,8 @@
     (synopsis "`x-www-form-urlencoded` meets Serde")
     (description
       (beautify-description "`x-www-form-urlencoded` meets Serde"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-sha-1_0_8_2
   (package
@@ -7096,7 +7095,7 @@
     (synopsis "SHA-1 hash function")
     (description
       (beautify-description "SHA-1 hash function"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-sha-1_0_9_8
   (package
@@ -7124,7 +7123,7 @@
     (synopsis "SHA-1 hash function")
     (description
       (beautify-description "SHA-1 hash function"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-sha1_0_6_1
   (package
@@ -7147,7 +7146,7 @@
     (synopsis "SHA-1 hash function")
     (description
       (beautify-description "SHA-1 hash function"))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-sha1_0_10_1
   (package
@@ -7172,7 +7171,7 @@
     (synopsis "SHA-1 hash function")
     (description
       (beautify-description "SHA-1 hash function"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-sha1_smol_1_0_0
   (package
@@ -7192,7 +7191,7 @@
     (synopsis "Minimal dependency free implementation of SHA1 for Rust.")
     (description
       (beautify-description "Minimal dependency free implementation of SHA1 for Rust."))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-sha2_0_9_9
   (package
@@ -7220,7 +7219,7 @@
     (synopsis "Pure Rust implementation of the SHA-2 hash function family\nincluding SHA-224, SHA-256, SHA-384, and SHA-512.")
     (description
       (beautify-description "Pure Rust implementation of the SHA-2 hash function family\nincluding SHA-224, SHA-256, SHA-384, and SHA-512."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-sha2_0_10_2
   (package
@@ -7245,7 +7244,7 @@
     (synopsis "Pure Rust implementation of the SHA-2 hash function family\nincluding SHA-224, SHA-256, SHA-384, and SHA-512.")
     (description
       (beautify-description "Pure Rust implementation of the SHA-2 hash function family\nincluding SHA-224, SHA-256, SHA-384, and SHA-512."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-sharded-slab_0_1_4
   (package
@@ -7268,7 +7267,7 @@
     (synopsis "A lock-free concurrent slab.")
     (description
       (beautify-description "A lock-free concurrent slab."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-signal-hook-registry_1_4_0
   (package
@@ -7291,8 +7290,8 @@
     (synopsis "Backend crate for signal-hook")
     (description
       (beautify-description "Backend crate for signal-hook"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-simple_asn1_0_6_1
   (package
@@ -7318,7 +7317,7 @@
     (synopsis "A simple DER/ASN.1 encoding/decoding library.")
     (description
       (beautify-description "A simple DER/ASN.1 encoding/decoding library."))
-    (license (spdx-string->license "ISC"))))
+    (license license:isc)))
 
 (define rust-siphasher_0_3_10
   (package
@@ -7338,8 +7337,8 @@
     (synopsis "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust")
     (description
       (beautify-description "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-slab_0_4_6
   (package
@@ -7359,7 +7358,7 @@
     (synopsis "Pre-allocated storage for a uniform data type")
     (description
       (beautify-description "Pre-allocated storage for a uniform data type"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-smallvec_0_6_14
   (package
@@ -7382,8 +7381,8 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-smallvec_1_8_0
   (package
@@ -7403,8 +7402,8 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-socket2_0_3_19
   (package
@@ -7429,8 +7428,8 @@
     (synopsis "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended.")
     (description
       (beautify-description "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-socket2_0_4_4
   (package
@@ -7454,7 +7453,7 @@
     (synopsis "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended.")
     (description
       (beautify-description "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-spin_0_5_2
   (package
@@ -7474,7 +7473,7 @@
     (synopsis "Spin-based synchronization primitives")
     (description
       (beautify-description "Spin-based synchronization primitives"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-spin_0_9_3
   (package
@@ -7494,7 +7493,7 @@
     (synopsis "Spin-based synchronization primitives")
     (description
       (beautify-description "Spin-based synchronization primitives"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-stable-pattern_0_1_0
   (package
@@ -7517,7 +7516,7 @@
     (synopsis "Stable port of std::str::Pattern and friends.")
     (description
       (beautify-description "Stable port of std::str::Pattern and friends."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-stable_deref_trait_1_2_0
   (package
@@ -7537,8 +7536,8 @@
     (synopsis "An unsafe marker trait for types like Box and Rc that dereference to a stable address even when moved, and hence can be used with libraries such as owning_ref and rental.")
     (description
       (beautify-description "An unsafe marker trait for types like Box and Rc that dereference to a stable address even when moved, and hence can be used with libraries such as owning_ref and rental."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-standback_0_2_17
   (package
@@ -7561,7 +7560,7 @@
     (synopsis "New standard library, old compiler.")
     (description
       (beautify-description "New standard library, old compiler."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-state_0_5_3
   (package
@@ -7584,8 +7583,8 @@
     (synopsis "A library for safe and effortless global and thread-local state management.")
     (description
       (beautify-description "A library for safe and effortless global and thread-local state management."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-stdweb_0_4_20
   (package
@@ -7613,8 +7612,8 @@
     (synopsis "A standard library for the client-side Web")
     (description
       (beautify-description "A standard library for the client-side Web"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-stdweb-derive_0_5_3
   (package
@@ -7641,8 +7640,8 @@
     (synopsis "Derive macros for the `stdweb` crate")
     (description
       (beautify-description "Derive macros for the `stdweb` crate"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-stdweb-internal-macros_0_2_9
   (package
@@ -7672,8 +7671,8 @@
     (synopsis "Internal procedural macros for the `stdweb` crate")
     (description
       (beautify-description "Internal procedural macros for the `stdweb` crate"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-stdweb-internal-runtime_0_1_5
   (package
@@ -7693,8 +7692,8 @@
     (synopsis "Internal runtime for the `stdweb` crate")
     (description
       (beautify-description "Internal runtime for the `stdweb` crate"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-strsim_0_10_0
   (package
@@ -7714,7 +7713,7 @@
     (synopsis "Implementations of string similarity metrics. Includes Hamming, Levenshtein,\nOSA, Damerau-Levenshtein, Jaro, Jaro-Winkler, and S\u00f8rensen-Dice.")
     (description
       (beautify-description "Implementations of string similarity metrics. Includes Hamming, Levenshtein,\nOSA, Damerau-Levenshtein, Jaro, Jaro-Winkler, and S\u00f8rensen-Dice."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-subtle_2_4_1
   (package
@@ -7734,7 +7733,7 @@
     (synopsis "Pure-Rust traits and utilities for constant-time cryptographic implementations.")
     (description
       (beautify-description "Pure-Rust traits and utilities for constant-time cryptographic implementations."))
-    (license (spdx-string->license "BSD-3-Clause"))))
+    (license license:bsd-3)))
 
 (define rust-syn_1_0_93
   (package
@@ -7759,7 +7758,7 @@
     (synopsis "Parser for Rust source code")
     (description
       (beautify-description "Parser for Rust source code"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-syslog_6_0_1
   (package
@@ -7786,7 +7785,7 @@
     (synopsis "Send log messages to syslog")
     (description
       (beautify-description "Send log messages to syslog"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tempfile_3_3_0
   (package
@@ -7814,7 +7813,7 @@
     (synopsis "A library for managing temporary files and directories.")
     (description
       (beautify-description "A library for managing temporary files and directories."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-thiserror_1_0_31
   (package
@@ -7837,7 +7836,7 @@
     (synopsis "derive(Error)")
     (description
       (beautify-description "derive(Error)"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-thiserror-impl_1_0_31
   (package
@@ -7862,7 +7861,7 @@
     (synopsis "Implementation detail of the `thiserror` crate")
     (description
       (beautify-description "Implementation detail of the `thiserror` crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-thread_local_1_1_4
   (package
@@ -7885,8 +7884,8 @@
     (synopsis "Per-object thread-local storage")
     (description
       (beautify-description "Per-object thread-local storage"))
-    (license `(,(spdx-string->license "Apache-2.0")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:asl2.0
+               license:expat))))
 
 (define rust-threadpool_1_8_1
   (package
@@ -7909,8 +7908,8 @@
     (synopsis "A thread pool for running a number of jobs on a fixed set of worker threads.")
     (description
       (beautify-description "A thread pool for running a number of jobs on a fixed set of worker threads."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-time_0_1_43
   (package
@@ -7935,8 +7934,8 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-time_0_2_27
   (package
@@ -7965,7 +7964,7 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-time_0_3_9
   (package
@@ -7992,7 +7991,7 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-time-macros_0_1_1
   (package
@@ -8016,7 +8015,7 @@
     (synopsis "Procedural macros for the time crate.")
     (description
       (beautify-description "Procedural macros for the time crate."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-time-macros_0_2_4
   (package
@@ -8036,7 +8035,7 @@
     (synopsis "Procedural macros for the time crate.")
     (description
       (beautify-description "Procedural macros for the time crate."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-time-macros-impl_0_1_2
   (package
@@ -8063,7 +8062,7 @@
     (synopsis "Procedural macros for the time crate.")
     (description
       (beautify-description "Procedural macros for the time crate."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-tinyvec_1_6_0
   (package
@@ -8086,7 +8085,7 @@
     (synopsis "`tinyvec` provides 100% safe vec-like data structures.")
     (description
       (beautify-description "`tinyvec` provides 100% safe vec-like data structures."))
-    (license (spdx-string->license "Zlib OR Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-tinyvec_macros_0_1_0
   (package
@@ -8106,7 +8105,7 @@
     (synopsis "Some macros for tiny containers")
     (description
       (beautify-description "Some macros for tiny containers"))
-    (license (spdx-string->license "MIT OR Apache-2.0 OR Zlib"))))
+    (license license:asl2.0)))
 
 (define rust-tokio_1_18_2
   (package
@@ -8140,7 +8139,7 @@
     (synopsis "An event-driven, non-blocking I/O platform for writing asynchronous I/O\nbacked applications.")
     (description
       (beautify-description "An event-driven, non-blocking I/O platform for writing asynchronous I/O\nbacked applications."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-macros_1_7_0
   (package
@@ -8165,7 +8164,7 @@
     (synopsis "Tokio\u0027s proc macros.")
     (description
       (beautify-description "Tokio\u0027s proc macros."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-native-tls_0_3_0
   (package
@@ -8189,7 +8188,7 @@
     (synopsis "An implementation of TLS/SSL streams for Tokio using native-tls giving an implementation of TLS\nfor nonblocking I/O streams.")
     (description
       (beautify-description "An implementation of TLS/SSL streams for Tokio using native-tls giving an implementation of TLS\nfor nonblocking I/O streams."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-rustls_0_23_4
   (package
@@ -8214,8 +8213,8 @@
     (synopsis "Asynchronous TLS/SSL streams for Tokio using Rustls.")
     (description
       (beautify-description "Asynchronous TLS/SSL streams for Tokio using Rustls."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-tokio-socks_0_5_1
   (package
@@ -8242,7 +8241,7 @@
     (synopsis "Asynchronous SOCKS proxy support for Rust.")
     (description
       (beautify-description "Asynchronous SOCKS proxy support for Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-stream_0_1_8
   (package
@@ -8267,7 +8266,7 @@
     (synopsis "Utilities to work with `Stream` and `tokio`.")
     (description
       (beautify-description "Utilities to work with `Stream` and `tokio`."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-util_0_6_9
   (package
@@ -8295,7 +8294,7 @@
     (synopsis "Additional utilities for working with Tokio.")
     (description
       (beautify-description "Additional utilities for working with Tokio."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tokio-util_0_7_1
   (package
@@ -8324,7 +8323,7 @@
     (synopsis "Additional utilities for working with Tokio.")
     (description
       (beautify-description "Additional utilities for working with Tokio."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-toml_0_5_9
   (package
@@ -8347,8 +8346,8 @@
     (synopsis "A native Rust encoder and decoder of TOML-formatted files and streams. Provides\nimplementations of the standard Serialize/Deserialize traits for TOML data to\nfacilitate deserializing and serializing Rust structures.")
     (description
       (beautify-description "A native Rust encoder and decoder of TOML-formatted files and streams. Provides\nimplementations of the standard Serialize/Deserialize traits for TOML data to\nfacilitate deserializing and serializing Rust structures."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-totp-lite_1_0_3
   (package
@@ -8374,7 +8373,7 @@
     (synopsis "A simple, correct TOTP library.")
     (description
       (beautify-description "A simple, correct TOTP library."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tower-service_0_3_1
   (package
@@ -8394,7 +8393,7 @@
     (synopsis "Trait representing an asynchronous, request / response based, client or server.")
     (description
       (beautify-description "Trait representing an asynchronous, request / response based, client or server."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tracing_0_1_34
   (package
@@ -8421,7 +8420,7 @@
     (synopsis "Application-level tracing for Rust.")
     (description
       (beautify-description "Application-level tracing for Rust."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tracing-attributes_0_1_21
   (package
@@ -8446,7 +8445,7 @@
     (synopsis "Procedural macro attributes for automatically instrumenting functions.")
     (description
       (beautify-description "Procedural macro attributes for automatically instrumenting functions."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tracing-core_0_1_26
   (package
@@ -8470,7 +8469,7 @@
     (synopsis "Core primitives for application-level tracing.")
     (description
       (beautify-description "Core primitives for application-level tracing."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tracing-log_0_1_3
   (package
@@ -8495,7 +8494,7 @@
     (synopsis "Provides compatibility between `tracing` and the `log` crate.")
     (description
       (beautify-description "Provides compatibility between `tracing` and the `log` crate."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-tracing-subscriber_0_3_11
   (package
@@ -8527,7 +8526,7 @@
     (synopsis "Utilities for implementing and composing `tracing` subscribers.")
     (description
       (beautify-description "Utilities for implementing and composing `tracing` subscribers."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-trust-dns-proto_0_20_4
   (package
@@ -8566,8 +8565,8 @@
     (synopsis "Trust-DNS is a safe and secure DNS library. This is the foundational DNS protocol library for all Trust-DNS projects.")
     (description
       (beautify-description "Trust-DNS is a safe and secure DNS library. This is the foundational DNS protocol library for all Trust-DNS projects."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-trust-dns-resolver_0_20_4
   (package
@@ -8601,8 +8600,8 @@
     (synopsis "Trust-DNS is a safe and secure DNS library. This Resolver library  uses the Client library to perform all DNS queries. The Resolver is intended to be a high-level library for any DNS record resolution see Resolver and AsyncResolver for supported resolution types. The Client can be used for other queries.")
     (description
       (beautify-description "Trust-DNS is a safe and secure DNS library. This Resolver library  uses the Client library to perform all DNS queries. The Resolver is intended to be a high-level library for any DNS record resolution see Resolver and AsyncResolver for supported resolution types. The Client can be used for other queries."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-try-lock_0_2_3
   (package
@@ -8622,7 +8621,7 @@
     (synopsis "A lightweight atomic lock.")
     (description
       (beautify-description "A lightweight atomic lock."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-typenum_1_15_0
   (package
@@ -8642,7 +8641,7 @@
     (synopsis "Typenum is a Rust library for type-level numbers evaluated at\n    compile time. It currently supports bits, unsigned integers, and signed\n    integers. It also provides a type-level array of type-level numbers, but its\n    implementation is incomplete.")
     (description
       (beautify-description "Typenum is a Rust library for type-level numbers evaluated at\n    compile time. It currently supports bits, unsigned integers, and signed\n    integers. It also provides a type-level array of type-level numbers, but its\n    implementation is incomplete."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ubyte_0_10_1
   (package
@@ -8665,7 +8664,7 @@
     (synopsis "A simple, complete, const-everything, saturating, human-friendly, no_std library for byte units.")
     (description
       (beautify-description "A simple, complete, const-everything, saturating, human-friendly, no_std library for byte units."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-ucd-trie_0_1_3
   (package
@@ -8685,8 +8684,8 @@
     (synopsis "A trie for storing Unicode codepoint sets and maps.")
     (description
       (beautify-description "A trie for storing Unicode codepoint sets and maps."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-uncased_0_9_6
   (package
@@ -8710,7 +8709,7 @@
     (synopsis "Case-preserving, ASCII case-insensitive, no_std string types.")
     (description
       (beautify-description "Case-preserving, ASCII case-insensitive, no_std string types."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-unicode-bidi_0_3_8
   (package
@@ -8730,7 +8729,7 @@
     (synopsis "Implementation of the Unicode Bidirectional Algorithm")
     (description
       (beautify-description "Implementation of the Unicode Bidirectional Algorithm"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-unicode-normalization_0_1_19
   (package
@@ -8753,8 +8752,8 @@
     (synopsis "This crate provides functions for normalization of\nUnicode strings, including Canonical and Compatible\nDecomposition and Recomposition, as described in\nUnicode Standard Annex #15.")
     (description
       (beautify-description "This crate provides functions for normalization of\nUnicode strings, including Canonical and Compatible\nDecomposition and Recomposition, as described in\nUnicode Standard Annex #15."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-unicode-xid_0_2_3
   (package
@@ -8774,7 +8773,7 @@
     (synopsis "Determine whether characters have the XID_Start\nor XID_Continue properties according to\nUnicode Standard Annex #31.")
     (description
       (beautify-description "Determine whether characters have the XID_Start\nor XID_Continue properties according to\nUnicode Standard Annex #31."))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-universal-hash_0_4_1
   (package
@@ -8798,7 +8797,7 @@
     (synopsis "Trait for universal hash functions")
     (description
       (beautify-description "Trait for universal hash functions"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-untrusted_0_7_1
   (package
@@ -8818,7 +8817,7 @@
     (synopsis "Safe, fast, zero-panic, zero-crashing, zero-allocation parsing of untrusted inputs in Rust.")
     (description
       (beautify-description "Safe, fast, zero-panic, zero-crashing, zero-allocation parsing of untrusted inputs in Rust."))
-    (license (spdx-string->license "ISC"))))
+    (license license:isc)))
 
 (define rust-url_1_7_2
   (package
@@ -8843,8 +8842,8 @@
     (synopsis "URL library for Rust, based on the WHATWG URL Standard")
     (description
       (beautify-description "URL library for Rust, based on the WHATWG URL Standard"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-url_2_2_2
   (package
@@ -8871,8 +8870,8 @@
     (synopsis "URL library for Rust, based on the WHATWG URL Standard")
     (description
       (beautify-description "URL library for Rust, based on the WHATWG URL Standard"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-uuid_1_0_0
   (package
@@ -8895,7 +8894,7 @@
     (synopsis "A library to generate and parse UUIDs.")
     (description
       (beautify-description "A library to generate and parse UUIDs."))
-    (license (spdx-string->license "Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-valuable_0_1_0
   (package
@@ -8915,7 +8914,7 @@
     (synopsis "Object-safe value inspection, used to pass un-typed structured data across trait-object boundaries.")
     (description
       (beautify-description "Object-safe value inspection, used to pass un-typed structured data across trait-object boundaries."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-vaultwarden_1_25_0
   (package
@@ -9003,7 +9002,7 @@
     (synopsis "")
     (description
       (beautify-description ""))
-    (license (spdx-string->license "GPL-3.0-only"))))
+    (license license:gpl3)))
 
 (define rust-vcpkg_0_2_15
   (package
@@ -9023,8 +9022,8 @@
     (synopsis "A library to find native dependencies in a vcpkg tree at build\ntime in order to be used in Cargo build scripts.")
     (description
       (beautify-description "A library to find native dependencies in a vcpkg tree at build\ntime in order to be used in Cargo build scripts."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-version_check_0_9_4
   (package
@@ -9044,8 +9043,8 @@
     (synopsis "Tiny crate to check the version of the installed/running rustc.")
     (description
       (beautify-description "Tiny crate to check the version of the installed/running rustc."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-walkdir_2_3_2
   (package
@@ -9070,8 +9069,8 @@
     (synopsis "Recursively walk a directory.")
     (description
       (beautify-description "Recursively walk a directory."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-want_0_3_0
   (package
@@ -9095,7 +9094,7 @@
     (synopsis "Detect when another Future wants a result.")
     (description
       (beautify-description "Detect when another Future wants a result."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-wasi_0_9_0+wasi-snapshot-preview1
   (package
@@ -9115,7 +9114,7 @@
     (synopsis "Experimental WASI API bindings for Rust")
     (description
       (beautify-description "Experimental WASI API bindings for Rust"))
-    (license (spdx-string->license "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-wasi_0_10_2+wasi-snapshot-preview1
   (package
@@ -9135,7 +9134,7 @@
     (synopsis "Experimental WASI API bindings for Rust")
     (description
       (beautify-description "Experimental WASI API bindings for Rust"))
-    (license (spdx-string->license "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-wasi_0_11_0+wasi-snapshot-preview1
   (package
@@ -9155,7 +9154,7 @@
     (synopsis "Experimental WASI API bindings for Rust")
     (description
       (beautify-description "Experimental WASI API bindings for Rust"))
-    (license (spdx-string->license "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT"))))
+    (license license:asl2.0)))
 
 (define rust-wasm-bindgen_0_2_80
   (package
@@ -9179,8 +9178,8 @@
     (synopsis "Easy support for interacting between JS and Rust.")
     (description
       (beautify-description "Easy support for interacting between JS and Rust."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-wasm-bindgen-backend_0_2_80
   (package
@@ -9209,8 +9208,8 @@
     (synopsis "Backend code generation of the wasm-bindgen tool")
     (description
       (beautify-description "Backend code generation of the wasm-bindgen tool"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-wasm-bindgen-futures_0_4_30
   (package
@@ -9236,8 +9235,8 @@
     (synopsis "Bridging the gap between Rust Futures and JavaScript Promises")
     (description
       (beautify-description "Bridging the gap between Rust Futures and JavaScript Promises"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-wasm-bindgen-macro_0_2_80
   (package
@@ -9261,8 +9260,8 @@
     (synopsis "Definition of the `#[wasm_bindgen]` attribute, an internal dependency")
     (description
       (beautify-description "Definition of the `#[wasm_bindgen]` attribute, an internal dependency"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-wasm-bindgen-macro-support_0_2_80
   (package
@@ -9289,8 +9288,8 @@
     (synopsis "The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate")
     (description
       (beautify-description "The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-wasm-bindgen-shared_0_2_80
   (package
@@ -9310,8 +9309,8 @@
     (synopsis "Shared support between wasm-bindgen and wasm-bindgen cli, an internal\ndependency.")
     (description
       (beautify-description "Shared support between wasm-bindgen and wasm-bindgen cli, an internal\ndependency."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-web-sys_0_3_57
   (package
@@ -9335,8 +9334,8 @@
     (synopsis "Bindings for all Web APIs, a procedurally generated crate from WebIDL")
     (description
       (beautify-description "Bindings for all Web APIs, a procedurally generated crate from WebIDL"))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-webauthn-rs_0_3_2
   (package
@@ -9369,7 +9368,7 @@
     (synopsis "Webauthn Framework for Rust Web Servers")
     (description
       (beautify-description "Webauthn Framework for Rust Web Servers"))
-    (license (spdx-string->license "MPL-2.0"))))
+    (license license:mpl2.0)))
 
 (define rust-webpki_0_22_0
   (package
@@ -9393,7 +9392,7 @@
     (synopsis "Web PKI X.509 Certificate Verification.")
     (description
       (beautify-description "Web PKI X.509 Certificate Verification."))
-    (license (spdx-string->license "non-standard"))))
+    (license #f)))
 
 (define rust-widestring_0_4_3
   (package
@@ -9413,8 +9412,8 @@
     (synopsis "A wide string Rust library for converting to and from wide strings, such as those often used in Windows API or other FFI libaries. Both `u16` and `u32` string types are provided, including support for UTF-16 and UTF-32, malformed encoding, C-style strings, etc.")
     (description
       (beautify-description "A wide string Rust library for converting to and from wide strings, such as those often used in Windows API or other FFI libaries. Both `u16` and `u32` string types are provided, including support for UTF-16 and UTF-32, malformed encoding, C-style strings, etc."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-winapi_0_2_8
   (package
@@ -9434,7 +9433,7 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-winapi_0_3_9
   (package
@@ -9458,8 +9457,8 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-winapi-build_0_1_1
   (package
@@ -9479,7 +9478,7 @@
     (synopsis "Common code for build.rs in WinAPI -sys crates.")
     (description
       (beautify-description "Common code for build.rs in WinAPI -sys crates."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-winapi-i686-pc-windows-gnu_0_4_0
   (package
@@ -9499,8 +9498,8 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-winapi-util_0_1_5
   (package
@@ -9523,8 +9522,8 @@
     (synopsis "A dumping ground for high level safe wrappers over winapi.")
     (description
       (beautify-description "A dumping ground for high level safe wrappers over winapi."))
-    (license `(,(spdx-string->license "Unlicense")
-               ,(spdx-string->license "MIT")))))
+    (license `(license:unlicense
+               license:expat))))
 
 (define rust-winapi-x86_64-pc-windows-gnu_0_4_0
   (package
@@ -9544,8 +9543,8 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-windows-sys_0_36_1
   (package
@@ -9572,7 +9571,7 @@
     (synopsis "Rust for Windows")
     (description
       (beautify-description "Rust for Windows"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-windows_aarch64_msvc_0_36_1
   (package
@@ -9592,7 +9591,7 @@
     (synopsis "Code gen support for the windows crate")
     (description
       (beautify-description "Code gen support for the windows crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-windows_i686_gnu_0_36_1
   (package
@@ -9612,7 +9611,7 @@
     (synopsis "Code gen support for the windows crate")
     (description
       (beautify-description "Code gen support for the windows crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-windows_i686_msvc_0_36_1
   (package
@@ -9632,7 +9631,7 @@
     (synopsis "Code gen support for the windows crate")
     (description
       (beautify-description "Code gen support for the windows crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-windows_x86_64_gnu_0_36_1
   (package
@@ -9652,7 +9651,7 @@
     (synopsis "Code gen support for the windows crate")
     (description
       (beautify-description "Code gen support for the windows crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-windows_x86_64_msvc_0_36_1
   (package
@@ -9672,7 +9671,7 @@
     (synopsis "Code gen support for the windows crate")
     (description
       (beautify-description "Code gen support for the windows crate"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define rust-winreg_0_6_2
   (package
@@ -9695,7 +9694,7 @@
     (synopsis "Rust bindings to MS Windows Registry API")
     (description
       (beautify-description "Rust bindings to MS Windows Registry API"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-winreg_0_10_1
   (package
@@ -9718,7 +9717,7 @@
     (synopsis "Rust bindings to MS Windows Registry API")
     (description
       (beautify-description "Rust bindings to MS Windows Registry API"))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-ws2_32-sys_0_2_1
   (package
@@ -9742,7 +9741,7 @@
     (synopsis "Contains function definitions for the Windows API library ws2_32. See winapi for types and constants.")
     (description
       (beautify-description "Contains function definitions for the Windows API library ws2_32. See winapi for types and constants."))
-    (license (spdx-string->license "MIT"))))
+    (license license:expat)))
 
 (define rust-yansi_0_5_1
   (package
@@ -9762,8 +9761,8 @@
     (synopsis "A dead simple ANSI terminal color painting library.")
     (description
       (beautify-description "A dead simple ANSI terminal color painting library."))
-    (license `(,(spdx-string->license "MIT")
-               ,(spdx-string->license "Apache-2.0")))))
+    (license `(license:expat
+               license:asl2.0))))
 
 (define rust-yubico_0_11_0
   (package
@@ -9793,7 +9792,7 @@
     (synopsis "Yubikey client API library")
     (description
       (beautify-description "Yubikey client API library"))
-    (license (spdx-string->license "MIT OR Apache-2.0"))))
+    (license license:expat)))
 
 (define-public vaultwarden rust-vaultwarden_1_25_0)
 
@@ -9813,4 +9812,6 @@
       (home-page "https://github.com/dani-garcia/bw_web_builds")
       (synopsis "Web vault builds for vaultwarden")
       (description "Web vault builds for vaultwarden")
-      (license (spdx-string->license "GPL-3.0-only")))))
+      (license license:gpl3))))
+
+vaultwarden
