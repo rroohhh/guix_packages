@@ -152,7 +152,7 @@
     (synopsis "Fast multiple substring searching.")
     (description
       (beautify-description "Fast multiple substring searching."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-alloc-no-stdlib_2_0_3
@@ -364,7 +364,7 @@
     (synopsis "Generic Atomic\u003cT\u003e wrapper type")
     (description
       (beautify-description "Generic Atomic\u003cT\u003e wrapper type"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-atty_0_2_14
@@ -439,7 +439,7 @@
     (synopsis "A library to acquire a stack trace (backtrace) at runtime in a Rust program.")
     (description
       (beautify-description "A library to acquire a stack trace (backtrace) at runtime in a Rust program."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-base-x_0_2_10
@@ -480,7 +480,7 @@
     (synopsis "encodes and decodes base64 as bytes or utf8")
     (description
       (beautify-description "encodes and decodes base64 as bytes or utf8"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-binascii_0_1_4
@@ -521,7 +521,7 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-block-buffer_0_7_3
@@ -642,7 +642,7 @@
     (synopsis "A brotli compressor and decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. All included code is safe.")
     (description
       (beautify-description "A brotli compressor and decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. All included code is safe."))
-    (license `(license:bsd-3
+    (license (list license:bsd-3
                license:expat))))
 
 (define rust-brotli-decompressor_2_3_2
@@ -667,7 +667,7 @@
     (synopsis "A brotli decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. Alternatively, --features=unsafe turns off array bounds checks and memory initialization but provides a safe interface for the caller.  Without adding the --features=unsafe argument, all included code is safe. For compression in addition to this library, download https://github.com/dropbox/rust-brotli")
     (description
       (beautify-description "A brotli decompressor that with an interface avoiding the rust stdlib. This makes it suitable for embedded devices and kernels. It is designed with a pluggable allocator so that the standard lib\u0027s allocator may be employed. The default build also includes a stdlib allocator and stream interface. Disable this with --features=no-stdlib. Alternatively, --features=unsafe turns off array bounds checks and memory initialization but provides a safe interface for the caller.  Without adding the --features=unsafe argument, all included code is safe. For compression in addition to this library, download https://github.com/dropbox/rust-brotli"))
-    (license `(license:bsd-3
+    (license (list license:bsd-3
                license:expat))))
 
 (define rust-bumpalo_3_9_1
@@ -688,7 +688,7 @@
     (synopsis "A fast bump allocation arena for Rust.")
     (description
       (beautify-description "A fast bump allocation arena for Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-byte-tools_0_3_1
@@ -871,7 +871,7 @@
     (synopsis "A build-time dependency for Cargo build scripts to assist in invoking the native\nC compiler to compile native C code into a static archive to be linked into Rust\ncode.")
     (description
       (beautify-description "A build-time dependency for Cargo build scripts to assist in invoking the native\nC compiler to compile native C code into a static archive to be linked into Rust\ncode."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-cfg-if_0_1_10
@@ -892,7 +892,7 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-cfg-if_1_0_0
@@ -913,7 +913,7 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-chashmap_2_2_2
@@ -966,7 +966,7 @@
     (synopsis "Date and time library for Rust")
     (description
       (beautify-description "Date and time library for Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-chrono-tz_0_6_1
@@ -993,7 +993,7 @@
     (synopsis "TimeZone implementations for rust-chrono from the IANA database")
     (description
       (beautify-description "TimeZone implementations for rust-chrono from the IANA database"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-chrono-tz-build_0_0_2
@@ -1019,7 +1019,7 @@
     (synopsis "internal build script for chrono-tz")
     (description
       (beautify-description "internal build script for chrono-tz"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-cipher_0_3_0
@@ -1150,7 +1150,7 @@
     (synopsis "Implementation of Cookie storage and retrieval")
     (description
       (beautify-description "Implementation of Cookie storage and retrieval"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-cookie_store_0_16_0
@@ -1181,7 +1181,7 @@
     (synopsis "Implementation of Cookie storage and retrieval")
     (description
       (beautify-description "Implementation of Cookie storage and retrieval"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-core-foundation_0_9_3
@@ -1206,7 +1206,7 @@
     (synopsis "Bindings to Core Foundation for macOS")
     (description
       (beautify-description "Bindings to Core Foundation for macOS"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-core-foundation-sys_0_8_3
@@ -1227,7 +1227,7 @@
     (synopsis "Bindings to Core Foundation for macOS")
     (description
       (beautify-description "Bindings to Core Foundation for macOS"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-cpufeatures_0_2_2
@@ -1418,7 +1418,7 @@
     (synopsis "Easy Ctrl-C handler for Rust projects")
     (description
       (beautify-description "Easy Ctrl-C handler for Rust projects"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-darling_0_13_4
@@ -1588,7 +1588,7 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-devise_codegen_0_3_1
@@ -1613,7 +1613,7 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-devise_core_0_3_1
@@ -1641,7 +1641,7 @@
     (synopsis "A library for devising derives and other procedural macros.")
     (description
       (beautify-description "A library for devising derives and other procedural macros."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-diesel_1_4_8
@@ -1904,7 +1904,7 @@
     (synopsis "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.")
     (description
       (beautify-description "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-email-encoding_0_1_0
@@ -1977,7 +1977,7 @@
     (synopsis "A proc-macro for deriving inner field accessor functions on enums.")
     (description
       (beautify-description "A proc-macro for deriving inner field accessor functions on enums."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-error-chain_0_12_4
@@ -2001,7 +2001,7 @@
     (synopsis "Yet another error boilerplate library.")
     (description
       (beautify-description "Yet another error boilerplate library."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-fake-simd_0_1_2
@@ -2022,7 +2022,7 @@
     (synopsis "Crate for mimicking simd crate on stable Rust")
     (description
       (beautify-description "Crate for mimicking simd crate on stable Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-fastrand_1_7_0
@@ -2124,7 +2124,7 @@
     (synopsis "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams.")
     (description
       (beautify-description "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-fnv_1_0_7
@@ -2145,7 +2145,7 @@
     (synopsis "Fowler\u2013Noll\u2013Vo hash function")
     (description
       (beautify-description "Fowler\u2013Noll\u2013Vo hash function"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-foreign-types_0_3_2
@@ -2169,7 +2169,7 @@
     (synopsis "A framework for Rust wrappers over C APIs")
     (description
       (beautify-description "A framework for Rust wrappers over C APIs"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-foreign-types-shared_0_1_1
@@ -2190,7 +2190,7 @@
     (synopsis "An internal crate used by foreign-types")
     (description
       (beautify-description "An internal crate used by foreign-types"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-form_urlencoded_1_0_1
@@ -2215,7 +2215,7 @@
     (synopsis "Parser and serializer for the application/x-www-form-urlencoded syntax, as used by HTML forms.")
     (description
       (beautify-description "Parser and serializer for the application/x-www-form-urlencoded syntax, as used by HTML forms."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-fuchsia-cprng_0_1_1
@@ -2483,7 +2483,7 @@
     (synopsis "Timeouts for futures.")
     (description
       (beautify-description "Timeouts for futures."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-futures-util_0_3_21
@@ -2543,7 +2543,7 @@
     (synopsis "Stackfull Generator Library in Rust")
     (description
       (beautify-description "Stackfull Generator Library in Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-generic-array_0_12_4
@@ -2685,7 +2685,7 @@
     (synopsis "A library for reading and writing the DWARF debugging format.")
     (description
       (beautify-description "A library for reading and writing the DWARF debugging format."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-glob_0_3_0
@@ -2706,7 +2706,7 @@
     (synopsis "Support for matching file paths against Unix shell style patterns.")
     (description
       (beautify-description "Support for matching file paths against Unix shell style patterns."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-governor_0_4_2
@@ -2841,7 +2841,7 @@
     (synopsis "A Rust port of Google\u0027s SwissTable hash map")
     (description
       (beautify-description "A Rust port of Google\u0027s SwissTable hash map"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-hashbrown_0_12_1
@@ -2905,7 +2905,7 @@
     (synopsis "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`.")
     (description
       (beautify-description "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-hkdf_0_12_3
@@ -3094,7 +3094,7 @@
     (synopsis "A tiny, safe, speedy, zero-copy HTTP/1.x parser.")
     (description
       (beautify-description "A tiny, safe, speedy, zero-copy HTTP/1.x parser."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-httpdate_1_0_2
@@ -3115,7 +3115,7 @@
     (synopsis "HTTP date parsing and formatting")
     (description
       (beautify-description "HTTP date parsing and formatting"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-hyper_0_14_18
@@ -3183,7 +3183,7 @@
     (synopsis "Default TLS implementation for use with hyper")
     (description
       (beautify-description "Default TLS implementation for use with hyper"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-ident_case_1_0_1
@@ -3204,7 +3204,7 @@
     (synopsis "Utility for applying case rules to Rust identifiers.")
     (description
       (beautify-description "Utility for applying case rules to Rust identifiers."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-idna_0_1_5
@@ -3230,7 +3230,7 @@
     (synopsis "IDNA (Internationalizing Domain Names in Applications) and Punycode.")
     (description
       (beautify-description "IDNA (Internationalizing Domain Names in Applications) and Punycode."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-idna_0_2_3
@@ -3256,7 +3256,7 @@
     (synopsis "IDNA (Internationalizing Domain Names in Applications) and Punycode.")
     (description
       (beautify-description "IDNA (Internationalizing Domain Names in Applications) and Punycode."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-indexmap_1_8_1
@@ -3282,7 +3282,7 @@
     (synopsis "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap.")
     (description
       (beautify-description "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-inlinable_string_0_1_15
@@ -3303,7 +3303,7 @@
     (synopsis "The `inlinable_string` crate provides the `InlinableString` type -- an owned, grow-able UTF-8 string that stores small strings inline and avoids heap-allocation -- and the `StringExt` trait which abstracts string operations over both `std::string::String` and `InlinableString` (or even your own custom string type).")
     (description
       (beautify-description "The `inlinable_string` crate provides the `InlinableString` type -- an owned, grow-able UTF-8 string that stores small strings inline and avoids heap-allocation -- and the `StringExt` trait which abstracts string operations over both `std::string::String` and `InlinableString` (or even your own custom string type)."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-instant_0_1_12
@@ -3350,7 +3350,7 @@
     (synopsis "Portable buffer type for scatter/gather I/O operations")
     (description
       (beautify-description "Portable buffer type for scatter/gather I/O operations"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-ipconfig_0_2_2
@@ -3377,7 +3377,7 @@
     (synopsis "Get network adapters information and network configuration for windows.")
     (description
       (beautify-description "Get network adapters information and network configuration for windows."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-ipnet_2_5_0
@@ -3463,7 +3463,7 @@
     (synopsis "A simple cron-like job scheduling library for Rust.")
     (description
       (beautify-description "A simple cron-like job scheduling library for Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-job_scheduler_1_2_1
@@ -3490,7 +3490,7 @@
     (synopsis "A simple cron-like job scheduling library for Rust.")
     (description
       (beautify-description "A simple cron-like job scheduling library for Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-js-sys_0_3_57
@@ -3514,7 +3514,7 @@
     (synopsis "Bindings for all JS global objects and functions in all JS environments like\nNode.js and browsers, built on `#[wasm_bindgen]` using the `wasm-bindgen` crate.")
     (description
       (beautify-description "Bindings for all JS global objects and functions in all JS environments like\nNode.js and browsers, built on `#[wasm_bindgen]` using the `wasm-bindgen` crate."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-jsonwebtoken_8_1_0
@@ -3587,7 +3587,7 @@
     (synopsis "A macro for declaring lazily evaluated statics in Rust.")
     (description
       (beautify-description "A macro for declaring lazily evaluated statics in Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-lazycell_1_3_0
@@ -3608,7 +3608,7 @@
     (synopsis "A library providing a lazily filled Cell struct")
     (description
       (beautify-description "A library providing a lazily filled Cell struct"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-lettre_0_10_0-rc_6
@@ -3733,7 +3733,7 @@
     (synopsis "A HashMap wrapper that holds key-value pairs in insertion order")
     (description
       (beautify-description "A HashMap wrapper that holds key-value pairs in insertion order"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-lock_api_0_4_7
@@ -3833,7 +3833,7 @@
     (synopsis "A cache that holds a limited number of key-value pairs")
     (description
       (beautify-description "A cache that holds a limited number of key-value pairs"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-mach_0_3_2
@@ -3877,7 +3877,7 @@
     (synopsis "Collection \u201cliteral\u201d macros for HashMap, HashSet, BTreeMap, and BTreeSet.")
     (description
       (beautify-description "Collection \u201cliteral\u201d macros for HashMap, HashSet, BTreeMap, and BTreeSet."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-match_cfg_0_1_0
@@ -3898,7 +3898,7 @@
     (synopsis "A convenience macro to ergonomically define an item depending on a large number\nof `#[cfg]` parameters. Structured like match statement, the first matching\nbranch is the item that gets emitted.")
     (description
       (beautify-description "A convenience macro to ergonomically define an item depending on a large number\nof `#[cfg]` parameters. Structured like match statement, the first matching\nbranch is the item that gets emitted."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-matchers_0_1_0
@@ -3982,7 +3982,7 @@
     (synopsis "Safe interface to memchr.")
     (description
       (beautify-description "Safe interface to memchr."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-migrations_internals_1_4_1
@@ -4075,7 +4075,7 @@
     (synopsis "Strongly Typed Mimes")
     (description
       (beautify-description "Strongly Typed Mimes"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-minimal-lexical_0_2_1
@@ -4096,7 +4096,7 @@
     (synopsis "Fast float parsing conversion routines.")
     (description
       (beautify-description "Fast float parsing conversion routines."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-miniz_oxide_0_5_1
@@ -4231,7 +4231,7 @@
     (synopsis "A zero overhead I/O library for Windows, focusing on IOCP and Async I/O\nabstractions.")
     (description
       (beautify-description "A zero overhead I/O library for Windows, focusing on IOCP and Async I/O\nabstractions."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-multer_2_0_2
@@ -4322,7 +4322,7 @@
     (synopsis "A wrapper over a platform\u0027s native TLS implementation")
     (description
       (beautify-description "A wrapper over a platform\u0027s native TLS implementation"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-net2_0_2_37
@@ -4348,7 +4348,7 @@
     (synopsis "Extensions to the standard library\u0027s networking types as proposed in RFC 1158.")
     (description
       (beautify-description "Extensions to the standard library\u0027s networking types as proposed in RFC 1158."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-nix_0_24_1
@@ -4719,7 +4719,7 @@
     (synopsis "Internal macros used by the openssl crate.")
     (description
       (beautify-description "Internal macros used by the openssl crate."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-openssl-probe_0_1_5
@@ -4740,7 +4740,7 @@
     (synopsis "Tool for helping to find SSL certificate locations on the system for OpenSSL")
     (description
       (beautify-description "Tool for helping to find SSL certificate locations on the system for OpenSSL"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-openssl-src_111_18_0+1_1_1n
@@ -4764,7 +4764,7 @@
     (synopsis "Source of OpenSSL and logic to build it.")
     (description
       (beautify-description "Source of OpenSSL and logic to build it."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-openssl-sys_0_9_73
@@ -4872,7 +4872,7 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-parking_lot_0_11_2
@@ -4898,7 +4898,7 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-parking_lot_0_12_0
@@ -4923,7 +4923,7 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-parking_lot_core_0_2_14
@@ -4950,7 +4950,7 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-parking_lot_core_0_8_5
@@ -4979,7 +4979,7 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-parking_lot_core_0_9_3
@@ -5075,7 +5075,7 @@
     (synopsis "A pear is a fruit.")
     (description
       (beautify-description "A pear is a fruit."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pear_codegen_0_2_3
@@ -5102,7 +5102,7 @@
     (synopsis "A (codegen) pear is a fruit.")
     (description
       (beautify-description "A (codegen) pear is a fruit."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pem_1_0_2
@@ -5146,7 +5146,7 @@
     (synopsis "Percent encoding and decoding")
     (description
       (beautify-description "Percent encoding and decoding"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-percent-encoding_2_1_0
@@ -5167,7 +5167,7 @@
     (synopsis "Percent encoding and decoding")
     (description
       (beautify-description "Percent encoding and decoding"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pest_2_1_3
@@ -5191,7 +5191,7 @@
     (synopsis "The Elegant Parser")
     (description
       (beautify-description "The Elegant Parser"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pest_derive_2_1_0
@@ -5216,7 +5216,7 @@
     (synopsis "pest\u0027s derive macro")
     (description
       (beautify-description "pest\u0027s derive macro"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pest_generator_2_1_3
@@ -5244,7 +5244,7 @@
     (synopsis "pest code generator")
     (description
       (beautify-description "pest code generator"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pest_meta_2_1_3
@@ -5270,7 +5270,7 @@
     (synopsis "pest meta language parser and validator")
     (description
       (beautify-description "pest meta language parser and validator"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-phf_0_10_1
@@ -5492,7 +5492,7 @@
     (synopsis "Implementation of the crypto-simd API for x86")
     (description
       (beautify-description "Implementation of the crypto-simd API for x86"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-pq-sys_0_4_6
@@ -5586,7 +5586,7 @@
     (synopsis "Diagnostics for proc-macro2.")
     (description
       (beautify-description "Diagnostics for proc-macro2."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-psl-types_2_0_10
@@ -5607,7 +5607,7 @@
     (synopsis "Common types for the public suffix implementation crates")
     (description
       (beautify-description "Common types for the public suffix implementation crates"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-publicsuffix_2_1_1
@@ -5634,7 +5634,7 @@
     (synopsis "Extract root domain and suffix from a domain name")
     (description
       (beautify-description "Extract root domain and suffix from a domain name"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-quanta_0_9_3
@@ -5685,7 +5685,7 @@
     (synopsis "A macro which makes error types pleasant to write.")
     (description
       (beautify-description "A macro which makes error types pleasant to write."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-quick-error_2_0_1
@@ -5706,7 +5706,7 @@
     (synopsis "A macro which makes error types pleasant to write.")
     (description
       (beautify-description "A macro which makes error types pleasant to write."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-quickcheck_1_0_3
@@ -5730,7 +5730,7 @@
     (synopsis "Automatic property based testing with shrinking.")
     (description
       (beautify-description "Automatic property based testing with shrinking."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-quote_1_0_18
@@ -5799,7 +5799,7 @@
     (synopsis "A generic connection pool")
     (description
       (beautify-description "A generic connection pool"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rand_0_4_6
@@ -5827,7 +5827,7 @@
     (synopsis "Random number generators and other randomness functionality.")
     (description
       (beautify-description "Random number generators and other randomness functionality."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rand_0_7_3
@@ -5952,7 +5952,7 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rand_core_0_4_2
@@ -5973,7 +5973,7 @@
     (synopsis "Core random number generator traits and tools for implementation.")
     (description
       (beautify-description "Core random number generator traits and tools for implementation."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rand_core_0_5_1
@@ -6043,7 +6043,7 @@
     (synopsis "HC128 random number generator")
     (description
       (beautify-description "HC128 random number generator"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-raw-cpuid_10_3_0
@@ -6234,7 +6234,7 @@
     (synopsis "Automata construction and matching using regular expressions.")
     (description
       (beautify-description "Automata construction and matching using regular expressions."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-regex-syntax_0_6_25
@@ -6255,7 +6255,7 @@
     (synopsis "A regular expression parser.")
     (description
       (beautify-description "A regular expression parser."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-remove_dir_all_0_5_3
@@ -6279,7 +6279,7 @@
     (synopsis "A safe, reliable implementation of remove_dir_all for Windows")
     (description
       (beautify-description "A safe, reliable implementation of remove_dir_all for Windows"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-reqwest_0_11_10
@@ -6338,7 +6338,7 @@
     (synopsis "higher level HTTP client library")
     (description
       (beautify-description "higher level HTTP client library"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-resolv-conf_0_7_0
@@ -6363,7 +6363,7 @@
     (synopsis "The resolv.conf file parser")
     (description
       (beautify-description "The resolv.conf file parser"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-ring_0_16_20
@@ -6590,7 +6590,7 @@
     (synopsis "Rust compiler symbol demangling.")
     (description
       (beautify-description "Rust compiler symbol demangling."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rustc_version_0_2_3
@@ -6614,7 +6614,7 @@
     (synopsis "A library for querying the version of a installed rustc compiler")
     (description
       (beautify-description "A library for querying the version of a installed rustc compiler"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-rustls_0_20_4
@@ -6641,7 +6641,7 @@
     (synopsis "Rustls is a modern TLS library written in Rust.")
     (description
       (beautify-description "Rustls is a modern TLS library written in Rust."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:isc
                license:expat))))
 
@@ -6666,7 +6666,7 @@
     (synopsis "Basic .pem file parser for keys and certificates")
     (description
       (beautify-description "Basic .pem file parser for keys and certificates"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:isc
                license:expat))))
 
@@ -6731,7 +6731,7 @@
     (synopsis "A simple crate for determining whether two file paths point to the same file.")
     (description
       (beautify-description "A simple crate for determining whether two file paths point to the same file."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-schannel_0_1_19
@@ -6779,7 +6779,7 @@
     (synopsis "A scheduled thread pool")
     (description
       (beautify-description "A scheduled thread pool"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-scoped-tls_1_0_0
@@ -6800,7 +6800,7 @@
     (synopsis "Library implementation of the standard library\u0027s old `scoped_thread_local!`\nmacro for providing scoped access to thread local storage (TLS) so any type can\nbe stored into TLS.")
     (description
       (beautify-description "Library implementation of the standard library\u0027s old `scoped_thread_local!`\nmacro for providing scoped access to thread local storage (TLS) so any type can\nbe stored into TLS."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-scopeguard_1_1_0
@@ -6821,7 +6821,7 @@
     (synopsis "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies.")
     (description
       (beautify-description "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-sct_0_7_0
@@ -6846,7 +6846,7 @@
     (synopsis "Certificate transparency SCT verification library")
     (description
       (beautify-description "Certificate transparency SCT verification library"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:isc
                license:expat))))
 
@@ -6922,7 +6922,7 @@
     (synopsis "Parser and evaluator for Cargo\u0027s flavor of Semantic Versioning")
     (description
       (beautify-description "Parser and evaluator for Cargo\u0027s flavor of Semantic Versioning"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-semver-parser_0_7_0
@@ -6943,7 +6943,7 @@
     (synopsis "Parsing of the semver spec.")
     (description
       (beautify-description "Parsing of the semver spec."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-serde_1_0_137
@@ -6991,7 +6991,7 @@
     (synopsis "CBOR support for serde.")
     (description
       (beautify-description "CBOR support for serde."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-serde_derive_1_0_137
@@ -7068,7 +7068,7 @@
     (synopsis "`x-www-form-urlencoded` meets Serde")
     (description
       (beautify-description "`x-www-form-urlencoded` meets Serde"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-sha-1_0_8_2
@@ -7290,7 +7290,7 @@
     (synopsis "Backend crate for signal-hook")
     (description
       (beautify-description "Backend crate for signal-hook"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-simple_asn1_0_6_1
@@ -7337,7 +7337,7 @@
     (synopsis "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust")
     (description
       (beautify-description "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-slab_0_4_6
@@ -7381,7 +7381,7 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-smallvec_1_8_0
@@ -7402,7 +7402,7 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-socket2_0_3_19
@@ -7428,7 +7428,7 @@
     (synopsis "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended.")
     (description
       (beautify-description "Utilities for handling networking sockets with a maximal amount of configuration\npossible intended."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-socket2_0_4_4
@@ -7536,7 +7536,7 @@
     (synopsis "An unsafe marker trait for types like Box and Rc that dereference to a stable address even when moved, and hence can be used with libraries such as owning_ref and rental.")
     (description
       (beautify-description "An unsafe marker trait for types like Box and Rc that dereference to a stable address even when moved, and hence can be used with libraries such as owning_ref and rental."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-standback_0_2_17
@@ -7583,7 +7583,7 @@
     (synopsis "A library for safe and effortless global and thread-local state management.")
     (description
       (beautify-description "A library for safe and effortless global and thread-local state management."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-stdweb_0_4_20
@@ -7612,7 +7612,7 @@
     (synopsis "A standard library for the client-side Web")
     (description
       (beautify-description "A standard library for the client-side Web"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-stdweb-derive_0_5_3
@@ -7640,7 +7640,7 @@
     (synopsis "Derive macros for the `stdweb` crate")
     (description
       (beautify-description "Derive macros for the `stdweb` crate"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-stdweb-internal-macros_0_2_9
@@ -7671,7 +7671,7 @@
     (synopsis "Internal procedural macros for the `stdweb` crate")
     (description
       (beautify-description "Internal procedural macros for the `stdweb` crate"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-stdweb-internal-runtime_0_1_5
@@ -7692,7 +7692,7 @@
     (synopsis "Internal runtime for the `stdweb` crate")
     (description
       (beautify-description "Internal runtime for the `stdweb` crate"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-strsim_0_10_0
@@ -7884,7 +7884,7 @@
     (synopsis "Per-object thread-local storage")
     (description
       (beautify-description "Per-object thread-local storage"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define rust-threadpool_1_8_1
@@ -7908,7 +7908,7 @@
     (synopsis "A thread pool for running a number of jobs on a fixed set of worker threads.")
     (description
       (beautify-description "A thread pool for running a number of jobs on a fixed set of worker threads."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-time_0_1_43
@@ -7934,7 +7934,7 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-time_0_2_27
@@ -8213,7 +8213,7 @@
     (synopsis "Asynchronous TLS/SSL streams for Tokio using Rustls.")
     (description
       (beautify-description "Asynchronous TLS/SSL streams for Tokio using Rustls."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-tokio-socks_0_5_1
@@ -8346,7 +8346,7 @@
     (synopsis "A native Rust encoder and decoder of TOML-formatted files and streams. Provides\nimplementations of the standard Serialize/Deserialize traits for TOML data to\nfacilitate deserializing and serializing Rust structures.")
     (description
       (beautify-description "A native Rust encoder and decoder of TOML-formatted files and streams. Provides\nimplementations of the standard Serialize/Deserialize traits for TOML data to\nfacilitate deserializing and serializing Rust structures."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-totp-lite_1_0_3
@@ -8565,7 +8565,7 @@
     (synopsis "Trust-DNS is a safe and secure DNS library. This is the foundational DNS protocol library for all Trust-DNS projects.")
     (description
       (beautify-description "Trust-DNS is a safe and secure DNS library. This is the foundational DNS protocol library for all Trust-DNS projects."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-trust-dns-resolver_0_20_4
@@ -8600,7 +8600,7 @@
     (synopsis "Trust-DNS is a safe and secure DNS library. This Resolver library  uses the Client library to perform all DNS queries. The Resolver is intended to be a high-level library for any DNS record resolution see Resolver and AsyncResolver for supported resolution types. The Client can be used for other queries.")
     (description
       (beautify-description "Trust-DNS is a safe and secure DNS library. This Resolver library  uses the Client library to perform all DNS queries. The Resolver is intended to be a high-level library for any DNS record resolution see Resolver and AsyncResolver for supported resolution types. The Client can be used for other queries."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-try-lock_0_2_3
@@ -8684,7 +8684,7 @@
     (synopsis "A trie for storing Unicode codepoint sets and maps.")
     (description
       (beautify-description "A trie for storing Unicode codepoint sets and maps."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-uncased_0_9_6
@@ -8752,7 +8752,7 @@
     (synopsis "This crate provides functions for normalization of\nUnicode strings, including Canonical and Compatible\nDecomposition and Recomposition, as described in\nUnicode Standard Annex #15.")
     (description
       (beautify-description "This crate provides functions for normalization of\nUnicode strings, including Canonical and Compatible\nDecomposition and Recomposition, as described in\nUnicode Standard Annex #15."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-unicode-xid_0_2_3
@@ -8842,7 +8842,7 @@
     (synopsis "URL library for Rust, based on the WHATWG URL Standard")
     (description
       (beautify-description "URL library for Rust, based on the WHATWG URL Standard"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-url_2_2_2
@@ -8870,7 +8870,7 @@
     (synopsis "URL library for Rust, based on the WHATWG URL Standard")
     (description
       (beautify-description "URL library for Rust, based on the WHATWG URL Standard"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-uuid_1_0_0
@@ -9022,7 +9022,7 @@
     (synopsis "A library to find native dependencies in a vcpkg tree at build\ntime in order to be used in Cargo build scripts.")
     (description
       (beautify-description "A library to find native dependencies in a vcpkg tree at build\ntime in order to be used in Cargo build scripts."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-version_check_0_9_4
@@ -9043,7 +9043,7 @@
     (synopsis "Tiny crate to check the version of the installed/running rustc.")
     (description
       (beautify-description "Tiny crate to check the version of the installed/running rustc."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-walkdir_2_3_2
@@ -9069,7 +9069,7 @@
     (synopsis "Recursively walk a directory.")
     (description
       (beautify-description "Recursively walk a directory."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-want_0_3_0
@@ -9178,7 +9178,7 @@
     (synopsis "Easy support for interacting between JS and Rust.")
     (description
       (beautify-description "Easy support for interacting between JS and Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-wasm-bindgen-backend_0_2_80
@@ -9208,7 +9208,7 @@
     (synopsis "Backend code generation of the wasm-bindgen tool")
     (description
       (beautify-description "Backend code generation of the wasm-bindgen tool"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-wasm-bindgen-futures_0_4_30
@@ -9235,7 +9235,7 @@
     (synopsis "Bridging the gap between Rust Futures and JavaScript Promises")
     (description
       (beautify-description "Bridging the gap between Rust Futures and JavaScript Promises"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-wasm-bindgen-macro_0_2_80
@@ -9260,7 +9260,7 @@
     (synopsis "Definition of the `#[wasm_bindgen]` attribute, an internal dependency")
     (description
       (beautify-description "Definition of the `#[wasm_bindgen]` attribute, an internal dependency"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-wasm-bindgen-macro-support_0_2_80
@@ -9288,7 +9288,7 @@
     (synopsis "The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate")
     (description
       (beautify-description "The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-wasm-bindgen-shared_0_2_80
@@ -9309,7 +9309,7 @@
     (synopsis "Shared support between wasm-bindgen and wasm-bindgen cli, an internal\ndependency.")
     (description
       (beautify-description "Shared support between wasm-bindgen and wasm-bindgen cli, an internal\ndependency."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-web-sys_0_3_57
@@ -9334,7 +9334,7 @@
     (synopsis "Bindings for all Web APIs, a procedurally generated crate from WebIDL")
     (description
       (beautify-description "Bindings for all Web APIs, a procedurally generated crate from WebIDL"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-webauthn-rs_0_3_2
@@ -9412,7 +9412,7 @@
     (synopsis "A wide string Rust library for converting to and from wide strings, such as those often used in Windows API or other FFI libaries. Both `u16` and `u32` string types are provided, including support for UTF-16 and UTF-32, malformed encoding, C-style strings, etc.")
     (description
       (beautify-description "A wide string Rust library for converting to and from wide strings, such as those often used in Windows API or other FFI libaries. Both `u16` and `u32` string types are provided, including support for UTF-16 and UTF-32, malformed encoding, C-style strings, etc."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-winapi_0_2_8
@@ -9457,7 +9457,7 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-winapi-build_0_1_1
@@ -9498,7 +9498,7 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-winapi-util_0_1_5
@@ -9522,7 +9522,7 @@
     (synopsis "A dumping ground for high level safe wrappers over winapi.")
     (description
       (beautify-description "A dumping ground for high level safe wrappers over winapi."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define rust-winapi-x86_64-pc-windows-gnu_0_4_0
@@ -9543,7 +9543,7 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-windows-sys_0_36_1
@@ -9761,7 +9761,7 @@
     (synopsis "A dead simple ANSI terminal color painting library.")
     (description
       (beautify-description "A dead simple ANSI terminal color painting library."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define rust-yubico_0_11_0

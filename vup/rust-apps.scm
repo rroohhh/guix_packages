@@ -52,7 +52,7 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-cfg-if_0_1_10
@@ -73,7 +73,7 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-chrono_0_4_18
@@ -101,7 +101,7 @@
     (synopsis "Date and time library for Rust")
     (description
       (beautify-description "Date and time library for Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-clap_2_33_3
@@ -147,7 +147,7 @@
     (synopsis "Yet another error boilerplate library.")
     (description
       (beautify-description "Yet another error boilerplate library."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-fern_0_5_9
@@ -263,7 +263,7 @@
     (synopsis "A collection of numeric types and traits for Rust, including bigint,\ncomplex, rational, range iterators, generic integers, and more!")
     (description
       (beautify-description "A collection of numeric types and traits for Rust, including bigint,\ncomplex, rational, range iterators, generic integers, and more!"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-num-integer_0_1_43
@@ -288,7 +288,7 @@
     (synopsis "Integer traits and functions")
     (description
       (beautify-description "Integer traits and functions"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-num-iter_0_1_41
@@ -314,7 +314,7 @@
     (synopsis "External iterators for generic mathematics")
     (description
       (beautify-description "External iterators for generic mathematics"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-num-traits_0_2_12
@@ -338,7 +338,7 @@
     (synopsis "Numeric traits for generic mathematics")
     (description
       (beautify-description "Numeric traits for generic mathematics"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-phf_0_7_24
@@ -425,7 +425,7 @@
     (synopsis "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust")
     (description
       (beautify-description "SipHash-2-4, SipHash-1-3 and 128-bit variants in pure Rust"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-svgcleaner_0_9_5
@@ -555,7 +555,7 @@
     (synopsis "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
     (description
       (beautify-description "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std]."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-unicode-width_0_1_8
@@ -576,7 +576,7 @@
     (synopsis "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules.")
     (description
       (beautify-description "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-wasi_0_10_0+wasi-snapshot-preview1
@@ -621,7 +621,7 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-winapi-i686-pc-windows-gnu_0_4_0
@@ -642,7 +642,7 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-winapi-x86_64-pc-windows-gnu_0_4_0
@@ -663,7 +663,7 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-xmlparser_0_1_2
@@ -6861,7 +6861,7 @@ incomplete.")
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-unicode-xid_0_2_2

@@ -51,7 +51,7 @@
     (synopsis "Fast multiple substring searching.")
     (description
       (beautify-description "Fast multiple substring searching."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define-public rust-anyhow_1_0_44
@@ -140,7 +140,7 @@
     (synopsis "encodes and decodes base64 as bytes or utf8")
     (description
       (beautify-description "encodes and decodes base64 as bytes or utf8"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-bitflags_1_3_2
@@ -161,7 +161,7 @@
     (synopsis "A macro to generate structures which behave like bitflags.")
     (description
       (beautify-description "A macro to generate structures which behave like bitflags."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-byteorder_1_4_3
@@ -245,7 +245,7 @@
     (synopsis "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted.")
     (description
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-clap_3_0_0-beta_2
@@ -373,7 +373,7 @@
     (synopsis "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.")
     (description
       (beautify-description "The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-flate2_1_0_22
@@ -400,7 +400,7 @@
     (synopsis "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams.")
     (description
       (beautify-description "DEFLATE compression and decompression exposed as Read/BufRead/Write streams.\nSupports miniz_oxide, miniz.c, and multiple zlib implementations. Supports\nzlib, gzip, and raw deflate streams."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-getopts_0_2_21
@@ -424,7 +424,7 @@
     (synopsis "getopts-like option parsing.")
     (description
       (beautify-description "getopts-like option parsing."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-ghost_0_1_2
@@ -470,7 +470,7 @@
     (synopsis "Support for matching file paths against Unix shell style patterns.")
     (description
       (beautify-description "Support for matching file paths against Unix shell style patterns."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-hashbrown_0_11_2
@@ -491,7 +491,7 @@
     (synopsis "A Rust port of Google\u0027s SwissTable hash map")
     (description
       (beautify-description "A Rust port of Google\u0027s SwissTable hash map"))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define-public rust-heck_0_3_3
@@ -538,7 +538,7 @@
     (synopsis "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`.")
     (description
       (beautify-description "hermit-abi is small interface to call functions from the unikernel RustyHermit.\nIt is used to build the target `x86_64-unknown-hermit`."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-include_dir_0_6_2
@@ -615,7 +615,7 @@
     (synopsis "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap.")
     (description
       (beautify-description "A hash table with consistent order and fast iteration.\n\nThe indexmap is a hash table where the iteration order of the key-value\npairs is independent of the hash values of the keys. It has the usual\nhash table functionality, it preserves insertion order except after\nremovals, and it allows lookup of its elements by either hash table key\nor numerical index. A corresponding hash set type is also provided.\n\nThis crate was initially published under the name ordermap, but it was renamed to\nindexmap."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define-public rust-indoc_0_3_6
@@ -763,7 +763,7 @@
     (synopsis "Extra iterator adaptors, iterator methods, free functions, and macros.")
     (description
       (beautify-description "Extra iterator adaptors, iterator methods, free functions, and macros."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-itoa_0_4_8
@@ -804,7 +804,7 @@
     (synopsis "A macro for declaring lazily evaluated statics in Rust.")
     (description
       (beautify-description "A macro for declaring lazily evaluated statics in Rust."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-libc_0_2_104
@@ -848,7 +848,7 @@
     (synopsis "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std.")
     (description
       (beautify-description "Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define-public rust-log_0_4_14
@@ -892,7 +892,7 @@
     (synopsis "Safe interface to memchr.")
     (description
       (beautify-description "Safe interface to memchr."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define-public rust-miniz_oxide_0_4_4
@@ -940,7 +940,7 @@
     (synopsis "A multimap implementation.")
     (description
       (beautify-description "A multimap implementation."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-num-bigint_0_4_2
@@ -1058,7 +1058,7 @@
     (synopsis "More compact and efficient implementations of the standard synchronization primitives.")
     (description
       (beautify-description "More compact and efficient implementations of the standard synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define-public rust-parking_lot_core_0_8_5
@@ -1087,7 +1087,7 @@
     (synopsis "An advanced API for creating custom synchronization primitives.")
     (description
       (beautify-description "An advanced API for creating custom synchronization primitives."))
-    (license `(license:asl2.0
+    (license (list license:asl2.0
                license:expat))))
 
 (define-public rust-paste_0_1_18
@@ -1478,7 +1478,7 @@
     (synopsis "A regular expression parser.")
     (description
       (beautify-description "A regular expression parser."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-ron_0_5_1
@@ -1504,7 +1504,7 @@
     (synopsis "Rusty Object Notation")
     (description
       (beautify-description "Rusty Object Notation"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-ryu_1_0_5
@@ -1545,7 +1545,7 @@
     (synopsis "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies.")
     (description
       (beautify-description "A RAII scope guard that will run a given closure when it goes out of scope,\neven if the code between panics (assuming unwinding panic).\n\nDefines the macros `defer!`, `defer_on_unwind!`, `defer_on_success!` as\nshorthands for guards with one of the implemented strategies."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-serde_1_0_130
@@ -1639,7 +1639,7 @@
     (synopsis "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack")
     (description
       (beautify-description "\u0027Small vector\u0027 optimization: store up to a small number of items on the stack"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-strsim_0_10_0
@@ -1754,7 +1754,7 @@
     (synopsis "A case-insensitive wrapper around strings.")
     (description
       (beautify-description "A case-insensitive wrapper around strings."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-unicode-segmentation_1_8_0
@@ -1775,7 +1775,7 @@
     (synopsis "This crate provides Grapheme Cluster, Word and Sentence boundaries\naccording to Unicode Standard Annex #29 rules.")
     (description
       (beautify-description "This crate provides Grapheme Cluster, Word and Sentence boundaries\naccording to Unicode Standard Annex #29 rules."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-unicode-width_0_1_9
@@ -1796,7 +1796,7 @@
     (synopsis "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules.")
     (description
       (beautify-description "Determine displayed width of `char` and `str` types\naccording to Unicode Standard Annex #11 rules."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-unicode-xid_0_2_2
@@ -1857,7 +1857,7 @@
     (synopsis "A simple map based on a vector for small integer keys")
     (description
       (beautify-description "A simple map based on a vector for small integer keys"))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-version_check_0_9_3
@@ -1878,7 +1878,7 @@
     (synopsis "Tiny crate to check the version of the installed/running rustc.")
     (description
       (beautify-description "Tiny crate to check the version of the installed/running rustc."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-winapi_0_3_9
@@ -1903,7 +1903,7 @@
     (synopsis "Raw FFI bindings for all of Windows API.")
     (description
       (beautify-description "Raw FFI bindings for all of Windows API."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-winapi-i686-pc-windows-gnu_0_4_0
@@ -1924,7 +1924,7 @@
     (synopsis "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the i686-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 (define-public rust-winapi-util_0_1_5
@@ -1948,7 +1948,7 @@
     (synopsis "A dumping ground for high level safe wrappers over winapi.")
     (description
       (beautify-description "A dumping ground for high level safe wrappers over winapi."))
-    (license `(license:unlicense
+    (license (list license:unlicense
                license:expat))))
 
 (define-public rust-winapi-x86_64-pc-windows-gnu_0_4_0
@@ -1969,7 +1969,7 @@
     (synopsis "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead.")
     (description
       (beautify-description "Import libraries for the x86_64-pc-windows-gnu target. Please don\u0027t use this crate directly, depend on winapi instead."))
-    (license `(license:expat
+    (license (list license:expat
                license:asl2.0))))
 
 
