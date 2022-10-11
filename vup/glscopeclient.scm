@@ -5,7 +5,8 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages check)
   #:use-module (gnu packages version-control)
-  #:use-module (gnu packages opencl)
+  #:use-module (gnu packages vulkan)
+  #:use-module (vup misc)
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix build-system cmake)
@@ -37,7 +38,7 @@
      (license #f)))) ; whatever it is
 
 (define-public glscopeclient
-  (let ((commit "3686a915f12ee02460d9f50a3fe7db15307720fd"))
+  (let ((commit "303bb32dfbf8c1554d602e899c71e1cfb771e9c4"))
     (package
      (name "glscopeclient")
      (version (string-append "0.0-" (string-take commit 9)))
@@ -47,16 +48,16 @@
        (uri
         (git-reference
          (recursive? #t)
-         (url "https://github.com/azonenberg/scopehal-apps")
+         (url "https://github.com/glscopeclient/scopehal-apps")
          (commit commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "037ykay3vj81z16lfygfbpdfh7acqhvm48hkwh8c36jz590k35hc"))))
+        (base32 "1wzzggwz93aysw4gy57jljvx405p2rjzc9qyifhka6xb67j0wc14"))))
      (build-system cmake-build-system)
-     (inputs `(("ffts" ,ffts) ("yaml" ,yaml-cpp) ("glew" ,glew) ("gtkmm" ,gtkmm-3) ("catch2" ,catch-framework2)
-               ("opencl" ,opencl-icd-loader)))
-               
-     (native-inputs `(("pkg-config" ,pkg-config) ("git" ,git) ("opencl-headers" ,opencl-headers)))
+     (inputs `(("ffts" ,ffts) ("yaml" ,yaml-cpp) ("glew" ,glew) ("gtkmm" ,gtkmm-3) ("catch2" ,catch2)
+               ("vulkan-headers" ,vulkan-headers-upstream) ("vulkan-loader" ,vulkan-loader) ("shaderc" ,shaderc-2022)
+               ("vulkan-hpp" ,vulkan-hpp) ("glslang" ,glslang-11.11) ("glfw" ,glfw)))
+     (native-inputs `(("pkg-config" ,pkg-config) ("git" ,git)))
      (arguments
       `(#:configure-flags '("-DCMAKE_BUILD_TYPE=RELEASE")
         #:imported-modules ((guix build glib-or-gtk-build-system)
@@ -66,6 +67,11 @@
          (guix build cmake-build-system)
          ((guix build glib-or-gtk-build-system) #:prefix glib-or-gtk:))
         #:phases (modify-phases %standard-phases
+                  (delete 'check)       ; needs working vulkan device
+                  (add-after 'unpack 'glslang-include
+                    (lambda* (#:key inputs #:allow-other-keys)
+                      (substitute* "lib/scopehal/CMakeLists.txt" (("/usr/include/glslang/Include/") (string-append (assoc-ref inputs "glslang") "/include/glslang/Include/")))
+                      #t))
                   (add-after 'wrap-program 'glib-or-gtk-wrap
                    (assoc-ref glib-or-gtk:%standard-phases 'glib-or-gtk-wrap))
                   (add-after 'glib-or-gtk-wrap 'glib-or-gtk-compile-schemas
