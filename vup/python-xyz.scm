@@ -26,6 +26,8 @@
   #:use-module (gnu packages check)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages libusb)
+  #:use-module (gnu packages graphviz)
+  #:use-module (gnu packages machine-learning)
   #:use-module (vup fpga)
   #:use-module (vup smt)
   #:use-module (vup linux)
@@ -3301,3 +3303,162 @@ testbenches in Python.")
    (inherit python-jupyter)
    (name "jupyter-fixed")
    (inputs (modify-inputs (package-inputs python-nbconvert) (replace "python-nbconvert" python-nbconvert-fixed)))))
+
+
+(define-public python-pybtex-docutils
+  (package
+    (name "python-pybtex-docutils")
+    (version "1.0.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pybtex-docutils" version))
+              (sha256
+               (base32
+                "05m09byzhq8p1pax66g69z9n3l1jwfc3l1zh62ndb3s9dlxkbaj3"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-docutils python-pybtex))
+    (home-page "https://github.com/mcmtroffaes/pybtex-docutils")
+    (synopsis "A docutils backend for pybtex.")
+    (description "This package provides a docutils backend for pybtex.")
+    (license license:expat)))
+(define-public python-sphinxcontrib-bibtex
+  (package
+    (name "python-sphinxcontrib-bibtex")
+    (version "2.5.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "sphinxcontrib-bibtex" version))
+              (sha256
+               (base32
+                "1ahfn3szw9l80isps9w269v9maink6zjclw78gr89qp2n1fjxd3i"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-dataclasses
+                             python-docutils
+                             python-importlib-metadata
+                             python-pybtex
+                             python-pybtex-docutils
+                             python-wheel
+                             python-pytest-cov
+                             python-sphinx))
+    (home-page "https://github.com/mcmtroffaes/sphinxcontrib-bibtex")
+    (synopsis "Sphinx extension for BibTeX style citations.")
+    (description "Sphinx extension for BibTeX style citations.")
+    (license license:bsd-3)))
+(define-public python-tokenize-rt-5
+  (package
+    (name "python-tokenize-rt")
+    (version "5.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "tokenize_rt" version))
+              (sha256
+               (base32
+                "0h07s44585m1f9mpdxgm82i61h8zhvm1s5w50hnk34c47q6bqq1i"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/asottile/tokenize-rt")
+    (synopsis "A wrapper around the stdlib `tokenize` which roundtrips.")
+    (description
+     "This package provides a wrapper around the stdlib `tokenize` which roundtrips.")
+    (license license:expat)))
+(define-public python-pyupgrade
+  (package
+    (name "python-pyupgrade")
+    (version "3.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pyupgrade" version))
+              (sha256
+               (base32
+                "0kxiiangyliy8jfl8v735n63v124x6kjwjvilnaanz485mvf5hbf"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-tokenize-rt-5))
+    (home-page "https://github.com/asottile/pyupgrade")
+    (synopsis "A tool to automatically upgrade syntax for newer versions.")
+    (description
+     "This package provides a tool to automatically upgrade syntax for newer versions.")
+    (license license:expat)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
+(define-public python-flynt
+  (package
+    (name "python-flynt")
+    (version "0.76")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "flynt" version))
+              (sha256
+               (base32
+                "0fhr2djg0z3pd622crc4pkbvm776iknrjs9z40hqr7paa2jwb6bs"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-astor python-tomli))
+    (home-page "https://github.com/ikamensh/flynt")
+    (synopsis
+     "CLI tool to convert a python project's %-formatted strings to f-strings.")
+    (description
+     "CLI tool to convert a python project's %-formatted strings to f-strings.")
+    (license license:expat)))
+(define-public python-biblib-simple
+  (package
+    (name "python-biblib-simple")
+    (version "0.1.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "biblib-simple" version))
+              (sha256
+               (base32
+                "1gqnr11vdn6f2z0dip209v9r5riawbgqp9xsykq3b2a4zx6mrjkd"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/colour-science/biblib")
+    (synopsis "Simple, correct BibTeX parser and algorithms")
+    (description "Simple, correct BibTeX parser and algorithms")
+    (license #f)))
+(define-public python-colour-science
+  (package
+    (name "python-colour-science")
+    (version "0.4.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "colour-science" version))
+              (sha256
+               (base32
+                "0ffq0a0prcvkc4lshwjl8zb60hxgy3i0c3wqs2zaf267hd37i9rs"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-biblib-simple
+                             python-black
+                             python-coverage
+                             python-coveralls
+                             python-flake8
+                             python-flynt
+                             python-imageio
+                             python-invoke
+                             python-jupyter
+                             python-matplotlib
+                             python-mypy
+                             python-networkx
+                             python-numpy
+                             python-pandas
+                             python-pre-commit
+                             python-pydata-sphinx-theme
+                             python-pydocstyle
+                             python-pygraphviz
+                             python-pytest
+                             python-pytest-cov
+                             python-pyupgrade
+                             python-restructuredtext-lint
+                             python-scikit-learn
+                             python-scipy
+                             python-sphinx
+                             python-sphinxcontrib-bibtex
+                             python-toml
+                             python-tqdm
+                             python-trimesh
+                             python-twine
+                             python-typing-extensions))
+    (home-page "https://www.colour-science.org/")
+    (synopsis "Colour Science for Python")
+    (description "Colour Science for Python")
+    (license #f)
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))))
