@@ -3496,5 +3496,4 @@ testbenches in Python.")
        (base32 "09x0w6jlxdlbg7xxjavdkibl9g43gh493x8zggkjp861hmfc1igv"))))
    (native-inputs (modify-inputs
                    (package-native-inputs python-scipy)
-                   (replace "python-cython" python-cython-0.29.32)
                    (replace "meson-python" meson-python-0.9.0)))))
