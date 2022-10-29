@@ -23,6 +23,7 @@
   #:use-module (gnu packages python-compression)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages astronomy)
+  #:use-module (gnu packages build-tools)
   #:use-module (gnu packages check)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages libusb)
@@ -32,6 +33,7 @@
   #:use-module (vup smt)
   #:use-module (vup linux)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix build-system python)
@@ -3462,3 +3464,37 @@ testbenches in Python.")
     (arguments '(#:phases
                  (modify-phases %standard-phases
                    (delete 'check))))))
+
+(define-public meson-python-0.9.0
+  (package
+   (inherit meson-python)
+   (version "0.9.0")
+   (source (origin
+             (method url-fetch)
+             (uri (pypi-uri "meson_python" version))
+             (sha256
+              (base32
+               "17dj0y53vj683b75l1bphqy42aammczbzsrqi4qcbqfcyngs19ba"))))
+   (arguments
+     (substitute-keyword-arguments (package-arguments meson-python)
+       ((#:phases phases)
+        #~(modify-phases #$phases
+                        (delete 'check)))))
+   (native-inputs (modify-inputs
+                   (package-native-inputs meson-python)
+                   (append python-cython-0.29.32)))))
+
+(define-public python-scipy-fixed
+  (package
+   (inherit python-scipy)
+   (version "1.9.3")
+   (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "scipy" version))
+      (sha256
+       (base32 "09x0w6jlxdlbg7xxjavdkibl9g43gh493x8zggkjp861hmfc1igv"))))
+   (native-inputs (modify-inputs
+                   (package-native-inputs python-scipy)
+                   (replace "python-cython" python-cython-0.29.32)
+                   (replace "meson-python" meson-python-0.9.0)))))

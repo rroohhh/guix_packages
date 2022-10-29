@@ -8,6 +8,7 @@
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages sqlite)
   #:use-module (gnu packages gtk)
+  #:use-module (gnu packages backup)
   #:use-module (gnu packages curl)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages compression)
@@ -20,6 +21,7 @@
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages base)
   #:use-module (gnu packages tbb)
+  #:use-module (gnu packages engineering)
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public opencascade-occt-fixed
@@ -27,10 +29,10 @@
 
 
 (define-public horizon
-  (let ((commit "a29d84f0506a775bdc1f8d1f96295aacb4599c2f"))
+  (let ((commit "750111e829cd6f3563ef8040c224ce147808c27d"))
     (package
       (name "horizon")
-      (version (string-append "2.1.0+" (string-take commit 7)))
+      (version (string-append "2.4.0+" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -40,7 +42,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "16v9h8vh5h530n1zbbp2iirjnxd8xda52jd0y6g1kmmmhy2c3500"))))
+                  "0vx3ba4m1knjq53dylj9n3l38cnqihgj6x4jvkr0zmzspic4n6j3"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm-3) ("curl" ,curl) ("glib" ,glib)
@@ -48,7 +50,8 @@
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
                 ("boost" ,boost) ("opencascade" ,opencascade-occt-fixed) ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
-                ("librsvg" ,librsvg) ("gcc" ,gcc-11)))
+                ("librsvg" ,librsvg) ("gcc" ,gcc-11) ("libsigc++" ,libsigc++) ("glibmm" ,glibmm)
+                ("libarchive" ,libarchive) ("libspnav" ,libspnav)))
       (arguments
        `(#:make-flags (list "GOLD=" "CC=gcc" (string-append "PREFIX=" (assoc-ref %outputs "out")))
          #:phases (modify-phases %standard-phases
