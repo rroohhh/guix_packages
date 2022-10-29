@@ -3482,7 +3482,7 @@ testbenches in Python.")
                         (delete 'check)))))
    (native-inputs (modify-inputs
                    (package-native-inputs meson-python)
-                   (append python-cython-0.29.32)))))
+                   (append python-cython)))))
 
 (define-public python-scipy-fixed
   (package
