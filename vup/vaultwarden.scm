@@ -8942,7 +8942,7 @@
      `(#:phases (modify-phases %standard-phases
                                (delete 'check))
        #:features '("sqlite" "vendored_openssl")
-       #:rust ,rust-nightly-1.60
+       #:rust ,rust-nightly
        #:cargo-inputs
        (("rust-backtrace" ,rust-backtrace_0_3_65)        
         ("rust-bytes" ,rust-bytes_1_1_0)        
