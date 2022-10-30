@@ -48,8 +48,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.58.1"
-           "1iq7kj16qfpkx8gvw50d8rf7glbm6s0pj2y1qkrz7mi56vfsyfd8")))
+         (rust-bootstrapped-package rust "1.61.0"
+           "1vfs05hkf9ilk19b2vahqn8l6k17pl9nc1ky9kgspaascx8l62xd")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -58,7 +58,7 @@
         (origin
           (inherit (package-source base-rust))
           (snippet #f)))
-      (inputs (append (alist-replace "llvm" (list llvm-13) (package-inputs base-rust)) `(("ninja" ,ninja))))
+      (inputs (append (alist-replace "llvm" (list llvm-14) (package-inputs base-rust)) `(("ninja" ,ninja))))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
@@ -87,7 +87,7 @@
 sanitizers = true
 profiler = true
 extended = true
-tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\", \"miri\"]"))
+tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
                  (substitute* "config.toml"
                    (("jemalloc=true")
                     "jemalloc=true
@@ -155,15 +155,3 @@ llvm-tools=true
               (lambda _
                 (substitute* "config.toml"
                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
-
-(define-public rust-nightly-1.59
- (rust-bootstrapped-package rust-nightly "1.59.0"
-           "1yc5bwcbmbwyvpfq7zvra78l0r8y3lbv60kbr62fzz2vx2pfxj57"))
-
-(define-public rust-nightly-1.60
-  (let ((base-rust
-         (rust-bootstrapped-package rust-nightly-1.59 "1.60.0"
-           "1drqr0a26x1rb2w3kj0i6abhgbs3jx5qqkrcwbwdlx7n3inq5ji0")))
-    (package
-      (inherit base-rust)
-      (inputs (alist-replace "llvm" (list llvm-14) (package-inputs base-rust))))))
