@@ -1174,3 +1174,22 @@ find_package(\"zstd\")
         (replace "ffmpeg" ffmpeg-with-rubberband)))))
 
 
+(define-public advancecomp
+  (let* ((version "2.3"))
+    (package
+      (name "advancecomp")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append
+               "https://github.com/amadvance/advancecomp/releases/download/v"
+               version "/advancecomp-" version ".tar.gz"))
+         (sha256
+          (base32 "0y3mcnzbxxs928nb4l5q529zjana0gj37wganpffzpdxzcfnc7w1"))))
+      (build-system gnu-build-system)
+      (inputs (list zlib))
+      (home-page "https://www.advancemame.it/comp-readme.html")
+      (synopsis "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
+      (description "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
+      (license licenses:gpl2))))
