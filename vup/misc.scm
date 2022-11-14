@@ -12,6 +12,7 @@
   #:use-module (guix build-system meson)
   #:use-module (guix build-system glib-or-gtk)
   #:use-module (guix build-system ant)
+  #:use-module (guix build-system copy)
   #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
   #:use-module ((gnu packages animation) #:prefix guix:)
@@ -1193,3 +1194,25 @@ find_package(\"zstd\")
       (synopsis "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
       (description "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
       (license licenses:gpl2))))
+
+(define-public bash-preexec
+  (let* ((version "0.5.0"))
+    (package
+      (name "bash-prexeec")
+      (version version)
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append "https://github.com/rcaloras/bash-preexec/archive/refs/tags/" version ".tar.gz"))
+         (sha256
+          (base32 "0z479chg7i6j9apwqs1f3fx345mi3gcciyljixcw02d23p6qki93"))))
+      (build-system copy-build-system)
+      (arguments
+       '(#:install-plan
+         '(("bash-preexec.sh" "bash-preexec.sh"))))
+      (home-page
+       "https://github.com/rcaloras/bash-preexec")
+      (synopsis "preexec and precmd functions for Bash just like Zsh.")
+      (description
+       "preexec and precmd functions for Bash just like Zsh.")
+      (license licenses:expat))))
