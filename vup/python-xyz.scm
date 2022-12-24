@@ -28,6 +28,7 @@
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages libusb)
   #:use-module (gnu packages graphviz)
+  #:use-module (gnu packages openstack)
   #:use-module (gnu packages machine-learning)
   #:use-module (vup fpga)
   #:use-module (vup smt)
@@ -3497,3 +3498,14 @@ testbenches in Python.")
    (native-inputs (modify-inputs
                    (package-native-inputs python-scipy)
                    (replace "meson-python" meson-python-0.9.0)))))
+
+(define-public python-git-review-2.3
+  (package
+    (inherit python-git-review)
+    (version "2.3.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "git-review" version))
+       (sha256
+        (base32 "0vx92rb8ab2nsv72ppcxihj1xvpmy2b247mi4nsc1jca4q6xh0n6"))))))
