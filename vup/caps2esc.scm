@@ -12,16 +12,16 @@
 (define-public caps2esc
   (package
    (name "caps2esc")
-   (version "0.0.2")
+   (version "1.0.4")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/rroohhh/caps2esc")
-           (commit "3fd30002f8d3900d8e68441f7228769347972231")))
+           (commit "v1.0.4")))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "17d1dzbwg6xd8km7j3xifa0jsf5n2kd4qm1s4rry7gpmnr4g7rzx"))))
+      (base32 "0frxp0yfk293jknwgi6knbz2vk5i1ylj0g4gvrpn7d1z87s3r2hv"))))
    (build-system gnu-build-system)
    (arguments '(#:phases
                 (modify-phases %standard-phases

@@ -10,16 +10,16 @@
 (define-public qdirstat
   (package
    (name "qdirstat")
-   (version "1.7+844ee2ff")
+   (version "1.8.1")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/shundhammer/qdirstat")
-           (commit "844ee2ffab029c949de5511b7e60f9621ad89862")))
+           (commit "1.8.1")))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "0p78x77g8vzr9wl0rwi84wwf65vwkrvcpn1rs7y4sgpb2ycyqawf"))))
+      (base32 "04vpdlwk01kgmc4r5rnrmrgd4sf2kfh1rjzb2rjkfxdd4pbghsy9"))))
    (build-system qt-build-system)
    (arguments '(#:phases
                 (modify-phases %standard-phases
@@ -40,16 +40,16 @@
 (define-public klayout
   (package
    (name "klayout")
-   (version "0.27.3")
+   (version "0.28.2")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/KLayout/klayout")
-           (commit "v0.27.3")))
+           (commit "v0.28.2")))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "0kd0sspyhs29ql7a7zs6ynh5qi0hz892gy0iqqgibbks3nhx03za"))))
+      (base32 "0ji6jchigdwp8mch2vas86pxf6zx0ii61a12kjwibbhcy0gsg4ai"))))
    (arguments
     `(#:phases
       (modify-phases %standard-phases

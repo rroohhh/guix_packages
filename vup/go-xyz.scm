@@ -12,13 +12,13 @@
 (define-public vault
   (package
     (name "vault")
-    (version "1.7.2")
+    (version "386")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://releases.hashicorp.com/vault/" version "/vault_" version "_linux_amd64.zip"))
        (sha256
-        (base32 "1g37pgj7hbi6vfpwq9rrh6is980lfwbq5jb4736jfp5m360vprjy"))))
+        (base32 "0jfbpbbvvzxbpnbr31fgvn27b16n38w7ihgqnfrzw4zva57mdic4"))))
     (build-system trivial-build-system)
     (native-inputs `(("unzip" ,unzip)))
     (arguments

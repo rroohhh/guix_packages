@@ -24,8 +24,8 @@
   #:use-module (gnu packages engineering)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public opencascade-occt-fixed
-  ((package-input-rewriting/spec `(("tbb" . ,(const tbb-2020)))) opencascade-occt))
+;; (define-public opencascade-occt-fixed
+;;   ((package-input-rewriting/spec `(("tbb" . ,(const tbb-2020)))) opencascade-occt))
 
 
 (define-public horizon
@@ -48,7 +48,8 @@
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm-3) ("curl" ,curl) ("glib" ,glib)
                 ("glib:bin" ,glib "bin") ("libzip" ,libzip) ("libgit2" ,libgit2)
                 ("glm" ,glm) ("librsvg" ,librsvg) ("zeromq" ,zeromq) ("python3" ,python)
-                ("boost" ,boost) ("opencascade" ,opencascade-occt-fixed) ("cppzmq" ,cppzmq)
+                ("boost" ,boost) ("opencascade" ,opencascade-occt)
+                ("cppzmq" ,cppzmq)
                 ("podofo" ,podofo) ("coreutils" ,coreutils) ("hicolor-icon-theme" ,hicolor-icon-theme)
                 ("librsvg" ,librsvg) ("gcc" ,gcc-11) ("libsigc++" ,libsigc++) ("glibmm" ,glibmm)
                 ("libarchive" ,libarchive) ("libspnav" ,libspnav)))

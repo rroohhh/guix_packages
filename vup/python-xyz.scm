@@ -15,6 +15,7 @@
   #:use-module (gnu packages glib)
   #:use-module (gnu packages libevent)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages qt)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-crypto)
@@ -38,6 +39,7 @@
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix build-system python)
+  #:use-module (guix build-system pyproject)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system trivial)
   #:use-module ((guix licenses) #:prefix license:))
@@ -3509,3 +3511,177 @@ testbenches in Python.")
        (uri (pypi-uri "git-review" version))
        (sha256
         (base32 "0vx92rb8ab2nsv72ppcxihj1xvpmy2b247mi4nsc1jca4q6xh0n6"))))))
+
+(define-public python-waf-visionary
+  (package
+    (inherit python-waf)
+    (name "python-waf-visionary")
+    (version "2.0.24")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/electronicvisions/waf")
+             (commit "c77b023482ac2a3a3147c8dcbe6be59fc0e8c3a2")))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "0cx5rr0q0js0dkxj2bbbvmf48y7xnzcja8riv4vymfrzh2pl1vk0"))))
+    (build-system python-build-system)))
+
+(define-public python-socketio-client
+  (package
+    (name "python-socketio-client")
+    (version "0.5.7.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "socketIO-client" version))
+              (sha256
+               (base32
+                "0xg546g3dasgwk4zzz0ny1h1p8as2pxia0n4398xsml7ip64p84b"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-requests python-six
+                             python-websocket-client python-wheel))
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check))))
+    (home-page "https://github.com/invisibleroads/socketIO-client")
+    (synopsis "A socket.io client library")
+    (description "This package provides a socket.io client library")
+    (license license:expat)))
+
+(define-public overleaf-sync
+  (package
+    (name "overleaf-sync")
+    (version "1.2.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/moritzgloeckl/overleaf-sync")
+             (commit "aa62165eb9eba48f8b8bf3d93358f9feed0bf5a9")))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "0h0wspvhb5qr1n7b95pgdx6a1fwcqfsd6hbn2xwa30iwn5kahq00"))))
+    (build-system pyproject-build-system)
+    (propagated-inputs (list python-pyside-6 python-yaspin python-socketio python-socketio-client))
+    (native-inputs (list python-flit))
+    (home-page "https://github.com/moritzgloeckl/overleaf-sync")
+    (synopsis "Overleaf Two-Way Synchronization")
+    (description "Overleaf Two-Way Synchronization")
+    (arguments '(#:phases
+                 (modify-phases %standard-phases
+                   (delete 'check) (delete 'sanity-check))))
+    (license license:expat)))
+
+(define-public python-unearth
+  (package
+    (name "python-unearth")
+    (version "0.8.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "unearth" version))
+              (sha256
+               (base32
+                "10l5s8cl0mri8y2fsk5mvmkdm1bih1vlvc6cmnh5f5ahwplhmcnd"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-cached-property python-keyring
+                             python-packaging python-requests))
+    (home-page "")
+    (synopsis "A utility to fetch and download python packages")
+    (description
+     "This package provides a utility to fetch and download python packages")
+    (license license:expat)))
+
+(define-public python-pyproject-hooks
+  (package
+    (name "python-pyproject-hooks")
+    (version "1.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pyproject_hooks" version))
+              (sha256
+               (base32
+                "1xaf4sharvacqlav6w3b38nc4j0rzg0p4axi7zamanbzp6cb4wgj"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-tomli))
+    (home-page "")
+    (synopsis "Wrappers to call pyproject.toml-based build backend hooks.")
+    (description "Wrappers to call pyproject.toml-based build backend hooks.")
+    (license #f)))
+
+(define-public python-installer
+  (package
+    (name "python-installer")
+    (version "0.6.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "installer" version))
+              (sha256
+               (base32
+                "0fc8mvazsck9g76dwqjb1glzwy05rbn1n2qrl640li0v4v6kdggk"))))
+    (build-system python-build-system)
+    (home-page "")
+    (synopsis "A library for installing Python wheels.")
+    (description
+     "This package provides a library for installing Python wheels.")
+    (license #f)))
+
+(define-public python-findpython
+  (package
+    (name "python-findpython")
+    (version "0.2.4")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "findpython" version))
+              (sha256
+               (base32
+                "0qkkcqmf74i45qq93nhr1fjl2mn2b0n2fwarlkwc4gc4vn67dwb1"))))
+    (build-system pyproject-build-system)
+    (propagated-inputs (list python-packaging))
+    (home-page "")
+    (synopsis "A utility to find python versions on your system")
+    (description
+     "This package provides a utility to find python versions on your system")
+    (license license:expat)))
+
+(define-public python-pdm
+  (package
+    (name "python-pdm")
+    (version "2.4.7")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pdm" version))
+              (sha256
+               (base32
+                "0glslr73vrmn0s6j84q4vvh98zls152071za95jv47n790xx4s65"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-blinker
+                             python-cachecontrol
+                             python-certifi
+                             python-dotenv
+                             python-findpython
+                             python-importlib-metadata
+                             python-installer
+                             python-packaging
+                             python-platformdirs
+                             python-pyproject-hooks
+                             python-pytest
+                             python-pytest-mock
+                             python-requests-toolbelt
+                             python-resolvelib
+                             python-rich
+                             python-shellingham
+                             python-tomli
+                             python-tomlkit
+                             python-typing-extensions
+                             python-unearth
+                             python-virtualenv))
+    (home-page "")
+    (synopsis
+     "A modern Python package and dependency manager supporting the latest PEP standards")
+    (description
+     "This package provides a modern Python package and dependency manager supporting
+the latest PEP standards")
+    (license license:expat)))

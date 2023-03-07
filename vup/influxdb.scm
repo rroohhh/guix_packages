@@ -70,5 +70,3 @@
     (description
       "Telegraf is a plugin-driven server agent for collecting and sending metrics and events from databases, systems, and IoT sensors.")
     (license #f)))                      ; MIT
-
-telegraf

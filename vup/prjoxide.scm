@@ -3,6 +3,7 @@
   #:use-module (gnu packages gettext)
   #:use-module (gnu packages texinfo)
   #:use-module (gnu packages m4)
+  #:use-module (gnu packages crates-io)
   #:use-module (guix build-system cargo)
   #:use-module (guix packages)
   #:use-module (guix download)
@@ -247,66 +248,6 @@
       (beautify-description "A macro to ergonomically define an item depending on a large number of #[cfg]\nparameters. Structured like an if-else chain, the first matching branch is the\nitem that gets emitted."))
     (license (list license:expat
                license:asl2.0))))
-
-(define-public rust-clap_3_0_0-beta_2
-  (package
-    (name "rust-clap")
-    (version "3.0.0-beta.2")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "clap" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "0hm1kivw6190rxbfqhdr4hqwlrijvwh90i3d9dyyw0d5k0chdlab"))))
-    (build-system cargo-build-system)
-    (arguments
-     `(#:cargo-inputs
-       (("rust-atty" ,rust-atty_0_2_14)        
-        ("rust-bitflags" ,rust-bitflags_1_3_2)        
-        ("rust-clap_derive" ,rust-clap_derive_3_0_0-beta_2)        
-        ("rust-indexmap" ,rust-indexmap_1_7_0)        
-        ("rust-lazy_static" ,rust-lazy_static_1_4_0)        
-        ("rust-os_str_bytes" ,rust-os_str_bytes_2_4_0)        
-        ("rust-strsim" ,rust-strsim_0_10_0)        
-        ("rust-termcolor" ,rust-termcolor_1_1_2)        
-        ("rust-textwrap" ,rust-textwrap_0_12_1)        
-        ("rust-unicode-width" ,rust-unicode-width_0_1_9)        
-        ("rust-vec_map" ,rust-vec_map_0_8_2))))
-    (home-page "https://clap.rs/")
-    (synopsis "A simple to use, efficient, and full-featured Command Line Argument Parser")
-    (description
-      (beautify-description "A simple to use, efficient, and full-featured Command Line Argument Parser"))
-    (license license:expat)))
-
-(define-public rust-clap_derive_3_0_0-beta_2
-  (package
-    (name "rust-clap_derive")
-    (version "3.0.0-beta.2")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "clap_derive" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "18cn82jhcha7m0nkpi1a03jx8k7aaq5kxfcxnsqpaa8ih5dp23rp"))))
-    (build-system cargo-build-system)
-    (arguments
-     `(#:cargo-inputs
-       (("rust-heck" ,rust-heck_0_3_3)        
-        ("rust-proc-macro-error" ,rust-proc-macro-error_1_0_4)        
-        ("rust-proc-macro2" ,rust-proc-macro2_1_0_30)        
-        ("rust-quote" ,rust-quote_1_0_10)        
-        ("rust-syn" ,rust-syn_1_0_80))))
-    (home-page "https://clap.rs/")
-    (synopsis "Parse command line argument by defining a struct, derive crate.")
-    (description
-      (beautify-description "Parse command line argument by defining a struct, derive crate."))
-    (license license:expat)))
 
 (define-public rust-crc32fast_1_2_1
   (package
@@ -1146,21 +1087,20 @@
         (method git-fetch)
         (uri (git-reference
               (url "https://github.com/gatecat/prjoxide")
-              (commit "318331f8b30c2e2a31cc41d51f104b671e180a8a")
+              (commit "ea89720449915ab73afdb6f1f2f48939dae6a9e7")
               (recursive? #t)))
         (file-name (git-file-name name version))
         (sha256
           (base32
-            "1mh63dkcaik3xqb2qmkd602gsbmdfpbr1akd54av5jrd12g50ajz"))))
+            "02acj7hf4vr2hnz43bfznvsm5cnws8sc90d50khl92bn95mrlllm"))))
     (build-system cargo-build-system)
     (inputs `(("m4" ,m4)))
     (arguments
      `(#:cargo-inputs
        (("rust-capnp" ,rust-capnp_0_14_3)        
         ("rust-capnpc" ,rust-capnpc_0_14_4)        
-        ("rust-clap" ,rust-clap_3_0_0-beta_2)        
-        ("rust-clap_derive" ,rust-clap_derive_3_0_0-beta_2)        
-        ("rust-flate2" ,rust-flate2_1_0_22)        
+        ("rust-clap" ,rust-clap-3)
+        ("rust-flate2" ,rust-flate2_1_0_22)
         ("rust-include_dir" ,rust-include_dir_0_6_2)        
         ("rust-itertools" ,rust-itertools_0_8_2)        
         ("rust-lazy_static" ,rust-lazy_static_1_4_0)        
@@ -1178,14 +1118,11 @@
                        (delete-file "libprjoxide/Cargo.toml")
                        (chdir "libprjoxide/prjoxide")
                        (setenv "CONFIG_SHELL" (which "sh"))
-                       (display "changed to")
-                       (display (getcwd))
                        #t)))))
-    (home-page "FILLMEIN")
-    (synopsis "")
-    (description
-      (beautify-description ""))
-    (license #f)))
+    (home-page "https://github.com/gatecat/prjoxide")
+    (synopsis "Documenting Lattice's 28nm FPGA parts")
+    (description "Documenting Lattice's 28nm FPGA parts")
+    (license license:isc)))
 
 (define-public rust-proc-macro-error_1_0_4
   (package
