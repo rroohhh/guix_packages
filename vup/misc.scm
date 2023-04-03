@@ -1,7 +1,8 @@
 (define-module (vup misc)
   #:use-module (srfi srfi-1)
   #:use-module (guix packages)
-  #:use-module ((guix licenses) #:prefix licenses:)
+  #:use-module ((guix licenses)
+                #:prefix licenses:)
   #:use-module (guix download)
   #:use-module (guix utils)
   #:use-module (guix build utils)
@@ -13,9 +14,11 @@
   #:use-module (guix build-system glib-or-gtk)
   #:use-module (guix build-system ant)
   #:use-module (guix build-system copy)
+  #:use-module (guix build-system perl)
   #:use-module (gnu packages)
   #:use-module (gnu packages nettle)
-  #:use-module ((gnu packages animation) #:prefix guix:)
+  #:use-module ((gnu packages animation)
+                #:prefix guix:)
   #:use-module (gnu packages audio)
   #:use-module (gnu packages base)
   #:use-module (gnu packages boost)
@@ -70,43 +73,54 @@
   #:use-module (gnu packages imagemagick)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages libusb)
+  #:use-module (gnu packages perl-compression)
+  #:use-module (gnu packages web)
+  #:use-module (gnu packages libcanberra)
   #:use-module (vup mesa))
 
 (define-public mbuffer
-  (let* ((version "20210209"))
+  (let* ((version "20230301"))
     (package
       (name "mbuffer")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://www.maier-komor.de/software/mbuffer/mbuffer-" version ".tgz"))
-         (sha256
-          (base32 "034si7ym7ckl2lq7yhwihqr14vdc375z47hq93w207v2wa42f7z8"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://www.maier-komor.de/software/mbuffer/mbuffer-"
+                      version ".tgz"))
+                (sha256
+                 (base32
+                  "009d4m48yjidb91vdnrfv84nnd76n0i57g607llan3y0vq4n5xsk"))))
       (build-system gnu-build-system)
-      (arguments '(#:phases
-                   (modify-phases %standard-phases
-                     (delete 'check)))) ;; too lazy to include test deps
+      (native-inputs (list which))
+      (arguments
+       '(#:phases (modify-phases %standard-phases
+                    (delete 'check)))) ;too lazy to include test deps
       (home-page "https://www.maier-komor.de/mbuffer.html")
-      (synopsis "mbuffer is a tool for buffering data streams with a large set of unique features")
-      (description "mbuffer is a tool for buffering data streams with a large set of unique features")
+      (synopsis
+       "mbuffer is a tool for buffering data streams with a large set of unique features")
+      (description
+       "mbuffer is a tool for buffering data streams with a large set of unique features")
       (license licenses:gpl3))))
 
 (define-public libmodbus
-  (let* ((version "3.1.6"))
+  (let* ((version "3.1.10"))
     (package
       (name "libmodbus")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://libmodbus.org/releases/libmodbus-" version ".tar.gz"))
-         (sha256
-          (base32 "05kwz0n5gn9m33cflzv87lz3zp502yp8fpfzbx70knvfl6agmnfp"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/stephane/libmodbus/releases/download/v"
+                      version "/libmodbus-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "0lr2kdprgzdn4vbns4sniwp3s1kg1m8ng59zsjcmgzmpbbif96w9"))))
       (build-system gnu-build-system)
       (home-page "https://libmodbus.org/")
       (synopsis "A Modbus library for Linux, Mac OS X, FreeBSD, QNX and Win32")
-      (description "A Modbus library for Linux, Mac OS X, FreeBSD, QNX and Win32")
+      (description
+       "A Modbus library for Linux, Mac OS X, FreeBSD, QNX and Win32")
       (license licenses:gpl3))))
 
 (define-public mbpoll
@@ -114,21 +128,25 @@
     (package
       (name "mbpoll")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/epsilonrt/mbpoll/archive/v" version ".tar.gz"))
-         (sha256
-          (base32 "00dh65jky7a97r538nb5n0pgy3r175s41hmbh3yasqri867jwcsx"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/epsilonrt/mbpoll/archive/v" version
+                      ".tar.gz"))
+                (sha256
+                 (base32
+                  "00dh65jky7a97r538nb5n0pgy3r175s41hmbh3yasqri867jwcsx"))))
       (build-system cmake-build-system)
       (inputs `(("libmodbus" ,libmodbus)
                 ("pkg-config" ,pkg-config)))
-      (arguments '(#:phases
-                   (modify-phases %standard-phases
-                     (delete 'check)))) ;; no tests
+      (arguments
+       '(#:phases (modify-phases %standard-phases
+                    (delete 'check)))) ;no tests
       (home-page "https://github.com/epsilonrt/mbpoll")
-      (synopsis "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
-      (description "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
+      (synopsis
+       "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
+      (description
+       "mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).")
       (license licenses:gpl3))))
 
 (define-public antpm
@@ -136,450 +154,500 @@
     (package
       (name "antpm")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/ralovich/antpm/archive/v" version ".tar.gz"))
-         (sha256
-          (base32 "1rwp707fcg5w5qfhmadbjrbia8arjfz8knb7pvcycxl6f4hz3sn8"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/ralovich/antpm/archive/v" version
+                      ".tar.gz"))
+                (sha256
+                 (base32
+                  "1rwp707fcg5w5qfhmadbjrbia8arjfz8knb7pvcycxl6f4hz3sn8"))))
       (build-system cmake-build-system)
-      (inputs `(("libusb" ,libusb) ("boost" ,boost) ("libxml2" ,libxml2)))
-      (arguments '(#:configure-flags `("-DUSE_BOOST_STATIC_LINK=False")
-                   #:phases
-                   (modify-phases %standard-phases
-                     (add-before 'configure 'cd-to-src
-                       (lambda _
-                         (chdir "src")
-                         #t))
-                     (delete 'check)))) ;; no tests
+      (inputs `(("libusb" ,libusb)
+                ("boost" ,boost)
+                ("libxml2" ,libxml2)))
+      (arguments
+       '(#:configure-flags `("-DUSE_BOOST_STATIC_LINK=False")
+         #:phases (modify-phases %standard-phases
+                    (add-before 'configure 'cd-to-src
+                      (lambda _
+                        (chdir "src") #t))
+                    (delete 'check)))) ;no tests
       (home-page "https://github.com/ralovich/antpm")
       (synopsis "ANT+minus (ANT / ANT+ / ANT-FS)")
       (description "ANT+minus (ANT / ANT+ / ANT-FS)")
       (license licenses:gpl3))))
 
 (define-public rdfind
-  (let* ((version "1.4.1"))
+  (let* ((version "1.5.0"))
     (package
       (name "rdfind")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/pauldreik/rdfind/archive/releases/" version ".tar.gz"))
-         (sha256
-          (base32 "1126rpn0ld6a8b3szmml8gsg3x68m03n3dycjyqk81xjcm3sxs9y"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/pauldreik/rdfind/archive/refs/tags/releases/"
+                      version ".tar.gz"))
+                (sha256
+                 (base32
+                  "022gi48v8xmaqbawq9vyla4ypw7hy0ws7y8l8qbz157imsah1gss"))))
       (build-system gnu-build-system)
-      (inputs `(("automake" ,automake) ("nettle" ,nettle)
-                ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)))
-      (arguments '(#:phases
-                   (modify-phases %standard-phases
-                     (delete 'check)))) ;; too lazy to make tests work
+      (native-inputs (list automake autoconf autoconf-archive which))
+      (inputs (list nettle))
+      (arguments
+       '(#:phases (modify-phases %standard-phases
+                    (delete 'check)))) ;too lazy to make tests work
       (home-page "https://github.com/pauldreik/rdfind")
       (synopsis "find duplicate files utility")
       (description "find duplicate files utility")
       (license licenses:gpl2+))))
 
 (define-public xrestop
-  (let* ((version "0.4"))
+  (let* ((version "0.5"))
     (package
       (name "xrestop")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "http://downloads.yoctoproject.org/releases/xrestop/xrestop-" version ".tar.gz"))
-         (sha256
-          (base32 "0mz27jpij8am1s32i63mdm58znfijcpfhdqq1npbmvgclyagrhk7"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://xorg.freedesktop.org/archive/individual/app/xrestop-"
+                      version ".tar.bz2"))
+                (sha256
+                 (base32
+                  "06ym32famav8qhdms5k7y5i14nfq89hhvfn5g452jjqzkpcsbl49"))))
       (build-system gnu-build-system)
-      (inputs `(("libxres" ,libxres) ("libx11" ,libx11) ("libxext" ,libxext)
+      (inputs `(("libxres" ,libxres)
+                ("libx11" ,libx11)
+                ("libxext" ,libxext)
                 ("ncurses" ,ncurses)))
       (home-page "http://freedesktop.org/wiki/Software/xrestop")
-      (synopsis "Uses the X-Resource extension to provide 'top' like statistics")
-      (description "Uses the X-Resource extension to provide 'top' like statistics")
+      (synopsis
+       "Uses the X-Resource extension to provide 'top' like statistics")
+      (description
+       "Uses the X-Resource extension to provide 'top' like statistics")
       (license licenses:gpl2+))))
 
 (define-public libsigrokdecode-master
   (package
     (inherit libsigrokdecode)
-    (version "0.5.3-02aa01a")
+    (version "0.5.3-73cb546")
     (source (origin
               (method git-fetch)
               (uri (git-reference
-                    (url "https://repo.or.cz/libsigrokdecode.git")
-                    (commit "02aa01ad5f05f2730309200abda0ac75d3721e1d")
+                    (url "git://sigrok.org/libsigrokdecode")
+                    (commit "73cb5461acdbd007f4aa9e81385940fad6607696")
                     (recursive? #t)))
-              (file-name (git-file-name "libsigrok" version))
+              (file-name (git-file-name "libsigrokdecode" version))
               (sha256
-               (base32 "054p2sja32d5shlbsvrpaw3pq7gg4n03327ml1dn53pjnsl0wbjz"))))
-    (native-inputs (append (package-native-inputs libsigrokdecode)
-                       `(("autoconf" ,autoconf)
-                         ("automake" ,automake)
-                         ("libtool" ,libtool))))))
+               (base32
+                "1i4jpkhb9yqf1fmbvlzdifj9arkspspffn93q8yh4vq5zr27k085"))))
+    (arguments
+     (append `(#:modules ((guix build utils)
+                          (guix build gnu-build-system)
+                          ((guix build gnu-build-system)
+                           #:prefix gnu:)))
+             (substitute-keyword-arguments (package-arguments libsigrokdecode)
+               ((#:phases phases)
+                `(modify-phases ,phases
+                   (replace 'bootstrap
+                     (assoc-ref gnu:%standard-phases
+                                'bootstrap)))))))
+    (native-inputs (modify-inputs (package-native-inputs libsigrokdecode)
+                     (append autoconf automake libtool)))))
 
 (define-public libsigrok-master
   (package
     (inherit libsigrok)
-    (version "0.5.3-e972674d")
+    (version "0.5.3-66d58fcb9")
     (source (origin
               (method git-fetch)
               (uri (git-reference
-                    (url "https://repo.or.cz/libsigrok.git")
-                    (commit "e972674d0b30b98dcc354b707a80b6bfc1aeb532")
+                    (url "git://sigrok.org/libsigrok.git")
+                    (commit "66d58fcb9fdd3a167b8fc6ca19f7f0a007c2ee8f")
                     (recursive? #t)))
               (file-name (git-file-name "libsigrok" version))
               (sha256
-               (base32 "0sp9y0wb6caw6d69h0z10hd6vgjgmi8z1a93i3yjbzxx8a48iyzg"))))
+               (base32
+                "1g15q92pdhpcy0lkk25yghwkdzd4f3f33ngm6i41g22vy9fv3npy"))))
     (inputs (append (package-inputs libsigrok)
-                `(("glibmm" ,glibmm-2.64))))
+                    `(("glibmm" ,glibmm-2.64))))
     (native-inputs (append (package-native-inputs libsigrok)
-                    `(("autoconf" ,autoconf)
-                      ("automake" ,automake)
-                      ("libtool" ,libtool))))))
-
+                           `(("autoconf" ,autoconf)
+                             ("automake" ,automake)
+                             ("libtool" ,libtool))))))
 
 (define-public pulseview-libsigrok-master
   (package
-    (inherit
-     ((package-input-rewriting/spec
-       `(("libsigrok" . ,(const libsigrok-master))
-         ("libsigrokdecode" . ,(const libsigrokdecode-master)))) pulseview))
-    (version (string-append (package-version pulseview) "-a6fa4d47"))
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "git://sigrok.org/pulseview.git")
-             (commit "a6fa4d477d783478935a78c1b70596e38ae8ca64")))
-       (file-name (git-file-name (package-name pulseview) version))
-       (sha256
-        (base32 "1j5g8w74zmskq1r0rj68yz4xqv4z9j91v2hwr3i2jyk4g3yfxvd3"))))
+    (inherit ((package-input-rewriting/spec `(("libsigrok" unquote
+                                               (const libsigrok-master))
+                                              ("libsigrokdecode" unquote
+                                               (const libsigrokdecode-master))))
+              pulseview))
+    (version (string-append (package-version pulseview) "-136995b8"))
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "git://sigrok.org/pulseview.git")
+                    (commit "136995b831c50d3261143b1183c73af55c9ba3a5")))
+              (file-name (git-file-name (package-name pulseview) version))
+              (sha256
+               (base32
+                "1m3cmp421qzgyj8bv13s4zraczjkrvwy58nxpwcwzb3c4w08919q"))))
     (inputs (append (package-inputs pulseview)
-              `(("glibmm" ,glibmm-2.64))))))
+                    `(("glibmm" ,glibmm-2.64))))))
 
 (define-public ofono
   (package
     (name "ofono")
-    (version "1.31")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "git://git.kernel.org/pub/scm/network/ofono/ofono.git")
-             (commit "285fad8f39d46a5f0a0f9d194789978227558d1e")))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32 "0f8ivncndjq13gn0nmrz0zm51nhnqm2rg2nr5fxzcwv6i2bcvg7z"))
-       (patches `("0001-Search-connectors-in-OFONO_PLUGIN_PATH.patch"))))
+    (version "2.0")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url
+                     "git://git.kernel.org/pub/scm/network/ofono/ofono.git")
+                    (commit "0f24601c553f3183a0843b50f6f271fd0eee174f")))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1vsxdykn68a9klc8r8pphr8dbn5zpdpj86na7gnpq4w1m62g0q8j"))
+              (patches `("0001-Search-connectors-in-OFONO_PLUGIN_PATH.patch"))))
     (build-system gnu-build-system)
-    (inputs `(("automake" ,automake) ("nettle" ,nettle) ("libtool" ,libtool)
-              ("autoconf" ,autoconf) ("autoconf-archive" ,autoconf-archive)
-              ("pkg-config" ,pkg-config) ("glib" ,glib) ("dbus" ,dbus) ("ell" ,ell)
-              ("udev" ,eudev) ("mobile-broadband-provider-info" ,mobile-broadband-provider-info)
+    (inputs `(("automake" ,automake)
+              ("nettle" ,nettle)
+              ("libtool" ,libtool)
+              ("autoconf" ,autoconf)
+              ("autoconf-archive" ,autoconf-archive)
+              ("pkg-config" ,pkg-config)
+              ("glib" ,glib)
+              ("dbus" ,dbus)
+              ("ell" ,ell)
+              ("udev" ,eudev)
+              ("mobile-broadband-provider-info" ,mobile-broadband-provider-info)
               ("bluez" ,bluez)))
-    (arguments '(#:configure-flags
-                 (list
-                  "--enable-external-ell"
-                  (string-append
-                   "--with-dbusconfdir=" (assoc-ref %outputs "out") "/etc")
-                  (string-append
-                   "--with-dbusdatadir=" (assoc-ref %outputs "out") "/share"))
-                 #:phases
-                 (modify-phases %standard-phases
-                   (delete 'check)))) ;; there are no tests
+    (arguments
+     '(#:configure-flags (list "--enable-external-ell"
+                               (string-append "--with-dbusconfdir="
+                                              (assoc-ref %outputs "out")
+                                              "/etc")
+                               (string-append "--with-dbusdatadir="
+                                              (assoc-ref %outputs "out")
+                                              "/share"))
+       #:phases (modify-phases %standard-phases
+                  (delete 'check)))) ;there are no tests
     (home-page "https://01.org/ofono")
     (synopsis "ofono")
     (description "ofono")
     (license licenses:gpl2)))
 
 (define %common-gstreamer-phases
-  '((add-after 'unpack 'increase-test-timeout
-      (lambda _
-        (substitute* "tests/check/meson.build"
-          (("'CK_DEFAULT_TIMEOUT', '[0-9]*'")
-           "'CK_DEFAULT_TIMEOUT', '600'")
-          (("timeout ?: .*\\)")
-           "timeout: 90 * 60)"))
-        #t))))
+  '((add-after 'unpack
+               'increase-test-timeout
+               (lambda _
+                 (substitute* "tests/check/meson.build"
+                   (("'CK_DEFAULT_TIMEOUT', '[0-9]*'")
+                    "'CK_DEFAULT_TIMEOUT', '600'")
+                   (("timeout ?: .*\\)")
+                    "timeout: 90 * 60)")) #t))))
 
 (define-public gstreamer-vaapi
   (package
     (name "gstreamer-vaapi")
-    (version "1.18.1")
+    (version (package-version gstreamer))
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "https://gstreamer.freedesktop.org/src/" name "/"
-                    name "-" version ".tar.xz"))
-              (patches
-                (list
-                 (origin (method url-fetch)
-                         (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/e99ecbb/gstreamer_vaapi.patch")
-                         (sha256 "06sk93zy9ddq3iynswjjiq4gv7kn5qgy5rnygjld34jxvmp2gyl6"))))
+              (uri (string-append "https://gstreamer.freedesktop.org/src/"
+                                  name
+                                  "/"
+                                  name
+                                  "-"
+                                  version
+                                  ".tar.xz"))
+              (patches (list (origin
+                               (method url-fetch)
+                               (uri
+                                "https://raw.githubusercontent.com/rroohhh/guix_packages/e99ecbb/gstreamer_vaapi.patch")
+                               (sha256
+                                "06sk93zy9ddq3iynswjjiq4gv7kn5qgy5rnygjld34jxvmp2gyl6"))))
               ;; (patches (search-patches "gstreamer_vaapi.patch"))
               (sha256
                (base32
-                "1sm6x2qa7ng78w0w8q4mjs7pbpbbk8qkfgzhdmbb8l0bh513q3a0"))))
+                "0i8bd46sxhf45b7vfx6wdy7r2rrqijyiaa806ynykpdb2srrxsbf"))))
     (build-system meson-build-system)
     (arguments
      ;; FIXME: 16/22 failing tests.
      `(#:tests? #f
        #:phases (modify-phases %standard-phases
                   ,@%common-gstreamer-phases)))
-    (inputs
-     `(("libva" ,libva)
-       ("gstreamer" ,gstreamer)
-       ("gst-plugins-base" ,gst-plugins-base)
-       ("gst-plugins-bad", gst-plugins-bad)
-       ("libdrm", libdrm)
-       ("mesa" ,mesa)))
-    (native-inputs
-     `(; ("flex" ,flex)
-                                        ; ("gst-plugins-bad" ,gst-plugins-bad)
-                                        ; ("gst-plugins-good" ,gst-plugins-good)
-                                        ; ("perl" ,perl)
-       ("pkg-config" ,pkg-config)))
-                                        ; ("python" ,python)
-
+    (inputs (list libva
+                  gstreamer
+                  gst-plugins-base
+                  gst-plugins-bad
+                  libdrm
+                  mesa))
+    (native-inputs (list pkg-config python-wrapper))
+    ;; `()); ("flex" ,flex)
+    ;; ("gst-plugins-bad" ,gst-plugins-bad)
+    ;; ("gst-plugins-good" ,gst-plugins-good)
+    ;; ("perl" ,perl)
+    ;; ("pkg-config" ,pkg-config)))
+    ;; ("python" ,python)
+    
     (home-page "https://gstreamer.freedesktop.org/")
     (synopsis "GStreamer library for vaapi")
     (description
      "Hardware-accelerated video decoding, encoding and processing on Intel graphics through VA-API")
     (license licenses:gpl2+)))
 
-(define-public carla-2.2
+(define-public carla-2.5.4
   (package
     (inherit carla)
-    (version "2.2.0")
-    (source
-     (origin
-       (method git-fetch)
-       (uri
-        (git-reference
-         (url "https://github.com/falkTX/Carla")
-         (commit (string-append "v" version))))
-       (file-name (git-file-name (package-name carla) version))
-       (sha256
-        (base32
-         "0p289d1aj5ymmd7724fdcjq34drrn7xg33qnyvrq4ns4wd36i307"))))))
+    (version "2.5.4")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/falkTX/Carla")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name (package-name carla) version))
+              (sha256
+               (base32
+                "1db1951mzwp7pb91by5xlafv2a8xp6d7kxf4iz84rzbxy5m3xpaa"))))))
 
 (define-public kicad-nightly
   (package
-   (inherit kicad)
-   (name "kicad-nightly")
-   (version "6.0.0-fe6cc0c3")
-   (source
-    (origin
-     (method git-fetch)
-     (uri (git-reference
-           (url "https://gitlab.com/kicad/code/kicad.git")
-              
-           (commit "fe6cc0c3d8a8784e061d0b77643e8334ed4d14ac")))
-     (sha256
-      (base32 "0yv54lz9jr48mz7qngfi31r04l852nfv8n0h6np7pkp48lqysqig"))
-     (file-name (git-file-name name version))))
-   (inputs (append `(("occ" ,opencascade-occt) ("gtk+3" ,gtk+)) (alist-delete  "opencascade-oce" (package-inputs kicad))))
-   (arguments
-     (substitute-keyword-arguments (package-arguments kicad)
-       ((#:configure-flags flags)
-        `(append `("-DKICAD_USE_OCC=true" ,(string-append "-DOCC_INCLUDE_DIR=" (assoc-ref %build-inputs "occ") "/include/opencascade")) ,flags))))))
-   
-
-(define synfig-version "1.4.0")
-(define-public etl
-  (package
-    (inherit guix:etl)
-    (version synfig-version)
+    (inherit kicad)
+    (name "kicad-nightly")
+    (version "7.0.1-27e2e")
     (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://sourceforge/synfig/releases/"
-                                  version "/source/ETL-" version ".tar.gz"))
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://gitlab.com/kicad/code/kicad.git")
+                    (commit "27e2e820cbf5d4ca50bc451177764bac939822bd")))
               (sha256
                (base32
-                "04d0s40z4g5ndnj90ma7sn42az14ay96l8b96iqi8q9mmk09ccyl"))))))
-
-(define-public synfig
-  (package
-    (inherit guix:synfig)
-    (version synfig-version)
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://sourceforge/synfig/releases/"
-                                  version "/source/synfig-" version
-                                  ".tar.gz"))
-              (sha256
-               (base32
-                "170c10rzz7kalharjffryavqv845hn8fd2dfvvhmkjcxp9zdadkz"))))
-    (propagated-inputs (append `(("ffmpeg" ,ffmpeg)) (package-propagated-inputs guix:synfig)))
-    (inputs (append `(("etl" ,etl)) (alist-delete  "etl" (package-inputs guix:synfig))))))
-
-(define-public synfigstudio
-  (package
-    (inherit guix:synfigstudio)
-    (version synfig-version)
-    (source (origin
-              (modules '((guix build utils)))
-              (snippet
-                '(begin
-                  (substitute* "src/gui/pluginmanager.cpp"
-                    (("xmlpp::Node\\* n =")    "const xmlpp::Node* n =")
-                    (("xmlpp::Node::NodeList") "xmlpp::Node::const_NodeList"))
-                  #t))
-              (method url-fetch)
-              (uri (string-append "mirror://sourceforge/synfig/releases/"
-                                      version "/source/synfigstudio-" version
-                                      ".tar.gz"))
-              (sha256
-                (base32
-                  "0mmx7z4p5vfdmbzkv7g1rsb9s1q5w2aijvap9abmfk16waiv27na"))))
-    (inputs (append `(("etl" ,etl) ("synfig" ,synfig)) (alist-delete  "synfig" (package-inputs guix:synfigstudio))))))
+                "1maqwhvmgw5x0fnc78fik3c73x7x61rs9h1kzzkbmpw900bfcpwp"))
+              (file-name (git-file-name name version))))))
 
 (define-public gst-rtsp-server
   (package
     (name "gst-rtsp-server")
-    (version "1.18.2")
+    (version (package-version gstreamer))
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "https://gstreamer.freedesktop.org/src/" name "/"
-                    name "-" version ".tar.xz"))
+              (uri (string-append "https://gstreamer.freedesktop.org/src/"
+                                  name
+                                  "/"
+                                  name
+                                  "-"
+                                  version
+                                  ".tar.xz"))
               (sha256
                (base32
-                "1qjlp7az0hkzxvq53hwnp55sp6xhbybfwzaj66hp45jslsmj4fcp"))))
+                "1jlljz6ccpfarjvhg8rvr5p95r229wdlrjk6bq77y4lvpqc2fh7f"))))
     (build-system meson-build-system)
     (arguments
-     `(#:tests? #f                      ;; 17/17 failing ^^
+     `(#:tests? #f ;17/17 failing ^^
        #:phases (modify-phases %standard-phases
                   ,@%common-gstreamer-phases)))
-    (inputs
-     `(("glib" ,glib) ("gstreamer" ,gstreamer)
-       ("gst-plugins-base" ,gst-plugins-base)
-       ("gst-plugins-bad" ,gst-plugins-bad)))
-    (native-inputs
-     `(("pkg-config" ,pkg-config)))
+    (inputs (list glib gstreamer gst-plugins-base gst-plugins-bad))
+    (native-inputs (list pkg-config python-wrapper))
     (home-page "https://gstreamer.freedesktop.org/")
     (synopsis "RTSP server based on GStreamer")
     (description
      "gst-rtsp-server is a library on top of GStreamer for building an RTSP server")
     (license licenses:gpl2+)))
 
-(define-public whatsapp-for-linux
-  (let ((commit "1.3.0"))
+(define-public ayatana-ido3
+  (let ((commit "0.9.3"))
     (package
-      (name "whatsapp-for-linux")
-      (version (string-append commit))
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/eneshecan/whatsapp-for-linux")
-                      (commit (string-append "v" commit))
-                      (recursive? #t)))
-                (file-name (git-file-name name version))
-                (sha256
-                 (base32
-                  "1dsqzai59k4x69dzc46r94vnpvhr85fg8iwdapczza4r767h5nam"))))
-      (build-system cmake-build-system)
-      (arguments '(#:phases
-                   (modify-phases %standard-phases
-                     (delete 'check))))
-      (inputs `(("gtkmm" ,gtkmm-3) ("webkitgtk" ,webkitgtk) ("libappindicator" ,libappindicator)
-                ("glib:bin" ,glib "bin")))
-      (native-inputs `(("pkg-config" ,pkg-config)))
-      (synopsis "An unofficial WhatsApp desktop application for Linux.")
-      (description "An unofficial WhatsApp desktop application for Linux.")
-      (home-page "https://github.com/eneshecan/whatsapp-for-linux")
-      (license licenses:gpl3))))
+     (name "ayatana-ido3")
+     (version commit)
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/AyatanaIndicators/ayatana-ido")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1pi0qan239chglhi1vx8ndlx3ppr3xjrr7alan0vw6m06wx89kmd"))))
+     (build-system cmake-build-system)
+     (inputs (list glib gtk+ gobject-introspection))
+     (native-inputs (list pkg-config googletest vala `(,glib "bin")))
+     (arguments `(#:tests? #f))
+     (synopsis "Ayatana Indicator Display Objects")
+     (description "Ayatana Indicator Display Objects")
+     (home-page "https://github.com/AyatanaIndicators/ayatana-ido")
+     (license licenses:lgpl3))))
 
-(define-public glslang-11.11
+
+(define-public libayatana-indicator
+  (let ((commit "0.9.3"))
+    (package
+     (name "libayatana-indicator")
+     (version commit)
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/AyatanaIndicators/libayatana-indicator")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "0wmsm6mj1sq1qhwbksqxj6g4lb1w78v63lgjhf1hm8wrrfnmrrml"))))
+     (build-system cmake-build-system)
+     (propagated-inputs (list ayatana-ido3))
+     (inputs (list glib gtk+))
+     (native-inputs (list pkg-config `(,glib "bin")))
+     (arguments
+      `(#:tests? #f
+        #:configure-flags `("-DENABLE_LOADER=OFF")))
+     (synopsis "Ayatana Indicators Shared Library")
+     (description "Ayatana Indicators Shared Library")
+     (home-page "https://github.com/AyatanaIndicators/libayatana-indicator")
+     (license licenses:gpl3))))
+
+(define-public libayatana-appindicator
+  (let ((commit "0.5.92"))
+    (package
+     (name "libayatana-appindicator")
+     (version commit)
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/AyatanaIndicators/libayatana-appindicator")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1c2yxrg834pn5vjw669vnvz7a235nl2hmw3djdi3s4zn2r09cdip"))))
+     (build-system cmake-build-system)
+     (propagated-inputs (list libdbusmenu libayatana-indicator))
+     (inputs (list glib gtk+ gobject-introspection))
+     (native-inputs (list pkg-config vala `(,glib "bin")))
+     (arguments
+      `(#:tests? #f
+        #:configure-flags `("-DENABLE_BINDINGS_MONO=NO")))
+     (synopsis "Ayatana Application Indicators Shared Library")
+     (description "Ayatana Application Indicators Shared Library")
+     (home-page "https://github.com/AyatanaIndicators/libayatana-appindicator")
+     (license licenses:lgpl3))))
+
+(define-public whatsapp-for-linux
+  (let ((commit "1.6.2"))
+    (package
+     (name "whatsapp-for-linux")
+     (version (string-append commit))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/eneshecan/whatsapp-for-linux")
+                    (commit (string-append "v" commit))
+                    (recursive? #t)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "136dkz9aingbc6swh2bfikfn82xxx57k2mndn6lc2sh542rkkld1"))))
+     (build-system cmake-build-system)
+     (arguments '(#:tests? #f))
+     (inputs (list gtkmm-3 webkitgtk libayatana-appindicator libcanberra))
+     (native-inputs (list pkg-config gnu-gettext `(,glib "bin")))
+     (synopsis "An unofficial WhatsApp desktop application for Linux.")
+     (description "An unofficial WhatsApp desktop application for Linux.")
+     (home-page "https://github.com/eneshecan/whatsapp-for-linux")
+     (license licenses:gpl3))))
+
+(define-public glslang-upstream
   (package
     (inherit glslang)
-    (version "11.11.0")
+    (version "12.1.0")
     (arguments
      (substitute-keyword-arguments (package-arguments glslang)
        ((#:configure-flags flags)
-        `(cons "-DENABLE_GLSLANG_INSTALL=Yes" ,flags))))
-    (source
-     (origin
-      (method git-fetch)
-      (uri (git-reference
-            (url "https://github.com/KhronosGroup/glslang")
-            (commit version)))
-      (sha256
-       (base32 "03jnaj90q2cg2hjdsg96ashz28dw5hcsg9rvf60bp2mphzzsklpq"))
-      (file-name (git-file-name (package-name glslang) version))))))
+        `(cons "-DENABLE_GLSLANG_INSTALL=Yes"
+               ,flags))))
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/KhronosGroup/glslang")
+                    (commit version)))
+              (sha256
+               (base32
+                "06g5m0y94a021zqvn1xmqfg44id3hqnyxqcc7y2cv8rndpn7z3jk"))
+              (file-name (git-file-name (package-name glslang) version))))))
 
-
-(define-public spirv-headers-2022
+(define-public spirv-headers-upstream
   (package
     (inherit spirv-headers)
-    (version "1.3.224.1")
-    (source
-     (origin
-      (method git-fetch)
-      (uri (git-reference
-            (url "https://github.com/KhronosGroup/SPIRV-Headers")
-            (commit (string-append "sdk-" version))))
-      (sha256
-       (base32 "0v4aimhn57lpwr12arz920wnxmnx39dj1qamppc5nfnh3ahlb259"))
-      (file-name (git-file-name (package-name spirv-headers) version))))))
+    (version "1.3.243.0")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/KhronosGroup/SPIRV-Headers")
+                    (commit (string-append "sdk-" version))))
+              (sha256
+               (base32
+                "1yf9bly4fp6wnc0gal0ga2gvjq1h1y5f10isqs332v2wlspvgsjl"))
+              (file-name (git-file-name (package-name spirv-headers) version))))))
 
-
-(define-public spirv-tools-2022
+(define-public spirv-tools-upstream
   (package
     (inherit spirv-tools)
-    (version "2022.2")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/KhronosGroup/SPIRV-Tools")
-             (commit (string-append "v" version))))
-       (sha256
-        (base32 "10k8al954kq4py2xpbxqj2nnspbx436d7dnhi44iyk2f4983x08f"))
-       (file-name (git-file-name (package-name spirv-tools) version))))
-    (inputs (modify-inputs (package-inputs spirv-tools) (replace "spirv-headers" spirv-headers-2022)))
+    (version "2023.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/KhronosGroup/SPIRV-Tools")
+                    (commit (string-append "v" version))))
+              (sha256
+               (base32
+                "0z8r8k7bl5zvfl8qpxjg6swbbn0s162djgym1h2f8i538nxi33lp"))
+              (file-name (git-file-name (package-name spirv-tools) version))))
+    (inputs (modify-inputs (package-inputs spirv-tools)
+              (replace "spirv-headers" spirv-headers-upstream)))
     (arguments
      (substitute-keyword-arguments (package-arguments spirv-tools)
        ((#:configure-flags flags)
-        `(cons "-DSPIRV_WERROR=No" ,flags))))))
+        `(cons "-DSPIRV_WERROR=No"
+               ,flags))))))
 
-(define-public shaderc-2022
+(define-public shaderc-upstream
   (package
     (inherit shaderc)
-    (version "2022.2")
+    (version "2023.3")
     (source (origin
               (method git-fetch)
+              (patches (search-patches "shaderc_glslang_libs.patch"))
               (uri (git-reference
                     (url "https://github.com/google/shaderc")
                     (commit (string-append "v" version))))
               (file-name (git-file-name "shaderc" version))
               (sha256
-               (base32 "09cmds47pzv2s8n3ig7rqmr5lx1746vhqfx4g63gjnvan792xr8l"))))
-    (inputs 
-      (modify-inputs (package-inputs shaderc)
-                     (replace "glslang" glslang-11.11)
-                     (replace "spirv-tools" spirv-tools-2022)
-                     (replace "spirv-headers" spirv-headers-2022)))))
+               (base32
+                "0sa0nmcxklx6yy67wvkc46mqzpj1x44r7w0fcif4x8zvzzh5hrwz"))))
+    (inputs (modify-inputs (package-inputs shaderc)
+              (replace "glslang" glslang-upstream)
+              (replace "spirv-tools" spirv-tools-upstream)
+              (replace "spirv-headers" spirv-headers-upstream)))))
 
 (define-public vulkan-headers-upstream
   (package
     (inherit vulkan-headers)
-    (version "1.3.226")
+    (version "1.3.246")
     (name (package-name vulkan-headers))
-    (source
-     (origin
-       (inherit (package-source vulkan-headers))
-       (uri (git-reference
-             (url "https://github.com/KhronosGroup/Vulkan-Headers")
-             (commit (string-append "v" version))))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32
-         "09nd22399q18245avwhn0i6vl647iq3m5vbf8vgcmq5cb6036n38"))))))
+    (source (origin
+              (inherit (package-source vulkan-headers))
+              (uri (git-reference
+                    (url "https://github.com/KhronosGroup/Vulkan-Headers")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1q4n81qrpr3x0rhh7r9r76jzn3a6qzi1q21dds9z5xc1hxz6kkdm"))))))
 
 (define-public vulkan-hpp
   (package
     (name "vulkan-hpp")
-    (version "1.3.226")
+    (version "1.3.246")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -588,74 +656,87 @@
                     (recursive? #t)))
               (file-name (git-file-name name version))
               (sha256
-               (base32 "0rp824p09sxfsq8f2x2xx02aljpr2rnyhbsj0m83j49i2jkmclcp"))))
+               (base32
+                "027i5r1nak4jgjh8f8awa4gx4rdmxc09vrkr5mm4z398d7jcdhwf"))))
     (build-system cmake-build-system)
     (arguments
-     `(#:phases (modify-phases %standard-phases (delete 'check)
-                               (add-after 'unpack 'remove-w-error
-                                 (lambda _
-                                   (substitute* "CMakeLists.txt" (("-Werror") ""))
-                                   #t)))
+     `(#:phases (modify-phases %standard-phases
+                  (delete 'check)
+                  (add-after 'unpack 'remove-w-error
+                    (lambda _
+                      (substitute* "CMakeLists.txt"
+                        (("-Werror")
+                         "")) #t)))
        #:configure-flags (list "-DVULKAN_HPP_INSTALL=Yes"
-                               (string-append  "-DCMAKE_INSTALL_INCLUDEDIR=" (assoc-ref %outputs "out") "/include"))))
+                               (string-append "-DCMAKE_INSTALL_INCLUDEDIR="
+                                              (assoc-ref %outputs "out")
+                                              "/include"))))
     (home-page "https://github.com/KhronosGroup/Vulkan-Hpp")
     (synopsis "Open-Source Vulkan C++ API")
     (description "Vulkan-Hpp: C++ Bindings for Vulkan")
     (license licenses:asl2.0)))
 
 (define-public zfp
-  (let* ((version "0.5.5"))
+  (let* ((version "1.0.0"))
     (package
       (name "zfp")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/LLNL/zfp/releases/download/" version "/zfp-" version ".tar.gz"))
-         (sha256
-          (base32 "1ickfca08ga6scgabf4gmlby894cv67h9hp2rzffbx5ip94bkxzx"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/LLNL/zfp/releases/download/" version
+                      "/zfp-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "1i0pnqm6qnwlp1chrjm4qhmqks1ddrdvlhfgp3w94g0fwpiqm80f"))))
       (inputs (list python python-numpy python-cython))
       (build-system cmake-build-system)
-      (arguments '(#:configure-flags `("-DBUILD_ZFPY=YES")))
+      (arguments
+       '(#:configure-flags `("-DBUILD_ZFPY=YES")))
       (home-page "https://computing.llnl.gov/projects/zfp")
       (synopsis "zfp: Compressed Floating-Point and Integer Arrays")
       (description "zfp: Compressed Floating-Point and Integer Arrays")
       (license licenses:bsd-3))))
 
 (define-public std_compat
-  (let* ((version "0.0.14")
-         (commit "cd2dcc2963c59c76f853f689d4e43b37caea1277"))
+  (let* ((version "0.0.16")
+         (commit "5ac9cb295cf7988df297a06c434504a50647b0b4"))
     (package
       (name "std_compat")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/robertu94/std_compat")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32 "0a6wcy3pbcv7j48dxkp9m9970yzkrfdy849y6iskbdgc3rn9a51h"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/robertu94/std_compat")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "11kvdk1s4qy0mffma0vfgr407pdn4j1rps495n6pnl6pdw29gyjy"))))
       (build-system cmake-build-system)
-      (arguments '(#:configure-flags `("-DBUILD_TESTING=NO")
-                   #:phases (modify-phases %standard-phases
-                                           (delete 'check))))
+      (arguments
+       '(#:configure-flags `("-DBUILD_TESTING=NO")
+         #:phases (modify-phases %standard-phases
+                    (delete 'check))))
       (home-page "https://github.com/robertu94/std_compat")
       (synopsis "compatability header for older c++")
       (description "compatability header for older c++")
       (license #f))))
 
 (define-public sz
-  (let* ((version "2.1.12.2"))
+  (let* ((version "2.1.12.5"))
     (package
       (name "sz")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/szcompressor/SZ/releases/download/v" version "/SZ-" version ".tar.gz"))
-         (sha256
-          (base32 "1ikd0sv0mivnd22idp9mby6xgihrda7gy2iyw5b0l6zd3wz2czj2"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/szcompressor/SZ/releases/download/v"
+                      version "/SZ-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "173jm1dhmkalwxxwxzysr6jrhi1f7798j0rhfykmd481yvd21a1j"))))
       (inputs (list python python-numpy python-cython zlib zstd-cmake))
       (build-system cmake-build-system)
       (home-page "https://github.com/szcompressor/SZ")
@@ -668,36 +749,44 @@
     (package
       (name "SZauto")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/szcompressor/SZauto/releases/download/" version "/SZauto-" version ".tar.gz"))
-         (sha256
-          (base32 "0fmh141swmfqsaghi32rwl0hbpq7g4jajr7q9rl4z1rsvxc8ziam"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/szcompressor/SZauto/releases/download/"
+                      version "/SZauto-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "0fmh141swmfqsaghi32rwl0hbpq7g4jajr7q9rl4z1rsvxc8ziam"))))
       (build-system cmake-build-system)
       (inputs (list zstd-cmake))
       (home-page "https://github.com/szcompressor/SZauto")
-      (synopsis "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
-      (description "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
+      (synopsis
+       "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
+      (description
+       "SZauto: SZ C++ Version that Supports Second-Order Prediction and Parameter Optimization")
       (license #f))))
 
 (define-public SZ3
-  (let* ((version "3.1.4"))
+  (let* ((version "3.1.7"))
     (package
       (name "SZ3")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (patches (search-patches "sz3_zstd_cmake.patch"))
-         (uri (string-append "https://github.com/szcompressor/SZ3/archive/refs/tags/v." version ".tar.gz"))
-         (sha256
-          (base32 "0jrzpingv09kb6xigc923y60b6x9vqz7fx39a2gad3c7z17rv3w5"))))
+      (source (origin
+                (method url-fetch)
+                (patches (search-patches "sz3_zstd_cmake.patch"))
+                (uri (string-append
+                      "https://github.com/szcompressor/SZ3/archive/refs/tags/v"
+                      version ".tar.gz"))
+                (sha256
+                 (base32
+                  "146klxxkwfkxpvj4a3z4rygarlcgdjjiycwmwn01xzwk0wqylz82"))))
       (build-system cmake-build-system)
       (inputs (list zstd-cmake gsl))
       (home-page "https://github.com/szcompressor/SZ3")
-      (synopsis "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
-      (description "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
+      (synopsis
+       "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
+      (description
+       "SZ3: A Modular Error-bounded Lossy Compression Framework for Scientific Datasets")
       (license #f))))
 
 (define-public digitroundingZ
@@ -705,20 +794,24 @@
          (commit "68555fade9ecb1b123f29436461e02f7acb4f738"))
     (package
       (name "digitroundingZ")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/disheng222/digitroundingZ")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32 "1i8l41k6mm9hfipamhdm1sw35zxwcfh7p64h3chdsq37023hvyl6"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/disheng222/digitroundingZ")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "1i8l41k6mm9hfipamhdm1sw35zxwcfh7p64h3chdsq37023hvyl6"))))
       (build-system cmake-build-system)
       (inputs (list zlib))
       (home-page "https://github.com/disheng222/digitroundingZ")
-      (synopsis "The standalone digit rounding compressor which will be convenient for evaluation")
-      (description "The standalone digit rounding compressor which will be convenient for evaluation")
+      (synopsis
+       "The standalone digit rounding compressor which will be convenient for evaluation")
+      (description
+       "The standalone digit rounding compressor which will be convenient for evaluation")
       (license licenses:lgpl3))))
 
 (define-public bitgroomingZ
@@ -726,15 +819,17 @@
          (commit "4816b7f1b92765cac57bd01cd4e3cde1b8bdb65f"))
     (package
       (name "bitgroomingZ")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/disheng222/bitgroomingZ")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32 "1yab8x15067z97559azqns7v57ldzsawgnvyr1nd80qzivyxmbs6"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/disheng222/bitgroomingZ")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "1yab8x15067z97559azqns7v57ldzsawgnvyr1nd80qzivyxmbs6"))))
       (build-system cmake-build-system)
       (inputs (list zlib))
       (home-page "https://github.com/disheng222/BitGroomingZ")
@@ -743,22 +838,25 @@
       (license #f))))
 
 (define-public mgard
-  (let* ((version "1.0.0")
+  (let* ((version "1.5.0")
          (commit "0f6cdf9b59e837547e3298be7187de8df376bb18"))
     (package
       (name "mgard")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/CODARcode/MGARD")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32 "0382ijm5pc8cvrkqzx9hv4g8pzk2r5vbn6gih374r3as04zj9swj"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/CODARcode/MGARD")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "0382ijm5pc8cvrkqzx9hv4g8pzk2r5vbn6gih374r3as04zj9swj"))))
       (build-system cmake-build-system)
       (inputs (list zstd-cmake zlib python protobuf pkg-config))
-      (arguments `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")))
+      (arguments
+       `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")))
       (home-page "https://github.com/CODARcode/MGARD")
       (synopsis "MGARD: MultiGrid Adaptive Reduction of Data")
       (description "MGARD: MultiGrid Adaptive Reduction of Data")
@@ -769,19 +867,23 @@
          (commit "7d9715e612488731dfa5f8e488e7976539464c3e"))
     (package
       (name "mgard")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/CODARcode/MGARD")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32 "0pyk3p3q2jamc0i84g9pg4m5qgk8ic7b90y1j1fmfqqygb7whzim"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/CODARcode/MGARD")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "0pyk3p3q2jamc0i84g9pg4m5qgk8ic7b90y1j1fmfqqygb7whzim"))))
       (build-system cmake-build-system)
       (inputs (list zstd-cmake zlib python protobuf pkg-config))
-      (arguments `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")
-                   #:phases (modify-phases %standard-phases (delete 'check))))
+      (arguments
+       `(#:configure-flags '("-DMGARD_ENABLE_CLI=YES")
+         #:phases (modify-phases %standard-phases
+                    (delete 'check))))
       (home-page "https://github.com/CODARcode/MGARD")
       (synopsis "MGARD: MultiGrid Adaptive Reduction of Data")
       (description "MGARD: MultiGrid Adaptive Reduction of Data")
@@ -789,25 +891,60 @@
 
 (define-public ndzip
   (let* ((version "0.1")
+         (commit "ff4e6702bf0abb86d4aeef8249bd30344dfeef75"))
+    (package
+      (name "ndzip")
+      (version (string-append version "-"
+                              (string-take commit 9)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/fknorr/ndzip")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (patches (search-patches "ndzip_install.patch"))
+                (sha256
+                 (base32
+                  "0x58gglrw4fff2n31kda2il2rbpr68nng4i03jaf59i20nccjb0a"))))
+      (build-system cmake-build-system)
+      (inputs (list boost))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (delete 'check))))
+      (home-page "https://github.com/fknorr/ndzip")
+      (synopsis
+       "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (description
+       "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (license licenses:expat))))
+
+(define-public ndzip-old
+  (let* ((version "0.1")
          (commit "4e6e38e40af7f44fda05569a976445b226275997"))
     (package
       (name "ndzip")
-      (version (string-append version "-" (string-take commit 9)))
+      (version (string-append version "-"
+                              (string-take commit 9)))
       (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/fknorr/ndzip")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (patches (search-patches "ndzip_install.patch"))
-              (sha256
-               (base32 "0iahng8k6mhdg2xf3ric5zv2wdhcffz9sjvlix7v4cxixl846xi0"))))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/fknorr/ndzip")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (patches (search-patches "ndzip_install_old.patch"))
+                (sha256
+                 (base32
+                  "0iahng8k6mhdg2xf3ric5zv2wdhcffz9sjvlix7v4cxixl846xi0"))))
       (build-system cmake-build-system)
       (inputs (list boost))
-      (arguments `(#:phases (modify-phases %standard-phases (delete 'check))))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (delete 'check))))
       (home-page "https://github.com/fknorr/ndzip")
-      (synopsis "A High-Throughput Parallel Lossless Compressor for Scientific Data")
-      (description "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (synopsis
+       "A High-Throughput Parallel Lossless Compressor for Scientific Data")
+      (description
+       "A High-Throughput Parallel Lossless Compressor for Scientific Data")
       (license licenses:expat))))
 
 (define-public fpzip
@@ -815,16 +952,20 @@
     (package
       (name "fpzip")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/LLNL/fpzip/releases/download/" version "/fpzip-" version ".tar.gz"))
-         (sha256
-          (base32 "0v0ky3sdqwg13k2zvy786kbzrhvp59mrb5s79jmgxqsr8bcgg394"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/LLNL/fpzip/releases/download/"
+                      version "/fpzip-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "0v0ky3sdqwg13k2zvy786kbzrhvp59mrb5s79jmgxqsr8bcgg394"))))
       (build-system cmake-build-system)
       (home-page "https://github.com/LLNL/fpzip")
-      (synopsis "Lossless compressor of multidimensional floating-point arrays")
-      (description "Lossless compressor of multidimensional floating-point arrays")
+      (synopsis
+       "Lossless compressor of multidimensional floating-point arrays")
+      (description
+       "Lossless compressor of multidimensional floating-point arrays")
       (license licenses:bsd-3))))
 
 (define-public sol2
@@ -832,14 +973,18 @@
     (package
       (name "sol2")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/ThePhD/sol2/archive/refs/tags/v" version ".tar.gz"))
-         (sha256
-          (base32 "1nmjlfqfi3fqqwzgqpl48ljsg6z47m1raddcvg91v0n1w3d905ql"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/ThePhD/sol2/archive/refs/tags/v"
+                      version ".tar.gz"))
+                (sha256
+                 (base32
+                  "1nmjlfqfi3fqqwzgqpl48ljsg6z47m1raddcvg91v0n1w3d905ql"))))
       (build-system cmake-build-system)
-      (arguments `(#:phases (modify-phases %standard-phases (delete 'check))))
+      (arguments
+       `(#:phases (modify-phases %standard-phases
+                    (delete 'check))))
       (home-page "https://github.com/ThePhD/sol2")
       (synopsis "sol2 is a C++ library binding to Lua")
       (description "sol2 is a C++ library binding to Lua")
@@ -850,191 +995,134 @@
     (inherit zstd)
     (build-system cmake-build-system)
     (outputs '("out"))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check)
-                            (add-before 'configure 'chdir
-                              (lambda* _
-                                (chdir "build/cmake")
-                                #t)))))))
+    (arguments
+     `(#:phases (modify-phases %standard-phases
+                  (delete 'check)
+                  (add-before 'configure 'chdir
+                    (lambda* _
+                      (chdir "build/cmake") #t)))))))
 
 (define-public libpressio
-  (let* ((version "0.83.4"))
+  (let* ((version "0.94.0"))
     (package
       (name "libpressio")
       (version version)
       (source (origin
-              (modules '((guix build utils)))
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/robertu94/libpressio")
-                    (commit version)))
-              (file-name (git-file-name name version))
-              (patches (search-patches "libpressio_python_install_path.patch"))
-              (snippet
-                '(begin
-                  (substitute* "CMakeLists.txt"
-                    (("CMP0069 NEW)") "SET CMP0069 NEW)
-find_package(\"zstd\")
-")
-                    (("NDZip") "ndzip"))
-                  #t))
-              (sha256
-               (base32 "0hh9y6qj4mr7zgw8p80gd8vxfw2vlwh4gcc6s5s16nj8cjj025zz"))))
-      (build-system cmake-build-system)
-      (arguments 
-        '(#:configure-flags 
-          `("-DBUILD_TESTING=NO"
-            "-DLIBPRESSIO_INTERPROCEDURAL_OPTIMIZATION=YES"
-            "-DLIBPRESSIO_HAS_OPENMP=YES"
-            "-DLIBPRESSIO_HAS_SZ_AUTO=YES"
-            "-DLIBPRESSIO_HAS_ZFP=YES"
-            "-DLIBPRESSIO_HAS_SZ=YES"
-            "-DLIBPRESSIO_HAS_BLOSC=YES"
-            "-DLIBPRESSIO_HAS_MAGICK=YES"
-            "-DLIBPRESSIO_HAS_HDF=YES"
-            "-DLIBPRESSIO_HAS_FPZIP=YES"
-            "-DLIBPRESSIO_HAS_PETSC=YES"
-            "-DLIBPRESSIO_HAS_LUA=YES"
-            "-DLIBPRESSIO_HAS_JSON=YES"
-            "-DBUILD_PYTHON_WRAPPER=YES"
-            "-DLIBPRESSIO_HAS_DIGIT_ROUNDING=YES"
-            "-DLIBPRESSIO_HAS_BIT_GROOMING=YES"
-            "-DLIBPRESSIO_HAS_LINUX=YES"
-            "-DLIBPRESSIO_BUILD_MODE=FULL"
-            "-DLIBPRESSIO_HAS_BZIP2=YES"
-            "-DLIBPRESSIO_HAS_SZ3=YES"
-            "-DLIBPRESSIO_HAS_NETCDF=YES"
-            "-DLIBPRESSIO_HAS_NDZIP=YES"
-            "-DLIBPRESSIO_HAS_MGARD=NO")
-          #:phases (modify-phases %standard-phases (delete 'check))))
-      (inputs (list pkg-config std_compat boost zfp c-blosc hdf5 imagemagick sz
-                    digitroundingZ zlib bitgroomingZ SZauto zstd-cmake
-                    protobuf SZ3 ndzip netcdf fpzip sol2 luajit json-modern-cxx 
-                    python-numpy python swig petsc))
-      (home-page "https://github.com/CODARcode/libpressio")
-      (synopsis "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
-      (description "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
-      (license #f))))
-
-
-(define-public libuv-for-neovim
-  (let* ((version "1.43.0"))
-    (package
-     (inherit libuv)
-     (version version)
-     (source (origin
-               (method url-fetch)
-               (uri (string-append "https://dist.libuv.org/dist/v" version
-                                       "/libuv-v" version ".tar.gz"))
-               (sha256
+                (modules '((guix build utils)))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/robertu94/libpressio")
+                      (commit version)))
+                (file-name (git-file-name name version))
+                (patches (search-patches
+                          "libpressio_python_install_path.patch"))
+                (snippet '(begin
+                            (substitute* "CMakeLists.txt"
+                              (("CMP0069 NEW)")
+                               "SET CMP0069 NEW)\nfind_package(\"zstd\")\n")
+                              (("NDZip")
+                               "ndzip")) #t))
+                (sha256
                  (base32
-                   "194kwq3jfj9s628kzkchdca534rikjw0xiyas0cjbphqmsvjpmwh")))))))
-
-(define-public lua5.1-luv-for-neovim
-  (let* ((version "1.43.0-0"))
-    (package
-     (inherit lua5.1-luv)
-     (version version)
-     (source (origin
-              ;; The release tarball includes the sources of libuv but does
-              ;; not include the pkg-config files.
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/luvit/luv")
-                    (commit version)))
-              (file-name (git-file-name (package-name lua5.1-luv) version))
-              (sha256
-               (base32
-                "1yzi4bm845vl84wyv2qw4z1n1v285lgwm681swmp84brfy2s7czp"))))
-     (arguments
-       (substitute-keyword-arguments (package-arguments lua5.1-luv)
-         ((#:phases phases)
-           `(modify-phases ,phases
-             (delete 'copy-lua-compat)
-             (add-after 'unpack 'copy-lua-compat
-               (lambda* (#:key inputs #:allow-other-keys)
-                 (copy-recursively (assoc-ref inputs "lua-compat")
-                                   "lua-compat")
-                 (setenv "CPATH"
-                         (string-append (getcwd) "/lua-compat/c-api:"
-                                        (or (getenv "CPATH") "")))
-                 #t))))))
-     (inputs (modify-inputs (package-inputs lua5.1-luv) (replace "libuv" libuv-for-neovim)))
-     (native-inputs
-       (modify-inputs
-         (package-native-inputs lua5.1-luv)
-         (replace "lua-compat"
-           (origin
-             (method git-fetch)
-             (uri (git-reference
-                   (url "https://github.com/keplerproject/lua-compat-5.3")
-                   (commit "e245d3a18957e43ef902a59a72c8902e2e4435b9")))
-             (file-name "lua-compat-5.3-checkout")
-             (sha256
-              (base32
-                "1caxn228gx48g6kymp9w7kczgxcg0v0cd5ixsx8viybzkd60dcn4")))))))))
-
-(define-public neovim-latest
-  (let* ((version "0.7.0"))
-    (package
-     (inherit neovim)
-     (version version)
-     (source
-      (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/neovim/neovim")
-             (commit (string-append "v" version))))
-       (file-name (git-file-name (package-name neovim) version))
-       (sha256
-        (base32 "1m7xmry66pn27gvk7qj9di83xa1h7zjp4c6ygnf218pqhr08x06g"))))
-     (inputs
-       (modify-inputs
-         (package-inputs neovim)
-         (replace "lua-luv" lua5.1-luv-for-neovim)
-         (replace "libuv" libuv-for-neovim))))))
-
+                  "0ld4fvcc8q03wdp8vz2qfzxqssg5ss3av0sdh6qlg1rlz78lp31y"))))
+      (build-system cmake-build-system)
+      (arguments
+       '(#:configure-flags `("-DBUILD_TESTING=NO"
+                             "-DLIBPRESSIO_INTERPROCEDURAL_OPTIMIZATION=YES"
+                             "-DLIBPRESSIO_HAS_OPENMP=YES"
+                             "-DLIBPRESSIO_HAS_SZ_AUTO=YES"
+                             "-DLIBPRESSIO_HAS_ZFP=YES"
+                             "-DLIBPRESSIO_HAS_SZ=YES"
+                             "-DLIBPRESSIO_HAS_BLOSC=YES"
+                             "-DLIBPRESSIO_HAS_MAGICK=YES"
+                             "-DLIBPRESSIO_HAS_HDF=YES"
+                             "-DLIBPRESSIO_HAS_FPZIP=YES"
+                             "-DLIBPRESSIO_HAS_PETSC=YES"
+                             "-DLIBPRESSIO_HAS_LUA=YES"
+                             "-DLIBPRESSIO_HAS_JSON=YES"
+                             "-DBUILD_PYTHON_WRAPPER=YES"
+                             "-DLIBPRESSIO_HAS_DIGIT_ROUNDING=YES"
+                             "-DLIBPRESSIO_HAS_BIT_GROOMING=YES"
+                             "-DLIBPRESSIO_HAS_LINUX=YES"
+                             "-DLIBPRESSIO_BUILD_MODE=FULL"
+                             "-DLIBPRESSIO_HAS_BZIP2=YES"
+                             "-DLIBPRESSIO_HAS_SZ3=YES"
+                             "-DLIBPRESSIO_HAS_NETCDF=YES"
+                             "-DLIBPRESSIO_HAS_NDZIP=YES"
+                             "-DLIBPRESSIO_HAS_MGARD=NO")
+         #:phases (modify-phases %standard-phases
+                    (delete 'check))))
+      (inputs (list pkg-config
+                    std_compat
+                    boost
+                    zfp
+                    c-blosc
+                    hdf5
+                    imagemagick
+                    sz
+                    digitroundingZ
+                    zlib
+                    bitgroomingZ
+                    SZauto
+                    zstd-cmake
+                    protobuf
+                    SZ3
+                    ndzip-old
+                    netcdf
+                    fpzip
+                    sol2
+                    luajit
+                    json-modern-cxx
+                    python-numpy
+                    python
+                    swig
+                    petsc
+                    gsl))
+      (home-page "https://github.com/CODARcode/libpressio")
+      (synopsis
+       "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
+      (description
+       "LibPressio is a C++ library with C compatible bindings to abstract between different lossless and lossy compressors and their configurations")
+      (license #f))))
 
 (define-public ffmpeg-with-rubberband
   (package
     (inherit ffmpeg)
     (arguments
-      (substitute-keyword-arguments (package-arguments ffmpeg)
-        ((#:configure-flags flags)
-         `(cons "--enable-librubberband" ,flags))))
-    (inputs
-      (modify-inputs
-        (package-inputs ffmpeg)
-        (append rubberband)))))
+     (substitute-keyword-arguments (package-arguments ffmpeg)
+       ((#:configure-flags flags)
+        `(cons "--enable-librubberband"
+               ,flags))))
+    (inputs (modify-inputs (package-inputs ffmpeg)
+              (append rubberband)))))
 
 (define-public mpv-with-rubberband
   (package
     (inherit mpv)
     (name "mpv-rubberband")
-    (inputs
-      (modify-inputs
-        (package-inputs mpv)
-        (replace "ffmpeg" ffmpeg-with-rubberband)))))
-
+    (inputs (modify-inputs (package-inputs mpv)
+              (replace "ffmpeg" ffmpeg-with-rubberband)))))
 
 (define-public advancecomp
-  (let* ((version "2.3"))
+  (let* ((version "2.5"))
     (package
       (name "advancecomp")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append
-               "https://github.com/amadvance/advancecomp/releases/download/v"
-               version "/advancecomp-" version ".tar.gz"))
-         (sha256
-          (base32 "0y3mcnzbxxs928nb4l5q529zjana0gj37wganpffzpdxzcfnc7w1"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/amadvance/advancecomp/releases/download/v"
+                      version "/advancecomp-" version ".tar.gz"))
+                (sha256
+                 (base32
+                  "01vw669rslf84nnqbbfbfpiyk3ii485qbgl5irjp0ivv72nyrf4h"))))
       (build-system gnu-build-system)
       (inputs (list zlib))
       (home-page "https://www.advancemame.it/comp-readme.html")
-      (synopsis "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
-      (description "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
+      (synopsis
+       "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
+      (description
+       "AdvanceCOMP is a collection of recompression utilities for your .ZIP archives, .PNG snapshots, .MNG video clips and .GZ files.")
       (license licenses:gpl2))))
 
 (define-public bash-preexec
@@ -1042,19 +1130,18 @@ find_package(\"zstd\")
     (package
       (name "bash-prexeec")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/rcaloras/bash-preexec/archive/refs/tags/" version ".tar.gz"))
-         (sha256
-          (base32 "0z479chg7i6j9apwqs1f3fx345mi3gcciyljixcw02d23p6qki93"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/rcaloras/bash-preexec/archive/refs/tags/"
+                      version ".tar.gz"))
+                (sha256
+                 (base32
+                  "0z479chg7i6j9apwqs1f3fx345mi3gcciyljixcw02d23p6qki93"))))
       (build-system copy-build-system)
       (arguments
-       '(#:install-plan
-         '(("bash-preexec.sh" "bash-preexec.sh"))))
-      (home-page
-       "https://github.com/rcaloras/bash-preexec")
+       '(#:install-plan '(("bash-preexec.sh" "bash-preexec.sh"))))
+      (home-page "https://github.com/rcaloras/bash-preexec")
       (synopsis "preexec and precmd functions for Bash just like Zsh.")
-      (description
-       "preexec and precmd functions for Bash just like Zsh.")
+      (description "preexec and precmd functions for Bash just like Zsh.")
       (license licenses:expat))))

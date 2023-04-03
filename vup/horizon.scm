@@ -29,7 +29,7 @@
 
 
 (define-public horizon
-  (let ((commit "750111e829cd6f3563ef8040c224ce147808c27d"))
+  (let ((commit "a7690407e84fe6304e8a6b891837f880f1a7c274"))
     (package
       (name "horizon")
       (version (string-append "2.4.0+" (string-take commit 7)))
@@ -42,7 +42,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0vx3ba4m1knjq53dylj9n3l38cnqihgj6x4jvkr0zmzspic4n6j3"))))
+                  "1zvw16h8ibmwpcrmswnfwx7lb2r9jnnq3524vak0dpg5yar6gms0"))))
       (build-system glib-or-gtk-build-system)
       (inputs `(("pkg-config" ,pkg-config) ("util-linux" ,util-linux) ("yaml-cpp" ,yaml-cpp)
                 ("sqlite" ,sqlite) ("gtkmm" ,gtkmm-3) ("curl" ,curl) ("glib" ,glib)
@@ -71,6 +71,3 @@
       (description "Horizon EDA is an Electronic Design Automation package supporting an integrated end-to-end workflow for printed circuit board design including parts management and schematic entry.")
       (home-page "https://horizon-eda.org/")
       (license license:gpl3))))
-
-
-horizon

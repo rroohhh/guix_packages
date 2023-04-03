@@ -12,13 +12,13 @@
 (define-public vault
   (package
     (name "vault")
-    (version "386")
+    (version "1.13.1")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://releases.hashicorp.com/vault/" version "/vault_" version "_linux_amd64.zip"))
        (sha256
-        (base32 "0jfbpbbvvzxbpnbr31fgvn27b16n38w7ihgqnfrzw4zva57mdic4"))))
+        (base32 "19lnwya2xq6qi2x3jf4yanq1znkpx9r6da6l418m21h8ng81a46g"))))
     (build-system trivial-build-system)
     (native-inputs `(("unzip" ,unzip)))
     (arguments
@@ -39,13 +39,13 @@
 (define-public rtsp-simple-server
   (package
     (name "rtsp-simple-server")
-    (version "0.16.4")
+    (version "0.21.6")
     (source
      (origin
        (method url-fetch/tarbomb)
        (uri (string-append "https://github.com/aler9/rtsp-simple-server/releases/download/v" version "/rtsp-simple-server_v" version "_linux_amd64.tar.gz"""))
        (sha256
-        (base32 "1nabx2zmkx758cw7szg118x61hl2y8hp13a5pai4f3q391vag7h6"))))
+        (base32 "1w8hjndviylh9nm023dm003xrsac5pk6g1wgww0rnw9vczfv6bx0"))))
     (build-system copy-build-system)
     (arguments
      '(#:install-plan

@@ -32,6 +32,8 @@
                  (if date (string-append date "/") "")
                  "rustc-" version "-src.tar.gz"))
 
+(define rust-1.65 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.65))
+
 (define* (rust-bootstrapped-package base-rust version checksum #:key date)
   "Bootstrap rust VERSION with source checksum CHECKSUM using BASE-RUST."
   (package
@@ -48,8 +50,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.61.0"
-           "1vfs05hkf9ilk19b2vahqn8l6k17pl9nc1ky9kgspaascx8l62xd")))
+         (rust-bootstrapped-package rust-1.65 "1.66.1"
+           "1fjr94gsicsxd2ypz4zm8aad1zdbiccr7qjfbmq8f8f7jhx96g2v")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -58,7 +60,7 @@
         (origin
           (inherit (package-source base-rust))
           (snippet #f)))
-      (inputs (append (alist-replace "llvm" (list llvm-14) (package-inputs base-rust)) `(("ninja" ,ninja))))
+      (inputs (append (alist-replace "llvm" (list llvm-15) (package-inputs base-rust)) `(("ninja" ,ninja))))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
@@ -87,12 +89,13 @@
 sanitizers = true
 profiler = true
 extended = true
-tools = [\"cargo\",  \"rust-demangler\", \"rls\", \"clippy\", \"llvm-tools\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\"]"))
+tools = [\"cargo\",  \"rust-demangler\", \"clippy\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\", \"miri\"]"))
                  (substitute* "config.toml"
                    (("jemalloc=true")
                     "jemalloc=true
 codegen-backends=[\"llvm\"]
 lld=true
+use-lld=false
 llvm-tools=true
 "))
                  #t))
@@ -127,13 +130,17 @@ llvm-tools=true
                ;; particular, vendor/jemalloc/rep/Makefile).
                (lambda* _
                  (use-modules (guix build cargo-utils))
-                 (substitute* "Cargo.lock"
-                   (("(checksum = )\".*\"" all name)
-                    (string-append name "\"" ,%cargo-reference-hash "\"")))
-                 (substitute* "src/tools/rust-analyzer/Cargo.lock"
+                 (substitute* '("Cargo.lock"
+                                "src/tools/rust-analyzer/Cargo.lock"
+                                "src/tools/miri/Cargo.lock"
+                                "src/tools/rustfmt/Cargo.lock"
+                                "src/bootstrap/Cargo.lock"
+                                "compiler/rustc_codegen_gcc/Cargo.lock"
+                                "compiler/rustc_codegen_cranelift/Cargo.lock")
                    (("(checksum = )\".*\"" all name)
                     (string-append name "\"" ,%cargo-reference-hash "\"")))
                  (generate-all-checksums "vendor")
+                 (generate-all-checksums "compiler")
                  (generate-all-checksums "src/tools")
                  #t))
              (delete 'delete-install-logs)
@@ -155,3 +162,7 @@ llvm-tools=true
               (lambda _
                 (substitute* "config.toml"
                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
+
+(define-public rust-nightly-1.67
+  (rust-bootstrapped-package
+   rust-nightly "1.67.1" "0vpzv6rm3w1wbni17ryvcw83k5klhghklylfdza3nnp8blz3sj26"))

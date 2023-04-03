@@ -2,11 +2,10 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 08cf61f..5656110 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,7 +11,8 @@ option(NDZIP_WITH_3RDPARTY_BENCHMARKS "Build third-party libraries for benchmark
+@@ -11,6 +11,7 @@ option(NDZIP_WITH_3RDPARTY_BENCHMARKS "Build third-party libraries for benchmark
  
  set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
  include(SplitConfiguration)
- include(CheckLanguage)
 +include(GNUInstallDirs)
  
  find_package(Boost REQUIRED COMPONENTS thread program_options)

@@ -7,7 +7,7 @@
   #:use-module (guix build-system trivial)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define concourse-version "7.9.0")
+(define concourse-version "7.9.1")
 
 (define-public concourse
   (package
@@ -18,7 +18,7 @@
      (method url-fetch)
      (uri (string-append "https://github.com/concourse/concourse/releases/download/v" version "/concourse-" version "-linux-amd64.tgz"))
      (sha256
-      (base32 "0mhcp86p8i8zpwvazfx4v2f5h5w2q7b9m554snb49lfsj1ch1mhj"))))
+      (base32 "0kpc4hkz64pikdjfds0fi15s0zj36y6b4g55nxs4pdm0lmhww5ys"))))
    (build-system copy-build-system)
    (synopsis "Concourse is an open-source continuous thing-doer.")
    (description "Concourse is an open-source continuous thing-doer.")
@@ -34,7 +34,7 @@
        (method url-fetch/tarbomb)
        (uri (string-append "https://github.com/concourse/concourse/releases/download/v" version "/fly-" version "-linux-amd64.tgz"))
        (sha256
-        (base32 "1hrkfqsv0hmgil3jix0fci42swj920xiaijdv9c14791dgnpf9i6"))))
+        (base32 "1dsf8d3khvjlqmh6riz50q1kd3g23g0385dskhrq1abqvvyarxvc"))))
     (build-system copy-build-system)
     (arguments
      '(#:install-plan

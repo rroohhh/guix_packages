@@ -13,13 +13,13 @@
 (define-public influxd
   (package
     (name "influxd")
-    (version "2.0.7")
+    (version "2.6.1")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://dl.influxdata.com/influxdb/releases/influxdb2-" version "-linux-amd64.tar.gz"))
        (sha256
-        (base32 "0ridj48inkzqhsrs5aqxi49rcy010fnrd6ga4p9pjm45bd4ydims"))))
+        (base32 "07ll8q9vfcvbs8l54c3rjahbclk5yr08xmnaqwy60lwnrjx0hf80"))))
     (build-system copy-build-system)
     (arguments
      '(#:install-plan
@@ -42,28 +42,20 @@
 (define-public telegraf
   (package
     (name "telegraf")
-    (version "1.19.0-rc1")
+    (version "1.26.0")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://dl.influxdata.com/telegraf/releases/telegraf-" (string-replace-substring version "-" "~") "_linux_amd64.tar.gz"))
        (file-name (string-append name "-" version ".tar.gz"))
        (sha256
-        (base32 "10vf1jh9ay5zxfbpn5c78h6g7bf1356hn5d2xd824pcbnjz19pmk"))))
+        (base32 "0rm2n4zl3h1a2s915cihk125kjqwai30rps6l4n0wia68fcwwscq"))))
     (build-system copy-build-system)
     (inputs `(("libc" ,glibc)
               ("patchelf" ,patchelf)))
     (arguments
      `(#:install-plan
-       '(("usr/bin/telegraf" "bin/telegraf"))
-       #:phases (modify-phases %standard-phases
-                  (add-after 'install 'patch
-                    (lambda* (#:key inputs outputs #:allow-other-keys)
-                      (let* ((ld-so (string-append (assoc-ref inputs "libc")
-                                                   ,(glibc-dynamic-linker)))
-                             (out (assoc-ref outputs "out"))
-                             (bin (string-append out "/bin/telegraf")))
-                        (invoke "patchelf" "--set-interpreter" ld-so bin)))))))
+       '(("usr/bin/telegraf" "bin/telegraf"))))
     (home-page
       "https://www.influxdata.com/")
     (synopsis "Telegraf is a plugin-driven server agent for collecting and sending metrics and events from databases, systems, and IoT sensors.")

@@ -19,23 +19,28 @@
     (package
       (name "tvm")
       (version version)
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append "https://github.com/apache/tvm/releases/download/v" version "/apache-tvm-src-v" version ".rc0.tar.gz"))
-         (sha256
-          (base32 "1r7wn2sjxk7vzdyg63zgm9lnr901px58ckx3qwpv6dknhjzh381d"))))
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/apache/tvm/releases/download/v"
+                      version "/apache-tvm-src-v" version ".rc0.tar.gz"))
+                (sha256
+                 (base32
+                  "1r7wn2sjxk7vzdyg63zgm9lnr901px58ckx3qwpv6dknhjzh381d"))))
       (build-system cmake-build-system)
-      (arguments '(#:configure-flags '("-DUSE_VULKAN=ON" "-DUSE_KHRONOS_SPIRV=ON" "-DUSE_SPIRV_KHR_INTEGER_DOT_PRODUCT=ON"
-                                       "-DUSE_LLVM=ON" "-DUSE_LIBBACKTRACE=OFF")
-                   #:phases
-                   (modify-phases %standard-phases
-                     (delete 'check))))
+      (arguments
+       '(#:configure-flags '("-DUSE_VULKAN=ON" "-DUSE_KHRONOS_SPIRV=ON"
+                             "-DUSE_SPIRV_KHR_INTEGER_DOT_PRODUCT=ON"
+                             "-DUSE_LLVM=ON" "-DUSE_LIBBACKTRACE=OFF")
+         #:phases (modify-phases %standard-phases
+                    (delete 'check))))
       (inputs (list vulkan-loader spirv-tools-2022 llvm-14 libffi))
       (native-inputs (list vulkan-headers spirv-headers-2022))
       (home-page "https://tvm.apache.org/")
-      (synopsis "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
-      (description "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
+      (synopsis
+       "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
+      (description
+       "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
       (license license:asl2.0))))
 
 (define-public python-synr
@@ -61,36 +66,38 @@
     (inherit tvm)
     (name "python-tvm")
     (build-system python-build-system)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check)
-                   (delete 'sanity-check) ; breaks because of homeless shelter
-                   (add-after 'install 'install-configs
-                     (lambda* (#:key outputs #:allow-other-keys)
-                       (let* ((out (assoc-ref outputs "out"))
-                              (bin (string-append out "/bin/tvmc"))
-                              (etc-configs (string-append out "/etc/configs")))
-                         (mkdir-p etc-configs)
-                         (copy-recursively "../configs" etc-configs)
-                         (wrap-program bin
-                           `("TVM_CONFIGS_JSON_DIR" = (,etc-configs))))))
-                   (add-after 'unpack 'chdir-and-set-env
-                     (lambda* (#:key inputs #:allow-other-keys)
-                       (chdir "python")
-                       (setenv "TVM_LIBRARY_PATH" (string-append (assoc-ref inputs "tvm") "/lib")))))))
+    (arguments
+     '(#:phases (modify-phases %standard-phases
+                  (delete 'check)
+                  (delete 'sanity-check) ;breaks because of homeless shelter
+                  (add-after 'install 'install-configs
+                    (lambda* (#:key outputs #:allow-other-keys)
+                      (let* ((out (assoc-ref outputs "out"))
+                             (bin (string-append out "/bin/tvmc"))
+                             (etc-configs (string-append out "/etc/configs")))
+                        (mkdir-p etc-configs)
+                        (copy-recursively "../configs" etc-configs)
+                        (wrap-program bin
+                                      `("TVM_CONFIGS_JSON_DIR" =
+                                        (,etc-configs))))))
+                  (add-after 'unpack 'chdir-and-set-env
+                    (lambda* (#:key inputs #:allow-other-keys)
+                      (chdir "python")
+                      (setenv "TVM_LIBRARY_PATH"
+                              (string-append (assoc-ref inputs "tvm") "/lib")))))))
     (inputs (list tvm git))
-    (propagated-inputs
-     (list
-      python-numpy
-      python-tornado
-      python-decorator
-      python-attrs
-      python-wheel
-      python-synr
-      python-psutil
-      python-cloudpickle
-      python-scipy))
+    (propagated-inputs (list python-numpy
+                             python-tornado
+                             python-decorator
+                             python-attrs
+                             python-wheel
+                             python-synr
+                             python-psutil
+                             python-cloudpickle
+                             python-scipy))
     (home-page "https://tvm.apache.org/")
-    (synopsis "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
-    (description "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
+    (synopsis
+     "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
+    (description
+     "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
     (license license:asl2.0)))

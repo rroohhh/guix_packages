@@ -11,7 +11,8 @@
   (let ((commit "ec10215d558f4b227547522c660f35db8ba6901e"))
     (package
       (name "x2x")
-      (version (string-append "2020.03.02-" (string-take commit 9)))
+      (version (string-append "2020.03.02-"
+                              (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -29,6 +30,8 @@
                 ("libxext" ,libxext)
                 ("libxtst" ,libxtst)))
       (home-page "https://github.com/dottedmag/x2x")
-      (synopsis "x2x allows the keyboard, mouse on one X display to be used to control another X display.")
-      (description "x2x allows the keyboard, mouse on one X display to be used to control another X display.")
+      (synopsis
+       "x2x allows the keyboard, mouse on one X display to be used to control another X display.")
+      (description
+       "x2x allows the keyboard, mouse on one X display to be used to control another X display.")
       (license #f))))

@@ -33,7 +33,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "be9a35c0363174a7cef21d55ed80d92a9ef95ab1")
+  (let ((commit "2c1c83f75b8078ced51f92c697da3e712feb3ac3")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -46,12 +46,12 @@
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "05ky82k0ix66d009cf8z5h0xa3f42zkl6dpxaf2z3p2zdy8rdbzv")))))))
+                  "10nn7x9pqbz8iy5czaiia42536136xpysjyg74ldy53yh5x8i460")))))))
 
 
 (define-public yosys-git
-  (let ((commit "3ebc50dee4007f8cca4ffc0e850bc3e86f7641f4")
-        (version "0.24+10"))
+  (let ((commit "53c0a6b780199dc56348916acf7c00e30f65e1ec")
+        (version "0.27+22"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
        (inherit guix:yosys)
@@ -63,13 +63,13 @@
                        (commit commit)))
                  (sha256
                   (base32
-                   "1dpv1zaz00j29pk4fg3fjk7nrfrbqwmw83bd26lw77rjh2gwilnq"))
+                   "1fyxi2rwkg6w1fyzsr3i76y6x1yw0wgr3qm8spfag8q6n14xs7q9"))
                  (file-name (git-file-name (package-name guix:yosys) version))))
        (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
 
 
 (define-public icestorm
-  (let ((commit "a545498d6fd0a28a006976293917115037d4628c")
+  (let ((commit "d20a5e9001f46262bf0cef220f1a6943946e421d")
         (revision "8"))
     (package
       (inherit guix:icestorm)
@@ -82,13 +82,13 @@
                 (file-name (git-file-name (package-name guix:icestorm) version))
                 (sha256
                  (base32
-                  "0b2zc5v2b1fqcbpw14jghsvayhijd185gfwfxv241mk2kjk2plz6")))))))
+                  "0v8l427f9a3pdv109mrfhwiiwl0q94vr8hrcazagyidyxp26ch3l")))))))
 
 (define-public trellis
-  (let ((commit "35f5affe10a2995bdace49e23fcbafb5723c5347"))
+  (let ((commit "b9120de2453e71b68b344452ef12040ee53d47ab"))
     (package
       (name "trellis")
-      (version (string-append "1.2-1-" (string-take commit 7)))
+      (version (string-append "1.3-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -98,7 +98,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "00vv9cpw3zdpl6h3al5b4n313prawyii9319gkmhv84npss99way"))))
+                  "1z46y191c1068wp56wf8fwnay2jaq5faiw031y9q1w185w2k6lcs"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python) ("boost" ,boost)))
       (arguments
@@ -129,7 +129,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (uri (git-reference
                       (url "https://github.com/Ravenslofty/mistral")
                       (commit commit)
-                      (recursive? #t))) ; for prjtrellis-db
+                      (recursive? #t))) ; for prjmistral-db
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
@@ -164,14 +164,14 @@ open Verilog to bitstream toolchain for these devices.")
 (define-public python-apycula
   (package
     (name "python-apycula")
-    (version "0.6.1")
+    (version "0.7")
     (source
       (origin
         (method url-fetch)
         (uri (pypi-uri "Apycula" version))
         (sha256
           (base32
-            "1zkh8czmj196rb5r7n0748wpks1l8jq7b9rqd51j1k6bix1kyx7x"))))
+            "1ihah1hikaxhfn0vb5pqknh5rzv4nx81rpcdmdly49nyzaj06xl7"))))
     (build-system python-build-system)
     (inputs
      `(("python-setuptools-scm" ,python-setuptools-scm)))
@@ -187,10 +187,10 @@ open Verilog to bitstream toolchain for these devices.")
 
 
 (define-public nextpnr
-  (let ((commit "76fea8268ca7c3f9a9f4f610951f9ea84993e974"))
+  (let ((commit "b36e8a3013ac70a9fbe71d2163f660dafe3b8b2f"))
     (package
       (name "nextpnr")
-      (version (string-append "0.4-" (string-take commit 9)))
+      (version (string-append "0.5-" (string-take commit 9)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -200,7 +200,7 @@ open Verilog to bitstream toolchain for these devices.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1xqy4qmcb0l5h4n72k50syhpr12spm29g5yydjrhhr36mn7gfcb7"))))
+                  "1d7mnm15z9fvxg5vw0k5zs71yfahsksdf23g0cw942prllqsjac4"))))
       (build-system cmake-build-system)
       (inputs `(("python" ,python)
                 ("boost" ,boost)
@@ -235,7 +235,7 @@ open Verilog to bitstream toolchain for these devices.")
 (define-public gtkwave-gtk3
   (package
     (name "gtkwave-gtk3")
-    (version "3.3.111")
+    (version "3.3.114")
     (source
      (origin
        (method url-fetch)
@@ -245,7 +245,7 @@ open Verilog to bitstream toolchain for these devices.")
                   (string-append "http://gtkwave.sourceforge.net/"
                                  "gtkwave-gtk3-" version ".tar.gz")))
        (sha256
-        (base32 "0cv222qhgldfniz6zys52zhrynfsp5v0h8ia857lng7v33vw5qdl"))))
+        (base32 "1b44rwbp1r6vjjkngkj6j4gba9yz7d0agr72rlj6ga9ppg55yfng"))))
     (build-system gnu-build-system)
     (native-inputs
      (list gperf pkg-config `(,glib "bin")))

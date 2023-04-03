@@ -1087,12 +1087,12 @@
         (method git-fetch)
         (uri (git-reference
               (url "https://github.com/gatecat/prjoxide")
-              (commit "ea89720449915ab73afdb6f1f2f48939dae6a9e7")
+              (commit "168bfe54b550aee65648f40e6cca0c88b53d337a")
               (recursive? #t)))
         (file-name (git-file-name name version))
         (sha256
           (base32
-            "02acj7hf4vr2hnz43bfznvsm5cnws8sc90d50khl92bn95mrlllm"))))
+            "19ilxdswaj2clnd6nqm32i3j1s0nndnhss69c84bkyrl05gnm0lj"))))
     (build-system cargo-build-system)
     (inputs `(("m4" ,m4)))
     (arguments

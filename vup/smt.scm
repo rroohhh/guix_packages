@@ -46,7 +46,10 @@
                  (base32
                   "0hyw9q42ir92vcaa7bwv6f631n85rfsxp463rnmklniq1wf6dyn9"))))
       (build-system gnu-build-system)
-      (arguments `(#:make-flags (list "CFLAGS=-Wall -Wextra -g -O3 -fPIC" "CXXFLAGS=-Wall -Wextra -g -O3 -fPIC" "LDFLAGS=-fPIC")))
+      (arguments
+       `(#:make-flags (list "CFLAGS=-Wall -Wextra -g -O3 -fPIC"
+                            "CXXFLAGS=-Wall -Wextra -g -O3 -fPIC"
+                            "LDFLAGS=-fPIC")))
       (home-page "https://github.com/ivmai/cudd")
       (synopsis "CUDD: CU Decision Diagram package")
       (description "CUDD: CU Decision Diagram package")
@@ -74,14 +77,19 @@
                 ("gperf" ,gperf)))
       (arguments
        `(#:make-flags `("LDCONFIG=true")
-         #:configure-flags `(,(string-append "--with-static-gmp=" (assoc-ref %build-inputs "gmp") "/lib/libgmp.a")
-                             ,(string-append "--with-static-gmp-include-dir=" (assoc-ref %build-inputs "gmp") "/include")
+         #:configure-flags `(,(string-append "--with-static-gmp="
+                                             (assoc-ref %build-inputs "gmp")
+                                             "/lib/libgmp.a") ,(string-append
+                                                                "--with-static-gmp-include-dir="
+                                                                (assoc-ref
+                                                                 %build-inputs
+                                                                 "gmp")
+                                                                "/include")
                              "--enable-mcsat")
          #:phases (modify-phases %standard-phases
                     (add-after 'configure 'patch-makefile-SHELL
                       (lambda _
-                        (patch-makefile-SHELL "Makefile.build")
-                        #t)))
+                        (patch-makefile-SHELL "Makefile.build") #t)))
          #:build #f))
       (build-system gnu-build-system)
       (home-page "http://yices.csl.sri.com")

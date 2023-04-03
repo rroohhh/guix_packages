@@ -133,31 +133,26 @@ resources")
   (package
     (name "rust-url")
     (version "2.2.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (crate-uri "url" version))
-       (file-name
-        (string-append name "-" version ".tar.gz"))
-       (sha256
-        (base32
-         "0vlpd0c7y9yv4x5vmb6qlnkxkj63r20wv2rysyg48l3kh6qg42ar"))))
+    (source (origin
+              (method url-fetch)
+              (uri (crate-uri "url" version))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "0vlpd0c7y9yv4x5vmb6qlnkxkj63r20wv2rysyg48l3kh6qg42ar"))))
     (build-system cargo-build-system)
     (arguments
-     `(#:cargo-inputs
-       (("rust-form-urlencoded" ,rust-form-urlencoded-1)
-        ("rust-idna" ,rust-idna-0.3)
-        ("rust-percent-encoding" ,rust-percent-encoding-2)
-        ("rust-serde" ,rust-serde-1))
-       #:cargo-development-inputs
-       (("rust-bencher" ,rust-bencher-0.1)
-        ("rust-debugger-test" ,rust-debugger-test-0.1)
-        ("rust-debugger-test-parser" ,rust-debugger-test-parser-0.1)
-        ("rust-serde-json" ,rust-serde-json-1))))
+     `(#:cargo-inputs (("rust-form-urlencoded" ,rust-form-urlencoded-1)
+                       ("rust-idna" ,rust-idna-0.3)
+                       ("rust-percent-encoding" ,rust-percent-encoding-2)
+                       ("rust-serde" ,rust-serde-1))
+       #:cargo-development-inputs (("rust-bencher" ,rust-bencher-0.1)
+                                   ("rust-debugger-test" ,rust-debugger-test-0.1)
+                                   ("rust-debugger-test-parser" ,rust-debugger-test-parser-0.1)
+                                   ("rust-serde-json" ,rust-serde-json-1))))
     (home-page "https://github.com/servo/rust-url")
     (synopsis "URL library for Rust, based on the WHATWG URL Standard")
-    (description
-     "URL library for Rust, based on the WHATWG URL Standard.")
+    (description "URL library for Rust, based on the WHATWG URL Standard.")
     (license (list license:asl2.0 license:expat))))
 
 (define-public rust-wiremock-0.4
@@ -839,8 +834,7 @@ primitives.")
     (home-page "https://github.com/bytecodealliance/wasi")
     (synopsis "Experimental WASI API bindings for Rust")
     (description "Experimental WASI API bindings for Rust")
-    (license (list license:asl2.0 license:asl2.0
-                   license:expat))))
+    (license (list license:asl2.0 license:asl2.0 license:expat))))
 
 (define-public rust-libc-0.2
   (package
