@@ -40,53 +40,52 @@
 (define-public klayout
   (package
    (name "klayout")
-   (version "0.28.2")
+   (version "0.28.6")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/KLayout/klayout")
-           (commit "v0.28.2")))
+           (commit (string-append "v" version))))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "0ji6jchigdwp8mch2vas86pxf6zx0ii61a12kjwibbhcy0gsg4ai"))))
+      (base32 "1fb96bx605cnv51lpw6a42nf3splijwcxfkgpbf5kic7c6gykfhj"))))
    (arguments
-    `(#:phases
+    `(#:tests? #f
+      #:phases
       (modify-phases %standard-phases
-        (delete 'check)
-        (replace 'configure
-          (lambda* (#:key outputs #:allow-other-keys)
-            (mkdir "build")
-            (chdir "build")
-            (invoke "qmake"
-                    (string-append "PREFIX=" (assoc-ref outputs "out"))
-                    "HAVE_QT5=1"
-                    "HAVE_QT=0"
-                    "HAVE_QT_NETWORK=1"
-                    "HAVE_QT_UITOOLS=1"
-                    "HAVE_QT_SVG=1"
-                    "HAVE_QT_SQL=1"
-                    "HAVE_QT_PRINTSUPPORT=1"
-                    "HAVE_QT_XML=1"
-                    "HAVE_QT_DESIGNER=1"
-                    "HAVE_QT_MULTIMEDIA=1"
-                    "HAVE_QTBINDINGS=1"
-                    "HAVE_QT=1"
-                    "HAVE_PYTHON=0"
-                    "HAVE_RUBY=0"
-                    "HAVE_64BIT_COORD=1"
-                    "CONFIG+=release"
-                    "-recursive"
-                    "../src/klayout.pro")
-            #t)))))
+                     (replace 'configure
+                                           (lambda* (#:key outputs #:allow-other-keys)
+                                             (mkdir "build")
+                                             (chdir "build")
+                                             (invoke "qmake"
+                                                     (string-append "PREFIX=" (assoc-ref outputs "out"))
+                                                     ;; "HAVE_QT5=1"
+                                                     "HAVE_QT=0"
+                                                     "HAVE_QT_NETWORK=1"
+                                                     "HAVE_QT_UITOOLS=1"
+                                                     "HAVE_QT_SVG=1"
+                                                     "HAVE_QT_SQL=1"
+                                                     "HAVE_QT_PRINTSUPPORT=1"
+                                                     "HAVE_QT_XML=1"
+                                                     "HAVE_QT_DESIGNER=1"
+                                                     "HAVE_QT_MULTIMEDIA=1"
+                                                     "HAVE_QTBINDINGS=1"
+                                                     "HAVE_QT=1"
+                                                     "HAVE_PYTHON=0"
+                                                     "HAVE_RUBY=0"
+                                                     "HAVE_64BIT_COORD=1"
+                                                     "CONFIG+=release"
+                                                     "-recursive"
+                                                     "../src/klayout.pro")
+                                             #t)))))
    (build-system qt-build-system)
-
    (inputs
     `(("qtbase" ,qtbase-5)
-      ("qtsvg" ,qtsvg)
+      ("qtsvg" ,qtsvg-5)
       ("qtxmlpatterns" ,qtxmlpatterns)
-      ("qttools" ,qttools)
-      ("qtmultimedia" ,qtmultimedia)
+      ("qttools" ,qttools-5)
+      ("qtmultimedia" ,qtmultimedia-5)
       ("python" ,python)
       ("zlib" ,zlib)))
    (home-page "https://github.com/KLayout/klayout")

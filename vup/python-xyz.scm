@@ -7,6 +7,7 @@
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages pdf)
   #:use-module (gnu packages time)
+  #:use-module (gnu packages compression)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages libffi)
   #:use-module (gnu packages freedesktop)
@@ -16,6 +17,10 @@
   #:use-module (gnu packages libevent)
   #:use-module (gnu packages python)
   #:use-module (gnu packages qt)
+  #:use-module (gnu packages linux)
+  #:use-module (gnu packages rpc)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages admin)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-crypto)
@@ -44,15 +49,6 @@
   #:use-module (guix build-system trivial)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public python-pandas-fixed
-  (package
-    (inherit python-pandas)
-    (arguments
-       (substitute-keyword-arguments (package-arguments python-pandas)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             (delete 'check)))))))
-
 (define-public python-pyvcd
   (package
     (name "python-pyvcd")
@@ -73,168 +69,86 @@
     (description "Python VCD file support.")
     (license license:expat)))
 
-(define-public python-fitsio
-  (package
-    (name "python-fitsio")
-    (version "1.1.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "fitsio" version))
-       (sha256
-        (base32
-         "0bq0hmyza56q5hz5w11disk1mv87fi71bxx1qk35zgwcpfyqkri0"))))
-    (build-system python-build-system)
-    (inputs `(("cfitsio" ,cfitsio)))
-    (propagated-inputs
-     `(("python-numpy" ,python-numpy)))
-    (home-page "https://github.com/esheldon/fitsio")
-    (synopsis
-     "A full featured python library to read from and write to FITS files.")
-    (description
-     "A full featured python library to read from and write to FITS files.")
-    (license license:gpl3)
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (add-before 'patch-source-shebangs 'patch-bin-sh
-           (lambda _
-             (substitute* '("cfitsio3470/Makefile.in"
-                            "cfitsio3470/configure")
-               (("/bin/sh") (which "sh")))
-             #t)))))))
-
-(define-public python-setuptools42
-  (package
-    (inherit python-setuptools)
-    (version "42.0.2")
-    (source
-     (origin
-       (inherit (package-source python-setuptools))
-       (uri (pypi-uri "setuptools" version ".zip"))
-       (sha256
-        (base32
-         "0h5rsh8cpq9mh6kzr5xgcmyqyl8ym5r6i9m6g770k1vw1l4p5cy5"))))))
-
-(define-public python-mpmath-fixed
- (package
-  (name "python-mpmath")
-  (version "1.1.0")
-  (source (origin
-            (method url-fetch)
-            (uri (pypi-uri "mpmath" version))
-            (sha256
-             (base32
-              "1xlrcja213jpfhw25q1jl5pl10w1a2cc68x1c4mkicxsbzhan5zw"))))
-  (build-system python-build-system)
-  (native-inputs
-   `(("python-pytest" ,python-pytest)))
-  (arguments
-   '(#:phases
-     (modify-phases %standard-phases
-       (replace 'check
-         (lambda _
-           (invoke "python" "mpmath/tests/runtests.py" "-local"))))))
-  (home-page "https://mpmath.org")
-  (synopsis "Arbitrary-precision floating-point arithmetic in python")
-  (description
-    "@code{mpmath} can be used as an arbitrary-precision substitute for
-Python's float/complex types and math/cmath modules, but also does much
-more advanced mathematics.")
-  (license license:bsd-3)))
-
-(define-public python-sympy-fixed
-  (package
-    (name "python-sympy")
-    (version "1.7.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "sympy" version))
-       (sha256
-        (base32 "0bkb4jf24yv5i4kjpsmg1xjjccfhqyi0syv0p0xvhdbmx5hr5pm3"))))
-    (build-system python-build-system)
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (replace 'check
-           (lambda* (#:key outputs #:allow-other-keys)
-             (invoke
-               (or (which "python3") (which "python"))
-               "-c" "import sympy; sympy.test(\"/core\")"))))))
-    (propagated-inputs
-     `(("python-mpmath" ,python-mpmath-fixed)))
-    (home-page "https://www.sympy.org/")
-    (synopsis "Python library for symbolic mathematics")
-    (description
-     "SymPy is a Python library for symbolic mathematics.  It aims to become a
-full-featured computer algebra system (CAS) while keeping the code as simple
-as possible in order to be comprehensible and easily extensible.")
-    (license license:bsd-3)))
-
-
 (define-public python-orthopy
   (package
     (name "python-orthopy")
-    (version "0.6.3")
+    (version "0.9.5")
     (source
      (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/sigma-py/orthopy")
-             (commit "7a1d9c765e45a2b2620e513bd8b377ae255dd195")))
-       (file-name (git-file-name name version))
+       (method url-fetch)
+       (uri (string-append "https://zenodo.org/record/5751934/files/nschloe/orthopy-v" version ".zip"))
        (sha256
         (base32
-         "1vc0by82bz5rf3b4lgvximxf1hjz8znd0hzrigfdy7z5rkb4hnm9"))))
-    (build-system python-build-system)
+         "0ghcahjy7cjx95hdccbqvcds3vmcj3gpr852fqy92czfsnpc0lna"))))
+    (build-system pyproject-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy-fixed)
+       ("python-sympy" ,python-sympy)
        ("python-importlib-metadata" ,python-importlib-metadata)))
     (native-inputs
-     `(("python-setuptools" ,python-setuptools42)
-       ("python-wheel" ,python-wheel)))
+     `(("python-setuptools" ,python-setuptools)
+       ("python-wheel" ,python-wheel)
+       ("unzip" ,unzip)))
     (home-page "https://github.com/nschloe/orthopy")
     (synopsis
      "Tools for orthogonal polynomials, Gaussian quadrature")
     (description
      "Tools for orthogonal polynomials, Gaussian quadrature")
     (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
+    (arguments '(#:tests? #f))))
+
+(define-public python-ndim
+  (package
+    (name "python-ndim")
+    (version "0.1.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://github.com/sigma-py/ndim/archive/refs/tags/v" version ".tar.gz"))
+       (sha256
+        (base32
+         "0z9pvj79n72x4ls9ndq3dm5znwflk38pkrd05afh5algakvh18wm"))))
+    (build-system pyproject-build-system)
+    (propagated-inputs (list python-sympy))
+    (native-inputs (list python-flit-core))
+    (home-page "https://github.com/nschloe/ndim")
+    (synopsis
+     "Compute multidimensional volumes and monomial integrals")
+    (description
+     "Compute multidimensional volumes and monomial integrals")
+    (license #f)
+    (arguments '(#:tests? #f))))
 
 (define-public python-quadpy
   (package
     (name "python-quadpy")
-    (version "0.14.8")
+    (version "0.16.10")
     (source
      (origin
        (method url-fetch)
-       (uri (pypi-uri "quadpy" version))
+       (uri (string-append "https://zenodo.org/record/5541216/files/nschloe/quadpy-v" version ".zip"))
        (sha256
         (base32
-         "13fpl8wpdaxan05w8s7hd2hgvnvp7lhdqh42chakxss54blgyxka"))))
-    (build-system python-build-system)
+         "1f989dipv7lqxvalfrvvlmhlxyl67a87lavyyqrr1mh88glhl592"))))
+    (build-system pyproject-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-orthopy" ,python-orthopy)
        ("python-scipy" ,python-scipy)
-       ("python-sympy" ,python-sympy-fixed)))
+       ("python-sympy" ,python-sympy)
+       ("python-sympy" ,python-ndim)))
     (native-inputs
-     `(("python-setuptools" ,python-setuptools42)
-       ("python-wheel" ,python-wheel)))
+     `(("python-setuptools" ,python-setuptools)
+       ("python-wheel" ,python-wheel)
+       ("unzip" ,unzip)))
     (home-page "https://github.com/nschloe/quadpy")
     (synopsis
      "Numerical integration, quadrature for various domains")
     (description
      "Numerical integration, quadrature for various domains")
     (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
+    (arguments '(#:tests? #f))))
 
 (define-public python-ordereddict
   (package
@@ -270,10 +184,7 @@ as possible in order to be comprehensible and easily extensible.")
     (propagated-inputs
      `(("python-ordereddict" ,python-ordereddict)))
     (home-page "http://funcsigs.readthedocs.org")
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (delete 'check))))
+    (arguments '(#:tests? #f))
     (synopsis
      "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+")
     (description
@@ -283,24 +194,21 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-xarray
   (package
     (name "python-xarray")
-    (version "0.16.2")
+    (version "2023.3.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "xarray" version))
        (sha256
         (base32
-         "1r01gnfnwljk5lk8gjahi333lr70z3d4k8zwq2vxbg4idjfl7s1q"))))
+         "1jic3g3b12hi10l939awb3d76qd4cwyczs9axwcnjbh71fv78p7h"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
-       ("python-pandas" ,python-pandas-fixed)))
-    (native-inputs
-     `(("python-setuptools" ,python-setuptools42)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-wheel" ,python-wheel)))
+       ("python-pandas" ,python-pandas)
+       ("python-packaging" ,python-packaging)))
     (arguments
-     `(#:phases (modify-phases %standard-phases (delete 'check)))) ; no tests
+     `(#:tests? #f)) ; no tests
     (home-page "https://github.com/pydata/xarray")
     (synopsis
      "N-D labeled arrays and datasets in Python")
@@ -311,14 +219,14 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-sparse
   (package
     (name "python-sparse")
-    (version "0.11.2")
+    (version "0.14.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "sparse" version))
        (sha256
         (base32
-         "0kw6ha83gk0dymayrxhh16xxk7aykiyiz3ksxdzj6hhjr3dkap5w"))))
+         "1600xad37mff46xg80cy6bi3l2n6jm69j7sl19rzdmkcgyijfn2z"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-numba" ,python-numba)
@@ -336,29 +244,17 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-pint
   (package
     (name "python-pint")
-    (version "0.16.1")
+    (version "0.20.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "Pint" version))
        (sha256
         (base32
-         "0fn81s2z804vsbg8vpwib4d1wn6q43cqrpqgnrw4j5h3w2d2wfnl"))))
+         "0rv0cbala7ibjbaf6kkcn0mdhqdbajnvlcw0f15gwzfwg10g0z1q"))))
     (build-system python-build-system)
-    (native-inputs
-     `(("python-setuptools-scm" ,python-setuptools-scm)))
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (delete `check))))
-    ;; (propagated-inputs
-    ;;  `(("python-funcsigs" ,python-funcsigs)
-    ;;    ("python-setuptools-scm" ,python-setuptools-scm)
-    ;;    ("python-matplotlib" ,python-matplotlib)
-    ;;    ("python-numpy" ,python-numpy)
-    ;;    ("python-sparse" ,python-sparse)
-    ;;    ("python-xarray" ,python-xarray)
-    ;;    ("python-pytest" ,python-pytest)))
+    (native-inputs (list python-wheel python-setuptools-scm))
+    (arguments '(#:tests? #f))
     (home-page "https://github.com/hgrecco/pint")
     (synopsis "Physical quantities module")
     (description "Physical quantities module")
@@ -367,14 +263,14 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-colorhash
   (package
     (name "python-colorhash")
-    (version "1.0.3")
+    (version "1.2.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "colorhash" version))
        (sha256
         (base32
-         "1frqvbrz7iyv3zsknz1jmj9v9mv06akr60kknypvfw0c44k75jhw"))))
+         "0ywwhs47d5izwbi8nrf8fwx5zp9zjyd4y9rmkpb4jjgbvsd76g8l"))))
     (build-system python-build-system)
     (home-page
      "https://bitbucket.org/fk/python-color-hash")
@@ -385,41 +281,34 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-arpeggio
   (package
     (name "python-arpeggio")
-    (version "1.10.1")
+    (version "2.0.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "Arpeggio" version))
        (sha256
         (base32
-         "17k3xvv0sk1ig7y8h7283ccdqhryr4a4mrmadnsjxnrffv6143cj"))))
+         "0ggdsck1wpladd5bh9drhkmm86bblgk2wagrhn3sdf4v04wkic6n"))))
     (build-system python-build-system)
-    (propagated-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-runner" ,python-pytest-runner)))
-    (inputs `(("python-wheel" ,python-wheel)))
+    (native-inputs (list python-wheel python-pytest-runner python-pytest))
     (home-page "https://github.com/textX/Arpeggio")
     (synopsis "Packrat parser interpreter")
     (description "Packrat parser interpreter")
-    (license license:expat)
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (delete 'check))))))
+    (license license:expat)))
 
 (define-public python-textx
   (package
     (name "python-textx")
-    (version "2.3.0")
+    (version "3.1.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "textX" version))
        (sha256
         (base32
-         "1b7v9v3npp6m696bb307ky3wqi7dds6cbkf8jivilhmfsh9gqni6"))))
+         "1ymhz9lf7nzwmpvfgd2l73vsahjw4xq3fc7hya5iz9x41q4pvyz2"))))
     (build-system python-build-system)
-    (inputs `(("python-wheel" ,python-wheel)))
+    (native-inputs `(("python-wheel" ,python-wheel)))
     (propagated-inputs
      `(("python-arpeggio" ,python-arpeggio)
        ("python-click" ,python-click)))
@@ -428,45 +317,67 @@ as possible in order to be comprehensible and easily extensible.")
      "Meta-language for DSL implementation inspired by Xtext")
     (description
      "Meta-language for DSL implementation inspired by Xtext")
-    (license license:expat)
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (delete 'check))))))
+    (license license:expat)))
 
 (define (make-linux-module-builder linux)
   (package
     (inherit linux)
     (name (string-append (package-name linux) "-module-builder"))
-    (native-inputs
-     `(("linux" ,linux)
-       ,@(package-native-inputs linux)))
+    (inputs
+     `(("linux" ,linux)))
     (arguments
      (substitute-keyword-arguments (package-arguments linux)
        ((#:phases phases)
-        `(modify-phases ,phases
-           (replace 'build
-             (lambda _
-               (invoke "make" "modules_prepare")))
-           (delete 'strip) ; faster.
-           (replace 'install
-             (lambda* (#:key inputs outputs #:allow-other-keys)
-               (let* ((out (assoc-ref outputs "out"))
-                      (out-lib-build (string-append out "/lib/modules/build")))
-                                        ; TODO: Only preserve the minimum, i.e. [Kbuild], Kconfig, scripts, include, ".config".
-                 (copy-recursively "." out-lib-build)
-                 (let* ((linux (assoc-ref inputs "linux")))
-                   (install-file (string-append linux "/System.map")
-                                 out-lib-build)
-                   (let ((source (string-append linux "/Module.symvers")))
-                     (if (file-exists? source)
-                         (install-file source out-lib-build))))
-                 #t)))))))))
+        #~(modify-phases #$phases
+            (replace 'build
+              (lambda _
+                (invoke "make" "modules_prepare")))
+            (delete 'strip)             ;faster
+            (replace 'install
+              (lambda* (#:key inputs #:allow-other-keys)
+                (let ((out-lib-build (string-append #$output "/lib/modules/build")))
+                  ;; Delete some huge items that we probably don't need.
+                  ;; TODO: Only preserve the minimum, i.e. [Kbuild], Kconfig,
+                  ;; scripts, include, ".config".
+                  (copy-recursively "." out-lib-build)
+                  (for-each (lambda (name)
+                              (when (file-exists? name)
+                                (delete-file-recursively name)))
+                            (map (lambda (name)
+                                   (string-append out-lib-build "/" name))
+                                 '("arch"          ; 137 MB
+                                   ;;"tools"       ; 44 MB built by our 'build phase
+                                   "tools/testing" ; 14 MB
+                                   "tools/perf"    ; 17 MB
+                                   "drivers"       ; 600 MB
+                                   "Documentation" ; 52 MB
+                                   "fs"            ; 43 MB
+                                   "net"           ; 33 MB
+                                   "samples"       ; 2 MB
+                                   "sound")))      ; 40 MB
+                  ;; Reinstate arch/**/dts since "scripts/dtc" depends on it.
+                  ;; Reinstate arch/**/include directories.
+                  ;; Reinstate arch/**/Makefile.
+                  ;; Reinstate arch/**/module.lds.
+                  (for-each
+                   (lambda (name)
+                     (mkdir-p (dirname (string-append out-lib-build "/" name)))
+                     (copy-recursively name
+                                       (string-append out-lib-build "/" name)))
+                   (append (find-files "arch" "^(dts|include)$"
+                                       #:directories? #t)
+                       (find-files "arch" "^(Makefile|module.lds)$")))
+                  (let* ((linux #$(this-package-input "linux")))
+                    (install-file (string-append linux "/System.map")
+                                  out-lib-build)
+                    (let ((source (string-append linux "/Module.symvers")))
+                      (when (file-exists? source)
+                        (install-file source out-lib-build)))))))))))))
 
 (define-public python-chipsec
   (package
     (name "python-chipsec")
-    (version "1.5.1")
+    (version "1.10.4")
     (source
      (origin
        (method git-fetch)
@@ -476,7 +387,7 @@ as possible in order to be comprehensible and easily extensible.")
        (file-name (git-file-name name version))
        (sha256
         (base32
-         "1rxr9i08a22m15slvlkrhnki30jixi2ds096kmmc2nqzfr9yibmb"))))
+         "0yqf308g7sp893g94mdzm6yddazf4vppxcgw29r56xxjm81hjj5b"))))
     (build-system python-build-system)
     (inputs
      `(("linux" ,linux-nonfree)
@@ -495,7 +406,7 @@ as possible in order to be comprehensible and easily extensible.")
            (lambda* (#:key inputs #:allow-other-keys)
              (let* ((kernel-dir (assoc-ref inputs "linux-module-builder"))
                     (kernel-src-dir (string-append kernel-dir "/lib/modules/build")))
-               (setenv "KERNEL_SRC_DIR" kernel-src-dir))))
+               (setenv "KSRC" kernel-src-dir))))
          (delete 'check)))))) ; broken for some reason
 
 (define (setuptools-scm-version-setter v)
@@ -504,7 +415,7 @@ as possible in order to be comprehensible and easily extensible.")
      #t))
 
 (define-public python-amaranth
-  (let ((commit "7d611b8fc1d9e58853ff268ec38ff8f4131a9774"))
+  (let ((commit "5f6b36e91f44c43bd7073fc94be239e795a12128"))
     (package
       (name "python-amaranth")
       (version (string-append "0.3+g" (string-take commit 9)))
@@ -524,27 +435,14 @@ as possible in order to be comprehensible and easily extensible.")
              #t))
          (sha256
           (base32
-           "0dbvwnvpr1pkz5cwhf1g8gsd7qjpyf41hd8ajff37h59xfama739"))))
+           "0pjvzl2p1ajjy3sshvc8sscm77am9dq070381kipmfcy4vjrvazl"))))
       (build-system python-build-system)
-      (native-inputs `(("git" ,git)))
       (inputs `(("yosys" ,yosys-git)
-                ("symbiyosys" ,symbiyosys)
-                ("python-setuptools-scm" ,python-setuptools-scm)
-                ("python-wheel" ,python-wheel)
-                ("python-setuptools" ,python-setuptools)))
+                ("symbiyosys" ,symbiyosys)))
       (propagated-inputs
        `(("python-jinja2" ,python-jinja2)
          ("python-pyvcd" ,python-pyvcd)
-         ("python-importlib-resources" ,python-importlib-resources)
-         ("python-pyvcd" ,python-pyvcd)))
-      (arguments
-       `(#:phases (modify-phases %standard-phases
-                    (add-before 'build 'set-setuptools-scm-version
-                      ,(setuptools-scm-version-setter version))
-                    (add-after 'unpack 'relax-requirements
-                     (lambda _
-                       (substitute* "setup.py"
-                         (("Jinja2~=2.11") "Jinja2>=2.11")))))))
+         ("python-paramiko" ,python-paramiko)))
       (home-page "https://amaranth-lang.org/")
       (synopsis
        "Python toolbox for building complex digital hardware")
@@ -554,7 +452,7 @@ as possible in order to be comprehensible and easily extensible.")
 
 
 (define-public python-amaranth-boards
-  (let ((commit "aaf18252e457ff95257137da2a629820c0ff2bfa"))
+  (let ((commit "892236ade101e929a11a90a7684c685411ea89b8"))
     (package
       (name "python-amaranth-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -567,19 +465,11 @@ as possible in order to be comprehensible and easily extensible.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1shbcmf4x75nh7880p3vxag1mdg4rwk3dy2r29w4p2nxaksiak38"))))
+           "16lygwb797zi42qcrmlzikannl6qxk1c5v9037q2hrgq2brgrnmw"))))
       (build-system python-build-system)
-      (inputs
-       `(("python-setuptools" ,python-setuptools)
-         ("python-setuptools-scm" ,python-setuptools-scm)
-         ("python-wheel" ,python-wheel)))
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
-      (arguments
-       `(#:phases (modify-phases %standard-phases
-                    (delete 'check)     ;; ; broken atm
-                    (add-before 'build 'set-setuptools-scm-version
-                      ,(setuptools-scm-version-setter version)))))
+      (arguments `(#:tests? #f))                  ; kind of super broken?
       (home-page "https://amaranth-lang.org/")
       (synopsis
        "Board and connector definitions for Amaranth")
@@ -588,7 +478,7 @@ as possible in order to be comprehensible and easily extensible.")
       (license license:bsd-3))))
 
 (define-public python-amaranth-stdio
-  (let ((commit "ae74f176b6ca32b24ab08325159a19318711a5a9"))
+  (let ((commit "f41e7e50ef1e608e337e8146fd9e6806fc48a727"))
     (package
       (name "python-amaranth-stdio")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -601,24 +491,18 @@ as possible in order to be comprehensible and easily extensible.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1v3168wyq5nz1psivm82y9i8zl05w9s01xgdnpgl0p13h4hnjhwq"))))
+           "0yyjsr8b0z3b161347f6y2xsmwmv70dn75f4yr3rxlsvfqka7iz8"))))
       (build-system python-build-system)
-      (inputs
-       `(("python-setuptools-scm" ,python-setuptools-scm)
-         ("python-wheel" ,python-wheel)))
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
-      (arguments
-       `(#:phases (modify-phases %standard-phases
-                    (add-before 'build 'set-setuptools-scm-version
-                      ,(setuptools-scm-version-setter version)))))
+      (arguments `(#:tests? #f))                  ; kind of super broken?
       (home-page "https://amaranth-lang.org/")
       (synopsis "Industry standard I/O for Amaranth")
       (description "Industry standard I/O for Amaranth")
       (license license:bsd-3))))
 
 (define-public python-amaranth-soc
-  (let ((commit "217d4ea76ad3b3bbf146980d168bc7b3b9d95a18"))
+  (let ((commit "d2185e3082c8101720d1a951a2e090a989b82394"))
     (package
       (name "python-amaranth-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -631,55 +515,36 @@ as possible in order to be comprehensible and easily extensible.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "106r0gdd3mv21pq099x0ifgg9jw0rmnphhx4swksazgvcbrskj3l"))))
+           "1yxa1libb75fjvvbj342v86ycjd1fs843c5g6qbqhfv12ijij5cx"))))
       (build-system python-build-system)
-      (inputs
-       `(("python-setuptools-scm" ,python-setuptools-scm)
-         ("python-wheel" ,python-wheel)))
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
-      (arguments
-       `(#:phases (modify-phases %standard-phases
-                    (add-before 'build 'set-setuptools-scm-version
-                      ,(setuptools-scm-version-setter version)))))
+      (arguments `(#:tests? #f))                  ; kind of super broken?
       (home-page "https://amaranth-lang.org/")
       (synopsis "System on Chip toolkit for Amaranth")
       (description "System on Chip toolkit for Amaranth")
       (license license:bsd-3))))
 
 
-(define-public python-setuptools44
-  (package
-    (inherit python-setuptools)
-    (version "44.1.1")
-    (source
-     (origin
-       (inherit (package-source python-setuptools))
-       (uri (pypi-uri "setuptools" version ".zip"))
-       (sha256
-        (base32
-         "0ss7b8mm88lqd4lr0kjl9p4crlybc6cvl81f9pfdm81jnmfsayn6"))))))
-
 (define-public python-asttokens
   (package
     (name "python-asttokens")
-    (version "2.0.4")
+    (version "2.2.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "asttokens" version))
        (sha256
         (base32
-         "0a2ixiz04aw4p0aivxh47k3fa9ql804l3y5iv5gcih9aizi5fbm4"))))
+         "0b756m6xf1h473cy8kmfsd5vgw3jk9gwfvw2s7aazgxfbl8iyyz2"))))
     (build-system python-build-system)
     (propagated-inputs `(("python-six" ,python-six)))
     (native-inputs
      `(("python-astroid" ,python-astroid)
        ("python-pytest" ,python-pytest)
-       ("python-setuptools" ,python-setuptools44)
-       ("python-setuptools-scm" ,python-setuptools-scm)
        ("python-wheel" ,python-wheel)
-       ("python-toml" ,python-toml)))
+       ("python-toml" ,python-toml)
+       ("python-setuptools-scm" ,python-setuptools-scm)))
     (home-page
      "https://github.com/gristlabs/asttokens")
     (synopsis
@@ -691,20 +556,22 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-executing
   (package
     (name "python-executing")
-    (version "0.5.4")
+    (version "1.0.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "executing" version))
        (sha256
         (base32
-         "1sv8jy3kij4mvrj2cmv6z9hxk7cfbxgdnr81z9wqb7iry3g1mdq7"))))
+         "05qhbvfk2bmkz6gvvgl9arc0b7h7mypdb028jh6lyslis6lyznlq"))))
     (build-system python-build-system)
-    (inputs
+    (native-inputs
      `(("python-setuptools-scm" ,python-setuptools-scm)
        ("python-wheel" ,python-wheel)
        ("python-toml" ,python-toml)
-       ("python-asttokens" ,python-asttokens)))
+       ("python-pytest" ,python-pytest)
+       ("python-littleutils" ,python-littleutils)))
+    (inputs `(("python-asttokens" ,python-asttokens)))
     (home-page
      "https://github.com/alexmojaki/executing")
     (synopsis
@@ -716,15 +583,17 @@ as possible in order to be comprehensible and easily extensible.")
 (define-public python-varname
   (package
     (name "python-varname")
-    (version "0.6.2")
+    (version "0.9.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "varname" version))
        (sha256
         (base32
-         "16qzzdls1jdygdn7x2pnvrn6gkxpm0j7p69zy7ykc6hbd683v8wn"))))
-    (build-system python-build-system)
+         "1lizldli4g3jn3siacwn4fblgr6k34jdszhnpji37gjlca5gb9xk"))))
+    (build-system pyproject-build-system)
+    (native-inputs (list poetry))
+    (arguments `(#:tests? #f))                  ; kind of super broken?
     (propagated-inputs
      `(("python-executing" ,python-executing)))
     (home-page
@@ -736,10 +605,10 @@ as possible in order to be comprehensible and easily extensible.")
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "ac9001b22cd494e823f70ffe199fa7e812c6306d"))
+  (let ((commit "74f33880bd42fadd6deeda533aaceb44bafae1f9"))
     (package
       (name "symbiyosys")
-      (version (string-append "2021.12.18-" (string-take commit 9)))
+      (version (string-append "2023.04.05-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -749,316 +618,34 @@ as possible in order to be comprehensible and easily extensible.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0xgpx1lzf4qyg6agca91zpksrrp2zhkhxbbwpwidbvs2bm833xz3"))))
+           "1qr7crjr43lkdgka5c69xmmz7krgkqb2wjb36aqv2mg26r1kh7rb"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))
       (arguments
        `(#:make-flags `(,(string-append "PREFIX=" %output))
+         #:tests? #f
          #:phases (modify-phases %standard-phases
-                    (add-before 'install 'fix-permissions
-                      (lambda _
-                        (for-each make-file-writable (find-files "." ".*"))
-                        #t))
-                    (add-before 'install 'patch-yosys
-                      (lambda* (#:key inputs outputs #:allow-other-keys)
-                        (let ((out (assoc-ref outputs "out"))
-                              (yosys (assoc-ref inputs "yosys")))
-                          (substitute* '("sbysrc/sby.py" "sbysrc/sby_core.py")
-                            (("##yosys-sys-path##") (string-append "sys.path += [p + \"/share/yosys/python3/\" for p in [\"" out "\", \"" yosys "\"]]"))
-                            (("/usr/bin/env\", \"bash") (which "bash"))))
-                        #t))
-                    (delete 'configure) ; no configure
-                    (delete 'build)     ; no compilation
-                    (delete 'check))))  ; no tests (make test instead of make check)
+                                 (add-before 'install 'fix-permissions
+                                                          (lambda _
+                                                            (for-each make-file-writable (find-files "." ".*"))
+                                                            #t))
+                                 (add-before 'install 'patch-yosys
+                                                          (lambda* (#:key inputs outputs #:allow-other-keys)
+                                                            (let ((out (assoc-ref outputs "out"))
+                                                                  (yosys (assoc-ref inputs "yosys")))
+                                                              (substitute* '("sbysrc/sby.py" "sbysrc/sby_core.py")
+                                                                           (("##yosys-sys-path##") (string-append "sys.path += [p + \"/share/yosys/python3/\" for p in [\"" out "\", \"" yosys "\"]]"))
+                                                                           (("/usr/bin/env\", \"bash") (which "bash"))))
+                                                            #t))
+                                 (delete 'configure) ; no configure
+                                 (delete 'build))))     ; no compilation
+                    
       (build-system gnu-build-system)
       (home-page "https://github.com/YosysHQ/SymbiYosys")
       (synopsis "SymbiYosys (sby) -- Front-end for Yosys-based formal verification flows")
       (description "SymbiYosys (sby) is a front-end driver program for Yosys-based formal hardware verification flows.")
       (license license:isc))))
-
-(define-public python-skyfield
-  (package
-    (name "python-skyfield")
-    (version "1.36")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "skyfield" version))
-       (sha256
-        (base32
-         "1dm1327a4qv3klj9blrvddbhl72v1fqz52ym9km8qjj9vdkpywh6"))))
-    (build-system python-build-system)
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (delete 'check))))
-    (home-page
-     "http://github.com/brandon-rhodes/python-skyfield/")
-    (synopsis "Elegant astronomy for Python")
-    (description "Elegant astronomy for Python")
-    (license license:expat)))
-
-(define-public python-astropy
-  (package
-    (name "python-astropy")
-    (version "4.0.1.post1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "astropy" version))
-       (sha256
-        (base32
-         "1da4xj793ldck29aajyb514wpz330cml26f3gdp45jj531n4lc2w"))))
-    (build-system python-build-system)
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (delete 'check))))
-    (propagated-inputs
-     `(("python-numpy" ,python-numpy)))
-    (native-inputs
-     `(("python-coverage" ,python-coverage)
-       ("python-ipython" ,python-ipython)
-       ("python-objgraph" ,python-objgraph)
-       ("python-skyfield" ,python-skyfield)))
-    (home-page "http://astropy.org")
-    (synopsis
-     "Community-developed python astronomy tools")
-    (description
-     "Community-developed python astronomy tools")
-    (license #f)))
-
-(define-public python-toposort
-  (package
-    (name "python-toposort")
-    (version "1.6")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "toposort" version))
-       (sha256
-        (base32
-         "1b2hppzjg3p006qya3yfdnp76dwq8frl97lypdam0kw4xxb8yhm7"))))
-    (build-system python-build-system)
-    (home-page
-     "https://bitbucket.org/ericvsmith/toposort")
-    (synopsis
-     "Implements a topological sort algorithm.")
-    (description
-     "Implements a topological sort algorithm.")
-    (license #f)))
-
-(define-public python-sexpdata
-  (package
-    (name "python-sexpdata")
-    (version "0.0.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "sexpdata" version))
-       (sha256
-        (base32
-         "1q4lsjyzzqrdv64l0pv4ij9nd8gqhvxqcrpxc2xpxs652sk2gj0s"))))
-    (build-system python-build-system)
-    (home-page "https://github.com/tkf/sexpdata")
-    (synopsis "S-expression parser for Python")
-    (description "S-expression parser for Python")
-    (license license:bsd-3)))
-
-(define-public python-epc
-  (package
-    (name "python-epc")
-    (version "0.0.5")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "epc" version))
-       (sha256
-        (base32
-         "09bx1ln1bwa00917dndlgs4k589h8qx2x080xch5m58p92kjwkd1"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-sexpdata" ,python-sexpdata)
-       ("python-nose" ,python-nose)))
-    (home-page "https://github.com/tkf/python-epc")
-    (synopsis
-     "EPC (RPC stack for Emacs Lisp) implementation in Python")
-    (description
-     "EPC (RPC stack for Emacs Lisp) implementation in Python")
-    (license #f)))
-
-;; TODO(robin): broken
-;; (define-public python-frida
-;;   (package
-;;     (name "python-frida")
-;;     (version "12.8.20")
-;;     (source
-;;       (origin
-;;         (method url-fetch)
-;;         (uri (pypi-uri "frida" version))
-;;         (sha256
-;;           (base32
-;;             "126faax3zzdfkzjlm4q20iyaznz79jjyxh0m2m85jcxfacnhry7h"))))
-;;     (build-system python-build-system)
-;;     (home-page "https://www.frida.re")
-;;     (synopsis
-;;       "Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers")
-;;     (description
-;;       "Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers")
-;;     (license #f)))
-
-;; (define-public python-frida-tools
-;;   (package
-;;     (name "python-frida-tools")
-;;     (version "7.2.0")
-;;     (source
-;;       (origin
-;;         (method url-fetch)
-;;         (uri (pypi-uri "frida-tools" version))
-;;         (sha256
-;;           (base32
-;;             "0rnb8ycjmnf54p7ibca9rykc7wpfiv5navvy6qhqm3hw1wnbma7z"))))
-;;     (build-system python-build-system)
-;;     (propagated-inputs
-;;       `(("python-colorama" ,python-colorama)
-;;         ("python-frida" ,python-frida)
-;;         ("python-prompt-toolkit" ,python-prompt-toolkit)
-;;         ("python-pygments" ,python-pygments)))
-;;     (home-page "https://www.frida.re")
-;;     (synopsis "Frida CLI tools")
-;;     (description "Frida CLI tools")
-;;     (license #f)))
-
-(define-public python-pytest-helpers-namespace
-  (package
-    (name "python-pytest-helpers-namespace")
-    (version "2019.1.8")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pytest-helpers-namespace" version))
-       (sha256
-        (base32
-         "1kkifxcnv2s2136p0zg9h15f3lq1i7xgppzncq0hqhcjkyhj7zsf"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-pytest" ,python-pytest)))
-    (home-page
-     "https://github.com/saltstack/pytest-helpers-namespace")
-    (synopsis "PyTest Helpers Namespace")
-    (description "PyTest Helpers Namespace")
-    (license #f)))
-
-(define-public python-pytest-xdist-1.28.0
-  (package
-    (inherit python-pytest-xdist)
-    (version "1.28.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pytest-xdist" version))
-       (sha256
-        (base32
-         "0v2jpdk2gdybay453v3xrb2k59bk4kqs71asi9yda7z8jd94hfpq"))))))
-
-(define-public python-pytest-5.3.4
-  (package
-    (inherit python-pytest)
-    (version "5.3.4")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pytest" version))
-       (sha256
-        (base32
-         "005n7718iv0sm4w7yr347lqihc5svj2jsbpqasg706jdwn5jw4hx"))))))
-
-(define-public python-xmp-toolkit
-  (package
-    (name "python-xmp-toolkit")
-    (version "2.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "python-xmp-toolkit" version))
-       (sha256
-        (base32
-         "0f4s86hji6idyfg9007jncl366gasjjmldbwbknldzgrdya15ngq"))))
-    (build-system python-build-system)
-    (inputs
-     `(("exempi" ,exempi)))
-    (propagated-inputs
-     `(("python-pytz" ,python-pytz)))
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'patch-exempi-location
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (let ((exempi (assoc-ref inputs "exempi")))
-               (substitute* '("libxmp/exempi.py")
-                 (("ctypes.util.find_library\\('exempi'\\)") (string-append "\"" exempi "/lib/libexempi.so\""))))
-             #t))
-         (delete 'check)))) ; fails and I don't care
-    (home-page
-     "https://github.com/python-xmp-toolkit/python-xmp-toolkit")
-    (synopsis
-     "Python XMP Toolkit for working with metadata.")
-    (description
-     "Python XMP Toolkit for working with metadata.")
-    (license #f)))
-
-(define-public python-setuptools-scm-git-archive-fixed
-  (package
-    (inherit python-setuptools-scm-git-archive)
-    (arguments
-       (substitute-keyword-arguments (package-arguments python-setuptools-scm-git-archive)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             (delete 'sanity-check)))))))
-
-(define-public python-pikepdf
-  (package
-    (name "python-pikepdf")
-    (version "1.17.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pikepdf" version))
-       (sha256
-        (base32
-         "152cva29vpzwd9ksfwmp3whg57km0nfj8vf7s6nxaxxk8r5h0rgv"))))
-    (build-system python-build-system)
-    (native-inputs
-     `(("python-wheel" ,python-wheel)
-       ("python-setuptools-scm-git-archive" ,python-setuptools-scm-git-archive-fixed)))
-
-    (inputs
-     `(("pybind11" ,pybind11)
-       ("qpdf" ,qpdf)))
-    (propagated-inputs
-     `(("python-lxml" ,python-lxml)))
-    ;; ("attrs" ,python-attrs)
-    ;; ("python-pytest" ,python-pytest-5.3.4)
-    ;; ("python-pytest-helpers-namespace" ,python-pytest-helpers-namespace)
-    ;; ("python-pytest-timeout" ,python-pytest-timeout)
-    ;; ("python-pytest-xdist" ,python-pytest-xdist-1.28.0)
-    ;; ("python-pytest-runner" ,python-pytest-runner)
-    ;; ("python-pytest-forked" ,python-pytest-forked)
-    ;; ("python-pillow" ,python-pillow)
-    ;; ("python-xmp-toolkit" ,python-xmp-toolkit)
-    ;; ("python-hypothesis" ,python-hypothesis)
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (add-before 'build 'set-HOME
-           (lambda _
-             (setenv "HOME" "/tmp")))
-         (delete 'check)))) ; pytest version conflict
-    (home-page "https://github.com/pikepdf/pikepdf")
-    (synopsis
-     "Read and write PDFs with Python, powered by qpdf")
-    (description
-     "Read and write PDFs with Python, powered by qpdf")
-    (license #f)))
 
 (define-public python-bluepy
   (package
@@ -1096,46 +683,60 @@ as possible in order to be comprehensible and easily extensible.")
      "Python module for interfacing with BLE devices through Bluez")
     (license #f)))
 
+(define-public python-prompt-toolkit
+  (package
+    (name "python-prompt-toolkit")
+    (version "3.0.38")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "prompt_toolkit" version))
+              (sha256
+               (base32
+                "16sv7mb9ixw6z237m1b20v6kwh0bgnsfqpz0pp43i6laad85vb13"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-wcwidth))
+    (home-page "https://github.com/prompt-toolkit/python-prompt-toolkit")
+    (synopsis
+     "Library for building powerful interactive command lines in Python")
+    (description
+     "Library for building powerful interactive command lines in Python")
+    (license #f)))
+
 (define-public python-pymodbus
   (package
-    (name "python-pymodbus")
-    (version "2.4.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pymodbus" version))
-       (sha256
-        (base32
-         "1m9cq8vhcsfngfgl5hxy0w3h0pgklpnrjw4x5579zk5p8l161zr4"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-pyserial" ,python-pyserial)
-       ("python-six" ,python-six)))
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (delete 'check))))
-    (home-page
-     "https://github.com/riptideio/pymodbus/")
-    (synopsis
-     "A fully featured modbus protocol stack in python")
-    (description
-     "A fully featured modbus protocol stack in python")
-    (license #f)))
+   (name "python-pymodbus")
+   (version "3.2.2")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (pypi-uri "pymodbus" version))
+     (sha256
+      (base32
+       "12ah6l30jcbgnxqzc0z324l76ymvyhagaq563g25lpl785dzaikg"))))
+   (build-system python-build-system)
+   (arguments '(#:tests? #f))
+   (propagated-inputs
+    (list python-pyserial python-six python-click python-typer python-prompt-toolkit python-pygments python-aiohttp python-pyserial-asyncio))
+   (home-page
+    "https://github.com/riptideio/pymodbus/")
+   (synopsis
+    "A fully featured modbus protocol stack in python")
+   (description
+    "A fully featured modbus protocol stack in python")
+   (license #f)))
 
 (define-public python-solaredge-modbus
   (package
     (name "python-solaredge-modbus")
-    (version "0.6.4")
+    (version "0.7.2")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "solaredge_modbus" version))
        (sha256
         (base32
-         "0fsn60vwns0m3nw3b2mhda232p5kyhchmv3w4m66gxws85japwgb"))))
+         "0l12n69ry6s3fkk20l6fwwxgvp9pmj0cx9jar4x3xkvmp90ls61d"))))
     (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
     (propagated-inputs
      `(("python-pymodbus" ,python-pymodbus)))
     (home-page
@@ -1144,42 +745,9 @@ as possible in order to be comprehensible and easily extensible.")
     (description "SolarEdge Modbus parser library")
     (license license:expat)))
 
-(define-public python-importlib-resources
-  (package
-    (name "python-importlib-resources")
-    (version "3.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri "https://files.pythonhosted.org/packages/46/0b/7973c432eae095b60db1a37d6bf2c693cb4290b4d38d92f1bafe503c853d/importlib_resources-3.0.0.tar.gz") ; (pypi-uri "importlib-resources" version))
-       (sha256
-        (base32
-         "1hq626mx5jl9zfl0wdrjkxsnh8qd98fqv322n68b9251xjk4bxqr"))))
-    (build-system python-build-system)
-    (inputs
-     `(("python-setuptools-scm" ,python-setuptools-scm)))
-    (propagated-inputs
-     `(("python-contextlib2" ,python-contextlib2)
-       ("python-pathlib2" ,python-pathlib2)
-       ("python-singledispatch" ,python-singledispatch)
-       ("python-toml" ,python-toml)
-       ("python-zipp" ,python-zipp)))
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (delete 'check))))
-    ;; (delete 'check))
-    (home-page
-     "http://importlib-resources.readthedocs.io/")
-    (synopsis "Read resources from Python packages")
-    (description
-     "Read resources from Python packages")
-    (license #f)))
-
-
 (define-public python-openant
-  (let* ((commit "faa8987a1b8e3a085b584becaabdddb276b32a1b")
-         (version (string-append "0.4+" (string-take commit 9))))
+  (let* ((commit "8d2c6a0e91d90da38e1e48f32de62cf2aae37075")
+         (version (string-append "1.2+" (string-take commit 9))))
     (package
       (name "python-openant")
       (version version)
@@ -1192,7 +760,7 @@ as possible in order to be comprehensible and easily extensible.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0hzr099g33p1pz1wclr4yaavl89g3bqy2plxgglkmk9mmrmiy3z7"))))
+           "1cm3wv8hsssqjnj2yammffhwcl965dl6jqvgd1pnmpknxay94q3c"))))
       (build-system python-build-system)
       (propagated-inputs `(("python-pyusb" ,python-pyusb)))
       (arguments
@@ -1268,33 +836,6 @@ as possible in order to be comprehensible and easily extensible.")
     (description "cProfile flamegraph generator")
     (license license:expat)))
 
-
-(define-public python-shapely-fixed
-  (package
-    (inherit python-shapely)
-    (name "python-shapely-fixed")
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (delete 'check) ; broken
-         (add-after 'unpack 'patch-geos-path
-           (lambda* (#:key inputs #:allow-other-keys)
-             (let ((geos (assoc-ref inputs "geos"))
-                   (glibc (assoc-ref inputs ,(if (%current-target-system)
-                                                 "cross-libc" "libc"))))
-               (for-each
-                (lambda (file)
-                  (substitute* file
-                    (("_lgeos = load_dll\\('geos_c', fallbacks=.*\\)")
-                     (string-append "_lgeos = load_dll('geos_c', fallbacks=['"
-                                    geos "/lib/libgeos_c.so'])"))
-                    (("free = load_dll\\('c'\\)\\.free")
-                     (string-append "free = load_dll('c', fallbacks=['"
-                                    glibc "/lib/libc.so.6']).free"))))
-                '("shapely/geos.py" "shapely/_buildcfg.py")))
-               
-             #t)))))))
-
 (define-public python-flask-cors
   (package
     (name "python-flask-cors")
@@ -1317,9 +858,7 @@ as possible in order to be comprehensible and easily extensible.")
     (description
      "A Flask extension adding a decorator for CORS support")
     (license license:expat)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
+    (arguments '(#:tests? #f))))
 
 (define-public python-descartes
   (package
@@ -1344,629 +883,59 @@ as possible in order to be comprehensible and easily extensible.")
      "Use geometric objects as matplotlib paths and patches")
     (license license:bsd-3)))
 
-
-
 (define-public python-loky
   (package
     (name "python-loky")
-    (version "2.9.0")
+    (version "3.3.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "loky" version))
        (sha256
         (base32
-         "1gy594v2nsyc6v62qyxizvsgh6a938hi4zmg1zdw4avc9djg16sa"))))
+         "0wqy5csmwxzbynk9nx0fdwbs9mhxj2mwvii90nl3s683jvc0rqfv"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-cloudpickle" ,python-cloudpickle)))
+    (native-inputs (list python-psutil python-pytest))
+    (arguments `(#:tests? #f))
     (home-page "https://github.com/joblib/loky/")
     (synopsis
      "A robust implementation of concurrent.futures.ProcessPoolExecutor")
     (description
      "A robust implementation of concurrent.futures.ProcessPoolExecutor")
-    (license license:bsd-3)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-
-
-
-(define-public python-pybind11
-  (package
-    (name "python-pybind11")
-    (version "2.6.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pybind11" version))
-       (sha256
-        (base32
-         "1vg5cp1l3bpkxlfjghqhkvl53fg3nrz70fr404az4mln4zcsxq6h"))))
-    (build-system python-build-system)
-    (home-page "https://github.com/pybind/pybind11")
-    (synopsis
-     "Seamless operability between C++11 and Python")
-    (description
-     "Seamless operability between C++11 and Python")
     (license license:bsd-3)))
-
-(define-public python-ninja
-  (package
-    (name "python-ninja")
-    (version "1.10.0.post2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "ninja" version))
-       (sha256
-        (base32
-         "1y0jv150arz1rhrzi5z7sss80rgrksi33ig8hb5z1gm92csxf7v2"))))
-    (build-system python-build-system)
-    (inputs `(("skbuild" ,python-scikit-build)))
-    (home-page "http://ninja-build.org/")
-    (synopsis
-     "Ninja is a small build system with a focus on speed")
-    (description
-     "Ninja is a small build system with a focus on speed")
-    (license license:asl2.0)))
-
-(define-public python-cmake
-  (package
-    (name "python-cmake")
-    (version "3.18.2.post1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "cmake" version))
-       (sha256
-        (base32
-         "08h83c7ha29c10bd730s6jj0a4nrwjk7r4w8bsb61m6ndsg3rnp8"))))
-    (build-system python-build-system)
-    (inputs `(("skbuild" ,python-scikit-build)
-              ("cmake" ,cmake)
-              ("libuv" ,libuv)))
-    (home-page "http://cmake.org/")
-    (synopsis
-     "CMake is an open-source, cross-platform family of tools designed to build, test and package software")
-    (description
-     "CMake is an open-source, cross-platform family of tools designed to build, test and package software")
-    (license license:asl2.0)))
-
-(define-public python-scikit-build
-  (package
-    (name "python-scikit-build")
-    (version "0.11.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "scikit-build" version))
-       (sha256
-        (base32
-         "0p4smkl2rbpl00m5va5qa8hp2hqb3284p2cs6k8zlmi4kgbdyh6s"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-distro" ,python-distro)
-       ("python-packaging" ,python-packaging)
-       ("python-setuptools" ,python-setuptools)
-       ("python-wheel" ,python-wheel)))
-    (home-page
-     "https://github.com/scikit-build/scikit-build")
-    (synopsis
-     "Improved build system generator for Python C/C++/Fortran/Cython extensions")
-    (description
-     "Improved build system generator for Python C/C++/Fortran/Cython extensions")
-    (license license:expat)))
-
-(define-public python-xdoctest
-  (package
-    (name "python-xdoctest")
-    (version "0.15.4")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "xdoctest" version))
-       (sha256
-        (base32
-         "1l85hpggiqk1bxvmm5467y973adc6bn2dh1mdz5x723r2k9967zg"))))
-    (build-system python-build-system)
-    (propagated-inputs `(("python-six" ,python-six)))
-    (native-inputs
-     `(; ("python-cmake" ,python-cmake)
-       ("python-codecov" ,python-codecov)
-       ("python-ipykernel" ,python-ipykernel)
-       ("python-ipython" ,python-ipython)
-       ("python-jupyter-client" ,python-jupyter-client)
-       ("python-nbconvert" ,python-nbconvert)
-       ("python-nbformat" ,python-nbformat)
-                                        ; ("python-ninja" ,python-ninja)
-       ("python-pybind11" ,python-pybind11)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-scikit-build" ,python-scikit-build)))
-    (home-page
-     "https://github.com/Erotemic/xdoctest")
-    (synopsis
-     "A rewrite of the builtin doctest module")
-    (description
-     "A rewrite of the builtin doctest module")
-    (license #f)))
-
-
-
-(define-public python-setuptools-scm-3.5
-  (package
-    (inherit python-setuptools-scm)
-    (version "3.5.0")
-    (source
-     (origin
-       (inherit (package-source python-setuptools))
-       (uri "https://files.pythonhosted.org/packages/b2/f7/60a645aae001a2e06cf4b8db2fba9d9f36b8fd378f10647e3e218b61b74b/setuptools_scm-3.5.0.tar.gz") ; (pypi-uri "setuptools-scm" version ".zip"))
-       (sha256
-        (base32
-         "11qs1jvfgflx1msv39jgc6bj9d9a300ra35fwypkr44jayh23psv"))))))
-
-(define-public python-pytest-mypy
-  (package
-    (name "python-pytest-mypy")
-    (version "0.7.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pytest-mypy" version))
-       (sha256
-        (base32
-         "0gb7hn4yraji94873rzvxb1y59i334i1yhclljrrigv65fd7srjs"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-filelock" ,python-filelock)
-       ("python-mypy" ,python-mypy)
-       ("python-pytest" ,python-pytest)))
-    (native-inputs
-     `(("python-setuptools-scm" ,python-setuptools-scm-3.5)))
-    (home-page
-     "https://github.com/dbader/pytest-mypy")
-    (synopsis
-     "Mypy static type checker plugin for Pytest")
-    (description
-     "Mypy static type checker plugin for Pytest")
-    (license license:expat)))
-
-(define-public python-path
-  (package
-    (name "python-path")
-    (version "15.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "path" version))
-       (sha256
-        (base32
-         "14nsvz46b3srcbjhh59ik8mxdxf0rwj9am0mpkvxp8xf5xis06jj"))))
-    (build-system python-build-system)
-    (native-inputs
-     `(("python-appdirs" ,python-appdirs)
-       ("python-packaging" ,python-packaging)
-       ("python-pygments" ,python-pygments)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-black" ,python-pytest-black)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pytest-flake8" ,python-pytest-flake8)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-mypy" ,python-pytest-mypy)))
-    (home-page "https://github.com/jaraco/path")
-    (synopsis "A module wrapper for os.path")
-    (description "A module wrapper for os.path")
-    (license #f)))
-
-(define-public python-path.py
-  (package
-    (name "python-path.py")
-    (version "12.5.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "path.py" version))
-       (sha256
-        (base32
-         "1a198l1zz2rh21l16ap46pq02d4ljzyy151xf02x1blp4j5mx24d"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-path" ,python-path)))
-    (native-inputs
-     `(("python-appdirs" ,python-appdirs)
-       ("python-packaging" ,python-packaging)
-       ("python-pygments" ,python-pygments)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-black-multipy"
-        ,python-pytest-black-multipy)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page "https://github.com/jaraco/path")
-    (synopsis "A module wrapper for os.path")
-    (description "A module wrapper for os.path")
-    (license #f)))
-
-(define-public python-jaraco.structures
-  (package
-    (name "python-jaraco.structures")
-    (version "2.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.structures" version))
-       (sha256
-        (base32
-         "0wcmywzagybxvwl5d6ix7d655swi8sa41hcgb7zz723my7r9mapm"))))
-    (build-system python-build-system)
-    (inputs `(("python-setuptools-scm" ,python-setuptools-scm)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.structures")
-    (synopsis "Data structures by jaraco")
-    (description "Data structures by jaraco")
-    (license #f)))
-
-(define-public python-jaraco.collections
-  (package
-    (name "python-jaraco.collections")
-    (version "3.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.collections" version))
-       (sha256
-        (base32
-         "08a7appg3yaz7kkj8ijpan90mmv3z8w54fa9fishnag7ybs0wmxy"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-jaraco.classes" ,python-jaraco.classes)
-       ("python-jaraco.text" ,python-jaraco.text)
-       ("python-six" ,python-six)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-black-multipy"
-        ,python-pytest-black-multipy)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.collections")
-    (synopsis
-     "Collection objects similar to those in stdlib by jaraco")
-    (description
-     "Collection objects similar to those in stdlib by jaraco")
-    (license #f)))
-
-(define-public python-jaraco.functools
-  (package
-    (name "python-jaraco.functools")
-    (version "3.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.functools" version))
-       (sha256
-        (base32
-         "1x4l7d4mvr94nfzh4zgvkdcglvvagbx2y6ryw2ijql8p66zc9vcz"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-more-itertools" ,python-more-itertools)))
-    (native-inputs
-     `(("python-jaraco.classes" ,python-jaraco.classes)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-black" ,python-pytest-black)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.functools")
-    (synopsis "Functools like those found in stdlib")
-    (description
-     "Functools like those found in stdlib")
-    (license #f)))
-
-(define-public python-jaraco.text
-  (package
-    (name "python-jaraco.text")
-    (version "3.2.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.text" version))
-       (sha256
-        (base32
-         "1v0hz3h74m31jlbc5bxwkvrx1h2n7887bajrg1n1c3yc4q8qn1z5"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-importlib-resources"
-        ,python-importlib-resources)
-       ("python-jaraco.functools"
-        ,python-jaraco.functools)
-       ("python-six" ,python-six)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-black-multipy"
-        ,python-pytest-black-multipy)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.text")
-    (synopsis "Module for text manipulation")
-    (description "Module for text manipulation")
-    (license #f)))
-
-(define-public python-pytest-black-multipy
-  (package
-    (name "python-pytest-black-multipy")
-    (version "1.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pytest-black-multipy" version))
-       (sha256
-        (base32
-         "1ciwa99fnz3ngbsvcjvxqz4k1vwfmvpxaj7qf5vxkx0awvczhsyd"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-pytest-black" ,python-pytest-black)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page "https://github.com/jaraco/skeleton")
-    (synopsis "Allow '--black' on older Pythons")
-    (description "Allow '--black' on older Pythons")
-    (license #f)))
-
-(define-public python-jaraco.classes
-  (package
-    (name "python-jaraco.classes")
-    (version "3.1.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.classes" version))
-       (sha256
-        (base32
-         "1avsxzm5mwylmy2zbxq3xvn48z5djb0qy3hwv4ryncprivzri1n3"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-more-itertools" ,python-more-itertools)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-black-multipy"
-        ,python-pytest-black-multipy)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.classes")
-    (synopsis
-     "Utility functions for Python class constructs")
-    (description
-     "Utility functions for Python class constructs")
-    (license #f)))
-
-(define-public python-jaraco.ui
-  (package
-    (name "python-jaraco.ui")
-    (version "2.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.ui" version))
-       (sha256
-        (base32
-         "0di9fnjgwyyk6jq6gvwiz8qy1f6znwq96m416d9q8vr36hkmayzi"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-jaraco.classes" ,python-jaraco.classes)
-       ("python-jaraco.text" ,python-jaraco.text)
-       ("python-six" ,python-six)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page "https://github.com/jaraco/jaraco.ui")
-    (synopsis
-     "User-Interface tools (mainly command-line)")
-    (description
-     "User-Interface tools (mainly command-line)")
-    (license #f)))
-
-(define-public python-jaraco.windows
-  (package
-    (name "python-jaraco.windows")
-    (version "5.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jaraco.windows" version))
-       (sha256
-        (base32
-         "1zxcvmjd2w9n11b3wpdsmrzmlpxj1g2fj9qx6zzbbfzgswqkzg11"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-jaraco.collections"
-        ,python-jaraco.collections)
-       ("python-jaraco.structures"
-        ,python-jaraco.structures)
-       ("python-jaraco.text" ,python-jaraco.text)
-       ("python-jaraco.ui" ,python-jaraco.ui)
-       ("python-more-itertools" ,python-more-itertools)
-       ("python-path.py" ,python-path.py)
-       ("python-six" ,python-six)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-pytest-black" ,python-pytest-black)
-       ("python-pytest-checkdocs"
-        ,python-pytest-checkdocs)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-setuptools-scm" ,python-setuptools-scm)
-       ("python-pytest-flake8" ,python-pytest-flake8)))
-    (home-page
-     "https://github.com/jaraco/jaraco.windows")
-    (synopsis "Windows Routines by Jason R. Coombs")
-    (description
-     "Windows Routines by Jason R. Coombs")
-    (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-(define-public python-ordered-set
-  (package
-    (name "python-ordered-set")
-    (version "4.0.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "ordered-set" version))
-       (sha256
-        (base32
-         "159syfbqnwqnivzjfn3x7ak3xwrxmnzbji7c2qhj1jjv0pgv54xs"))))
-    (build-system python-build-system)
-    (native-inputs
-     `(("python-pytest" ,python-pytest)))
-    (home-page
-     "https://github.com/LuminosoInsight/ordered-set")
-    (synopsis
-     "A set that remembers its order, and allows looking up its items by their index in that order.")
-    (description
-     "A set that remembers its order, and allows looking up its items by their index in that order.")
-    (license #f)))
-
-(define-public python-ubelt
-  (package
-    (name "python-ubelt")
-    (version "0.9.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "ubelt" version))
-       (sha256
-        (base32
-         "0dvjwq9j1h04g9r2a0kc1vg1ycgi2kbmfa5z7wrp7lrx2q293qzl"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-jaraco.windows" ,python-jaraco.windows)
-       ("python-ordered-set" ,python-ordered-set)
-       ("python-six" ,python-six)))
-    ;; ("python-typing" ,python-typing)))
-    (native-inputs
-     `(("python-codecov" ,python-codecov)
-       ("python-coverage" ,python-coverage)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pytest-timeout" ,python-pytest-timeout)
-       ("python-xdoctest" ,python-xdoctest)))
-    (home-page "https://github.com/Erotemic/ubelt")
-    (synopsis
-     "A Python utility belt containing simple tools, a stdlib like feel, and extra batteries.")
-    (description
-     "A Python utility belt containing simple tools, a stdlib like feel, and extra batteries.")
-    (license #f)))
 
 (define-public python-line-profiler
   (package
     (name "python-line-profiler")
-    (version "3.0.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri "https://files.pythonhosted.org/packages/98/bd/4ff4e59f97897d21b3b7d0c97ac77cedab23e6137a8c8fb3cbc9ee9d1f71/line_profiler-3.0.2.tar.gz") ; (pypi-uri "line-profiler" version))
-       (sha256
-        (base32
-         "0hficwvgdfz7zwg6ajbbsqbg041rjc4g2jwp26r4k1hzv1mss63j"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-ipython" ,python-ipython)))
-    (native-inputs
-     `(("python-codecov" ,python-codecov)
-       ("python-coverage" ,python-coverage)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("skbuild" ,python-scikit-build)
-       ("python-ubelt" ,python-ubelt)
-       ("python-cython" ,python-cython)
-       ("cmake" ,cmake)))
-    (home-page
-     "https://github.com/pyutils/line_profiler")
-    (synopsis "Line-by-line profiler.")
-    (description "Line-by-line profiler.")
-    (license license:bsd-3)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-
-(define-public python-scikit-build
-  (package
-    (name "python-scikit-build")
-    (version "0.11.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "scikit-build" version))
-       (sha256
-        (base32
-         "0p4smkl2rbpl00m5va5qa8hp2hqb3284p2cs6k8zlmi4kgbdyh6s"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-distro" ,python-distro)
-       ("python-packaging" ,python-packaging)
-       ("python-setuptools" ,python-setuptools)
-       ("python-wheel" ,python-wheel)))
-    ;; (native-inputs
-    ;;  `(("python-pytest" ,python-pytest)
-    ;;    ("python-virtualenv" ,python-virtualenv)
-    ;;    ("python-pytest-runner" ,python-pytest-runner)))
-    (home-page
-     "https://github.com/scikit-build/scikit-build")
-    (synopsis
-     "Improved build system generator for Python C/C++/Fortran/Cython extensions")
-    (description
-     "Improved build system generator for Python C/C++/Fortran/Cython extensions")
-    (license license:expat)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
+    (version "4.0.3")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "line_profiler" version))
+              (sha256
+               (base32
+                "0zky9758cjmgdb4m7xz3r5qcv8k8xb4cxv93pvg13n8rj6gfpcny"))))
+    (build-system pyproject-build-system)
+    (native-inputs (list python-cython python-coverage python-ipython python-pytest
+                         python-pytest-cov python-ubelt))
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/pyutils/line_profiler")
+    (synopsis "Line-by-line profiler")
+    (description "Line-by-line profiler")
+    (license license:bsd-3)))
 
 (define-public python-snakeviz
   (package
     (name "python-snakeviz")
-    (version "2.1.0")
+    (version "2.1.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "snakeviz" version))
        (sha256
         (base32
-         "0s6byw23hr2khqx2az36hpi52fk4v6bfm1bb7biaf0d2nrpqgbcj"))))
+         "1ncl9kp9bli7ph5h5faarakkbjk6p25xjzpvnfs5q2ag603c15hd"))))
     (build-system python-build-system)
     (propagated-inputs
      `(("python-tornado" ,python-tornado)))
@@ -1979,272 +948,69 @@ as possible in order to be comprehensible and easily extensible.")
     (license #f)))
 
 
-(define-public python-numba-fixed
+(define-public pmbootstrap
   (package
-    (inherit python-numba)
-    (name "python-numba-fixed")
+    (name "pmbootstrap")
+    (version "1.50.1")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://gitlab.com/postmarketOS/pmbootstrap")
+                    (commit version)))
+              (sha256
+               (base32
+                "0n26zbpw7nhyh9gq0ydgij7m4pgv2n5wlmyc7g2sr7gqhqv04j2j"))))
+    (build-system python-build-system)
     (arguments
-     (substitute-keyword-arguments (package-arguments python-numba)
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (delete 'check)))))))
-
-
-(define-public python-pythran
-  (package
-    (name "python-pythran")
-    (version "0.9.8.post2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pythran" version))
-       (sha256
-        (base32
-         "1j10djs8jzw0acx1skbwjvdlln679bc9kf3jcm1mnwb1ivmnfc81"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-beniget" ,python-beniget)
-       ("python-decorator" ,python-decorator)
-       ("python-gast" ,python-gast-0.4.0)
-       ("python-networkx" ,python-networkx)
-       ("python-numpy" ,python-numpy)
-       ("python-ply" ,python-ply)
-       ("python-six" ,python-six)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-runner" ,python-pytest-runner)))
-    (home-page
-     "https://github.com/serge-sans-paille/pythran")
-    (synopsis
-     "Ahead of Time compiler for numeric kernels")
+     (list #:tests? #f ; TODO: many test fail
+           #:phases #~(modify-phases %standard-phases
+                        (add-after 'install 'fix-paths
+                          (lambda* _
+                            (let ((git (string-append #$git "/bin/"))
+                                  (procps (string-append #$procps "/bin"))
+                                  (openssl (string-append #$openssl "/bin"))
+                                  (sudo "/run/setuid-programs"))
+                              (wrap-program (string-append #$output
+                                                           "/bin/pmbootstrap")
+                                            `("PATH" ":" suffix
+                                              ,(list git procps openssl sudo))))))
+                        (replace 'check
+                          (lambda* (#:key tests? #:allow-other-keys)
+                            (when tests?
+                              (invoke "pytest")))))))
+    (native-inputs (list python-pytest python-pyopenssl))
+    (inputs (list git procps openssl sudo))
+    (home-page "https://postmarketos.org")
+    (synopsis "Build and flash tool for postmarketOS")
     (description
-     "Ahead of Time compiler for numeric kernels")
-    (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-(define-public python-commonmark
-  (package
-    (name "python-commonmark")
-    (version "0.9.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "commonmark" version))
-       (sha256
-        (base32
-         "0q7d39lm8kcingpmykk5r959hrwwj6v2icyw3mihczxyb749sbs5"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-future" ,python-future)))
-    (native-inputs
-     `(("python-flake8" ,python-flake8)
-       ("python-hypothesis" ,python-hypothesis)))
-    (home-page
-     "https://github.com/rtfd/commonmark.py")
-    (synopsis
-     "Python parser for the CommonMark Markdown spec")
-    (description
-     "Python parser for the CommonMark Markdown spec")
-    (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-(define-public python-recommonmark
-  (package
-    (name "python-recommonmark")
-    (version "0.7.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "recommonmark" version))
-       (sha256
-        (base32
-         "0rvdd2ikdr0yg6cx6594fdzn53cmdc0g0i6qsbcdq8i2kxjdpd5x"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-commonmark" ,python-commonmark)
-       ("python-docutils" ,python-docutils)
-       ("python-sphinx" ,python-sphinx)))
-    (home-page
-     "https://github.com/rtfd/recommonmark")
-    (synopsis
-     "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects.")
-    (description
-     "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects.")
-    (license license:expat)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-(define-public python-nbsphinx
-  (package
-    (name "python-nbsphinx")
-    (version "0.7.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nbsphinx" version))
-       (sha256
-        (base32
-         "0j56bxdj08vn3q1804qwb1ywhga1mdg1awgm7i64wfpfwi8df2zm"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-docutils" ,python-docutils)
-       ("python-jinja2" ,python-jinja2)
-       ("python-nbconvert" ,python-nbconvert)
-       ("python-nbformat" ,python-nbformat)
-       ("python-sphinx" ,python-sphinx)
-       ("python-traitlets" ,python-traitlets)))
-    (home-page "https://nbsphinx.readthedocs.io/")
-    (synopsis "Jupyter Notebook Tools for Sphinx")
-    (description "Jupyter Notebook Tools for Sphinx")
-    (license license:expat)))
-
-(define-public python-jupyter
-  (package
-    (name "python-jupyter")
-    (version "1.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jupyter" version))
-       (sha256
-        (base32
-         "0pwf3pminkzyzgx5kcplvvbvwrrzd3baa7lmh96f647k30rlpp6r"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-ipykernel" ,python-ipykernel)
-       ("python-ipywidgets" ,python-ipywidgets)
-       ("python-jupyter-console"
-        ,python-jupyter-console)
-       ("python-nbconvert" ,python-nbconvert)
-       ("python-notebook" ,python-notebook)
-       ("python-qtconsole" ,python-qtconsole)))
-    (home-page "http://jupyter.org")
-    (synopsis
-     "Jupyter metapackage. Install all the Jupyter components in one go.")
-    (description
-     "Jupyter metapackage. Install all the Jupyter components in one go.")
-    (license license:bsd-3)))
-
-(define-public python-beniget
-  (package
-    (name "python-beniget")
-    (version "0.3.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "beniget" version))
-       (sha256
-        (base32
-         "1w8gk9wcxza5rm91jnf10xqwd0adrqf085gv8hqpry6dx4xqjb06"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-gast" ,python-gast-0.4.0)))
-    (home-page
-     "https://github.com/serge-sans-paille/beniget/")
-    (synopsis
-     "Extract semantic information about static Python code")
-    (description
-     "Extract semantic information about static Python code")
-    (license #f)))
-
-(define-public python-transonic
-  (package
-    (name "python-transonic")
-    (version "0.4.7.post0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "transonic" version))
-       (sha256
-        (base32
-         "0ajcnaifxvcaribhnaj0qsz2n2gzxja2cq3mcpdnnphk2q336fs9"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-astunparse" ,python-astunparse)
-       ("python-autopep8" ,python-autopep8)
-       ("python-beniget" ,python-beniget)
-       ("python-gast" ,python-gast-0.4.0)
-       ("python-numpy" ,python-numpy)))
-    (native-inputs
-     `(("python-black" ,python-black)
-       ("python-cython" ,python-cython)
-       ("python-flake8" ,python-flake8)
-       ("python-ipython" ,python-ipython)
-       ("python-jupyter" ,python-jupyter)
-       ("python-mpi4py" ,python-mpi4py)
-       ("python-nbsphinx" ,python-nbsphinx)
-       ("python-nbval" ,python-nbval)
-       ("python-numpydoc" ,python-numpydoc)
-       ("python-pylint" ,python-pylint)
-       ("python-pytest" ,python-pytest)
-       ("python-pytest-cov" ,python-pytest-cov)
-       ("python-pythran" ,python-pythran)
-       ("python-recommonmark" ,python-recommonmark)
-       ("python-scipy" ,python-scipy)
-       ("python-sphinx" ,python-sphinx)
-       ("python-sphinx-rtd-theme"
-        ,python-sphinx-rtd-theme)))
-    (home-page "")
-    (synopsis
-     "Make your Python code fly at transonic speeds!")
-    (description
-     "Make your Python code fly at transonic speeds!")
-    (license license:bsd-3)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-
-
-(define-public python-gast-0.4.0
-  (package
-    (inherit python-gast)
-    (version "0.4.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri "https://files.pythonhosted.org/packages/83/4a/07c7e59cef23fb147454663c3271c21da68ba2ab141427c20548ae5a8a4d/gast-0.4.0.tar.gz") ; (pypi-uri "pytest-gast" version))
-       (sha256
-        (base32
-         "1ha27g42n0dsy53k0nky54cdnzl5idbd295jb9c8ais3p2wbgzj0"))))))
-
-(define-public python-pmbootstrap
-  (package
-    (name "python-pmbootstrap")
-    (version "1.29.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "pmbootstrap" version))
-       (sha256
-        (base32
-         "1l6sghirnn5spvdkr9w1yp1v9m78028w9lkgxb9v9chpmb5lv2hm"))))
-    (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page "https://www.postmarketos.org")
-    (synopsis
-     "A sophisticated chroot / build / flash tool to develop and install postmarketOS")
-    (description
-     "A sophisticated chroot / build / flash tool to develop and install postmarketOS")
-    (license #f)))
+     "Bootstrap program that abstracts everything in chroots and therefore
+basically runs on top of any Linux distribution. Features:
+@enumerate
+@item chroot setup (distro-independent QEMU user emulation
+@item clean chroot shutdown (umount) and zapping
+@item build software as packages
+@item cross-compile all armhf-packages
+@item effective caching out of the box (survives chroot zaps)
+@item installation targets
+@item flasher abstractions
+@item logging
+@item security
+@end enumerate")
+    (license license:gpl3+)))
 
 (define-public python-bitstring
   (package
     (name "python-bitstring")
-    (version "3.1.7")
+    (version "4.0.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "bitstring" version))
        (sha256
         (base32
-         "0jl6192dwrlm5ybkbh7ywmyaymrc3cmz9y07nm7qdli9n9rfpwzx"))))
-    (build-system python-build-system)
+         "01mpvjdws36scqs07frdi7d1n7gcm3a81rd5af2f577qdn7z06bp"))))
+    (build-system pyproject-build-system)
+    (arguments `(#:tests? #f))
     (home-page
      "https://github.com/scott-griffiths/bitstring")
     (synopsis
@@ -2271,158 +1037,47 @@ as possible in order to be comprehensible and easily extensible.")
     (description "Python client for Sonic Search DB")
     (license license:expat)))
 
+(define-public python-camel-converter
+  (package
+    (name "python-camel-converter")
+    (version "3.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "camel_converter" version))
+              (sha256
+               (base32
+                "1sz6h1r1hwb45xq7j9h1c2863s1xvi3wbxidmqwmy93720fhw83z"))))
+    (build-system python-build-system)
+    (propagated-inputs (list python-pydantic))
+    (home-page "https://github.com/sanders41/camel-converter")
+    (synopsis
+     "Converts a string from snake case to camel case or camel case to snake case")
+    (description
+     "Converts a string from snake case to camel case or camel case to snake case")
+    (license license:expat)))
 
 (define-public python-meilisearch
   (package
-    (name "python-meilisearch")
-    (version "0.14.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "meilisearch" version))
-       (sha256
-        (base32
-         "1h4qb88l0xa8q8ccvrn22q1rcrar06bl8068pfzn13bvklnn7z84"))))
-    (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (propagated-inputs
-     `(("python-requests" ,python-requests)))
-    (home-page
-     "https://github.com/meilisearch/meilisearch-python")
-    (synopsis
-     "The python client for MeiliSearch API.")
-    (description
-     "The python client for MeiliSearch API.")
-    (license #f)))
-
-(define-public python-ipympl
-  (package
-    (name "python-ipympl")
-    (version "0.5.8")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "ipympl" version))
-       (sha256
-        (base32
-         "10n3llpwnx9c70gnx0m3maqkd4icap43z6dp4hasdzid19a2wbqf"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-ipykernel" ,python-ipykernel)
-       ("python-ipywidgets" ,python-ipywidgets)
-       ("python-jupyter-packaging" ,python-jupyter-packaging)
-       ("python-matplotlib" ,python-matplotlib)))
-    (home-page "http://matplotlib.org")
-    (synopsis "Matplotlib Jupyter Extension")
-    (description "Matplotlib Jupyter Extension")
-    (license license:bsd-3)))
-
-
-(define-public python-jupyter-packaging
-  (package
-    (name "python-jupyter-packaging")
-    (version "0.7.11")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jupyter-packaging" version))
-       (sha256
-        (base32
-         "0ma4dsi2rjha1d592wkranbz4ppzwpvakgmybxzx3bqgdpi6w9gh"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-packaging" ,python-packaging)))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)))
-    (home-page "http://jupyter.org")
-    (synopsis "Jupyter Packaging Utilities")
-    (description "Jupyter Packaging Utilities")
-    (license license:bsd-3)))
-
-(define-public python-nbconvert-new
-  (package
-    (name "python-nbconvert")
-    (version "5.6.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "nbconvert" version))
-       (sha256
-        (base32
-         "08xm2sz7fslp2cm87k38anv3jxwxcld44hii1sx84gml03kliyr1"))))
-    (build-system python-build-system)
-    (arguments
-     `(;; The "bdist_egg" target is disabled by default, causing the installation
-       ;; to fail.
-       #:configure-flags (list "bdist_egg")
-                         ;; FIXME: 5 failures, 40 errors.
-                         #:tests? #f))
-    ;; #:phases
-    ;; (modify-phases %standard-phases
-    ;;   (replace 'check
-    ;;     (lambda _
-    ;;       (zero? (system* "py.test" "-v")))))
-    (native-inputs
-     `(("python-pytest" ,python-pytest)))
-    (propagated-inputs
-     `(("python-bleach" ,python-bleach)
-       ("python-entrypoints" ,python-entrypoints)
-       ("python-jinja2" ,python-jinja2)
-       ("python-jupyter-core" ,python-jupyter-core)
-       ("python-mistune" ,python-mistune)
-       ("python-nbformat" ,python-nbformat)
-       ("python-pygments" ,python-pygments)
-       ("python-traitlets" ,python-traitlets)))
-    (home-page "http://jupyter.org")
-    (synopsis "Converting Jupyter Notebooks")
-    (description "The @code{nbconvert} tool, @{jupyter nbconvert}, converts
-notebooks to various other formats via Jinja templates.  It allows you to
-convert an @code{.ipynb} notebook file into various static formats including:
-
-@enumerate
-@item HTML
-@item LaTeX
-@item PDF
-@item Reveal JS
-@item Markdown (md)
-@item ReStructured Text (rst)
-@item executable script
-@end enumerate\n")
-    (license license:bsd-3)))
-
-(define-public jupyter
-  (package
-    (name "jupyter")
-    (version "1.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "jupyter" version))
-       (sha256
-        (base32
-         "0pwf3pminkzyzgx5kcplvvbvwrrzd3baa7lmh96f647k30rlpp6r"))))
-    (build-system python-build-system)
-    (arguments '(#:tests? #f)) ; there are none.
-    (propagated-inputs
-     `(("python-ipykernel" ,python-ipykernel)
-       ("python-ipywidgets" ,python-ipywidgets)
-       ("python-jupyter-console" ,python-jupyter-console)
-       ("python-nbconvert" ,python-nbconvert-new)
-       ("python-notebook" ,python-notebook)
-       ("python-qtconsole" ,python-qtconsole)))
-    (native-search-paths
-     (list (search-path-specification
-            (variable "JUPYTER_PATH")
-            (files '("share/jupyter")))))
-    (home-page "https://jupyter.org")
-    (synopsis "Web application for interactive documents")
-    (description
-     "The Jupyter Notebook is a web application that allows you to create and
-share documents that contain live code, equations, visualizations and
-explanatory text.  Uses include: data cleaning and transformation, numerical
-simulation, statistical modeling, machine learning and much more.")
-    (license license:bsd-3)))
+   (name "python-meilisearch")
+   (version "0.26.0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (pypi-uri "meilisearch" version))
+     (sha256
+      (base32
+       "03d90cnqkyvb1jmms8lkf04slycky5dg1v041s6449mpyvmcazjr"))))
+   (build-system pyproject-build-system)
+   (arguments `(#:tests? #f))
+   (propagated-inputs
+    (list python-requests python-camel-converter))
+   (home-page
+    "https://github.com/meilisearch/meilisearch-python")
+   (synopsis
+    "The python client for MeiliSearch API.")
+   (description
+    "The python client for MeiliSearch API.")
+   (license #f)))
 
 (define-public python-huffman
   (package
@@ -2445,471 +1100,225 @@ simulation, statistical modeling, machine learning and much more.")
      "Generate Huffman codes with Python")
     (license #f)))
 
-
-(define-public python-proto-plus
+(define-public python-proto-plus-1.22
   (package
     (name "python-proto-plus")
-    (version "1.13.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "proto-plus" version))
-        (sha256
-          (base32
-            "1i5jjnwpd288378h37zads08h695iwmhxm0sxbr3ln6aax97rdb1"))))
+    (version "1.22.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "proto-plus" version))
+              (sha256
+               (base32
+                "0r9i4js4v8zxnmwf1c6yfp5qcr61aa9kqmswnyarhkb3b8yxm30f"))))
     (build-system python-build-system)
-    (propagated-inputs
-      `(("python-protobuf" ,python-protobuf)))
-    (native-inputs
-      `(("python-google-api-core"
-         ,python-google-api-core)))
-    (home-page
-      "https://github.com/googleapis/proto-plus-python.git")
-    (synopsis
-      "Beautiful, Pythonic protocol buffers.")
-    (description
-      "Beautiful, Pythonic protocol buffers.")
+    (propagated-inputs (list python-protobuf))
+    (native-inputs (list python-google-api-core))
+    (home-page "https://github.com/googleapis/proto-plus-python.git")
+    (synopsis "Beautiful, Pythonic protocol buffers.")
+    (description "Beautiful, Pythonic protocol buffers.")
     (license license:asl2.0)))
 
-(define-public python-google-cloud-firestore
+(define-public python-protobuf-4.22.1
   (package
-    (name "python-google-cloud-firestore")
-    (version "2.0.2")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-cloud-firestore" version))
-        (sha256
-          (base32
-            "1q5s2gpkibnjxal9zrz02jfnazf7rxk0bi0ln5a3di6i47kjnga9"))))
+    (name "python-protobuf")
+    (version "4.22.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "protobuf" version))
+              (sha256
+               (base32
+                "19q7mdr4gmw4daad25g81fy13kv3yz1zdcmdi3vfqc8wa1fsbryw"))))
     (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-api-core"
-         ,python-google-api-core)
-        ("python-google-cloud-core"
-         ,python-google-cloud-core)
-        ("python-proto-plus" ,python-proto-plus)
-        ("python-pytz" ,python-pytz)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/python-firestore")
-    (synopsis
-      "Google Cloud Firestore API client library")
-    (description
-      "Google Cloud Firestore API client library")
-    (license license:asl2.0)))
-
-(define-public python-google-crc32c
-  (package
-    (name "python-google-crc32c")
-    (version "1.1.2")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-crc32c" version))
-        (sha256
-          (base32
-            "09qbsvmbdhd8mlq8sy67pa758i41lzkmvllr16anczvk6q9bvxfz"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-cffi" ,python-cffi)))
-    (native-inputs
-      `(("python-pytest" ,python-pytest)))
-    (home-page
-      "https://github.com/googleapis/python-crc32c")
-    (synopsis
-      "A python wrapper of the C library 'Google CRC32C'")
-    (description
-      "A python wrapper of the C library 'Google CRC32C'")
-    (license license:asl2.0)))
-
-(define-public python-google-resumable-media
-  (package
-    (name "python-google-resumable-media")
-    (version "1.2.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-resumable-media" version))
-        (sha256
-          (base32
-            "0hwxdgsqh6933kp4jkv6hwwdcqs7bgjn9j08ga399njv3s9b367f"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-crcmod" ,python-crcmod)
-        ("python-google-crc32c" ,python-google-crc32c)
-        ("python-six" ,python-six)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/google-resumable-media-python")
-    (synopsis
-      "Utilities for Google Media Downloads and Resumable Uploads")
-    (description
-      "Utilities for Google Media Downloads and Resumable Uploads")
-    (license license:asl2.0)))
-
-(define-public python-google-cloud-core
-  (package
-    (name "python-google-cloud-core")
-    (version "1.6.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-cloud-core" version))
-        (sha256
-          (base32
-            "00mvgh4vm4z5mjnlbiigmp674dwsrrsxxi7ghby7jlsl4y2v3ay6"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-api-core"
-         ,python-google-api-core)
-        ("python-google-auth" ,python-google-auth)
-        ("python-six" ,python-six)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/python-cloud-core")
-    (synopsis "Google Cloud API client core library")
-    (description
-      "Google Cloud API client core library")
-    (license license:asl2.0)))
-
-(define-public python-google-cloud-storage
-  (package
-    (name "python-google-cloud-storage")
-    (version "1.36.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-cloud-storage" version))
-        (sha256
-          (base32
-            "1g04szsbkwfj5887i02i5qd3awhy0nsd2g78276jzrdlmmnf45wm"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-auth" ,python-google-auth)
-        ("python-google-cloud-core"
-         ,python-google-cloud-core)
-        ("python-google-resumable-media"
-         ,python-google-resumable-media)
-        ("python-requests" ,python-requests)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/python-storage")
-    (synopsis
-      "Google Cloud Storage API client library")
-    (description
-      "Google Cloud Storage API client library")
-    (license license:asl2.0)))
-
-(define-public python-futures
-  (package
-    (name "python-futures")
-    (version "3.3.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "futures" version))
-        (sha256
-          (base32
-            "154pvaybk9ncyb1wpcnzgd7ayvvhhzk92ynsas7gadaydbvkl0vy"))))
-    (build-system python-build-system)
-    (home-page
-      "https://github.com/agronholm/pythonfutures")
-    (synopsis
-      "Backport of the concurrent.futures package from Python 3")
-    (description
-      "Backport of the concurrent.futures package from Python 3")
+    (arguments `(#:tests? #f))
+    (home-page "https://developers.google.com/protocol-buffers/")
+    (inputs (list protobuf))
+    (synopsis "")
+    (description "")
     (license #f)))
 
-(define-public python-googleapis-common-protos
+(define-public python-google-auth-2.17
   (package
-    (name "python-googleapis-common-protos")
-    (version "1.52.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "googleapis-common-protos" version))
-        (sha256
-          (base32
-            "0lakcsd35qm5x4visvw6z5f1niasv9a0mjyf2bd98wqi0z41c1sn"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-protobuf" ,python-protobuf)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/python-api-common-protos")
-    (synopsis "Common protobufs used in Google APIs")
-    (description
-      "Common protobufs used in Google APIs")
-    (license #f)))
+    (inherit python-google-auth)
+    (version "2.17.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "google-auth" version))
+              (sha256
+               (base32
+                "0nnm2lfnm57q2f1389wzlz1d6a5d2c6gp7cq1cmav0fkp939ndwg"))))))
 
-(define-public python-grpcio
+(define-public python-google-api-core-2.11
   (package
-    (name "python-grpcio")
-    (version "1.35.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "grpcio" version))
-        (sha256
-          (base32
-            "0p34hjhliajpjwrjyblm8gly94rkkp9fyqhidbv8pryx2jxypl3v"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-six" ,python-six)))
-    (home-page "https://grpc.io")
-    (synopsis "HTTP/2-based RPC framework")
-    (description "HTTP/2-based RPC framework")
-    (license #f)))
-
-(define-public python-google-api-core
-  (package
-    (name "python-google-api-core")
-    (version "1.26.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-api-core" version))
-        (sha256
-          (base32
-            "02vk1qsmbk9a4lzgk3gnfvhl9s1igqhwr1cvwr7r7jj89mvfqc22"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-grpcio" ,python-grpcio)
-        ("python-google-auth" ,python-google-auth)
-        ("python-googleapis-common-protos"
-         ,python-googleapis-common-protos)
-        ("python-packaging" ,python-packaging)
-        ("python-protobuf" ,python-protobuf)
-        ("python-pytz" ,python-pytz)
-        ("python-requests" ,python-requests)
-        ("python-setuptools" ,python-setuptools)
-        ("python-six" ,python-six)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/python-api-core")
-    (synopsis "Google API client core library")
-    (description "Google API client core library")
-    (license license:asl2.0)))
-
-(define-public python-google-auth-httplib2
-  (package
-    (name "python-google-auth-httplib2")
-    (version "0.0.4")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-auth-httplib2" version))
-        (sha256
-          (base32
-            "0fdwnx2yd65f5vhnmn39f4xnxac5j6x0pv2p42qifrdi1z32q2cd"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-auth" ,python-google-auth)
-        ("python-httplib2" ,python-httplib2)
-        ("python-six" ,python-six)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/GoogleCloudPlatform/google-auth-library-python-httplib2")
-    (synopsis
-      "Google Authentication Library: httplib2 transport")
-    (description
-      "Google Authentication Library: httplib2 transport")
-    (license license:asl2.0)))
-
-(define-public python-cachetools
-  (package
-    (name "python-cachetools")
-    (version "4.2.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "cachetools" version))
-        (sha256
-          (base32
-            "1scjvk1w6r9zv7h6hv514l8yms3dwxfdkap4im6zdkx4gagf4sgl"))))
-    (build-system python-build-system)
-    (home-page "https://github.com/tkem/cachetools/")
-    (synopsis
-      "Extensible memoizing collections and decorators")
-    (description
-      "Extensible memoizing collections and decorators")
-    (license license:expat)))
-
-(define-public python-google-auth
-  (package
-    (name "python-google-auth")
-    (version "1.26.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-auth" version))
-        (sha256
-          (base32
-            "0ksm317n1hc9c78scfbfm7kskzrnqnalx0d7jbjfyl2nkc3isihv"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-cachetools" ,python-cachetools)
-        ("python-pyasn1-modules" ,python-pyasn1-modules)
-        ("python-rsa" ,python-rsa)
-        ("python-setuptools" ,python-setuptools)
-        ("python-six" ,python-six)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                           (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/google-auth-library-python")
-    (synopsis "Google Authentication Library")
-    (description "Google Authentication Library")
-    (license license:asl2.0)))
+    (inherit python-google-api-core)
+    (version "2.11.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "google-api-core" version))
+              (sha256
+               (base32
+                "08jch08wbki3yixy6c0p5hk8k6la3djh5cvk0pxbx840lgavb6sb"))))
+   (propagated-inputs
+    (modify-inputs
+     (package-propagated-inputs python-google-api-core)
+     (replace "python-google-auth" python-google-auth-2.17)
+     (replace "python-protobuf" python-protobuf-4.22.1)
+     (replace "python-proto-plus" python-proto-plus-1.22)))))
 
 (define-public python-google-api-python-client
   (package
-    (name "python-google-api-python-client")
-    (version "1.12.8")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "google-api-python-client" version))
-        (sha256
-          (base32
-            "1fq89wifa9ymby655is246w5d54ixybffj5vz7lwzhpf8926ifgk"))))
+   (name "python-google-api-python-client")
+   (version "2.83.0")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "google-api-python-client" version))
+            (sha256
+             (base32
+              "1ksivmh0a197hkrcmks839sy25bsdycxnm5lcdrl5cnjnbqhjxfh"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-google-api-core-2.11 python-google-auth-2.17
+                            python-google-auth-httplib2 python-httplib2
+                            python-uritemplate))
+   (native-inputs (list python-parameterized))
+   (arguments `(#:tests? #f))           ; require internet connection
+   (home-page "https://github.com/googleapis/google-api-python-client/")
+   (synopsis "Google API Client Library for Python")
+   (description "Google API Client Library for Python")
+   (license license:asl2.0)))
+
+(define-public python-grpcio-status
+  (package
+    (name "python-grpcio-status")
+    (version "1.47.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "grpcio-status" version))
+              (sha256
+               (base32
+                "007s12c9ka1ylb0ad4qblkm56d3b9bma7b1i3j0dhvscx09k5kn9"))))
     (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-api-core"
-         ,python-google-api-core)
-        ("python-google-auth" ,python-google-auth)
-        ("python-google-auth-httplib2"
-         ,python-google-auth-httplib2)
-        ("python-httplib2" ,python-httplib2)
-        ("python-six" ,python-six)
-        ("python-uritemplate" ,python-uritemplate)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/googleapis/google-api-python-client/")
-    (synopsis "Google API Client Library for Python")
-    (description
-      "Google API Client Library for Python")
-    (license license:asl2.0)))
+    (propagated-inputs (list python-googleapis-common-protos python-grpcio
+                             python-protobuf))
+    (home-page "https://grpc.io")
+    (synopsis "Status proto mapping for gRPC")
+    (description "Status proto mapping for gRPC")
+    (license #f)))
+
+(define-public python-google-cloud-firestore
+  (package
+   (name "python-google-cloud-firestore")
+   (version "2.11.0")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "google-cloud-firestore" version))
+            (sha256
+             (base32
+              "1bhdlikslpy8vk2ymfwa66bbvmccnnnr2ihklx05gvm0f1gwa3cq"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-google-api-core-2.11 python-google-cloud-core
+                            python-proto-plus-1.22 python-protobuf-4.22.1 python-grpcio-status))
+   (arguments `(#:tests? #f))           ; really fucked
+   (home-page "https://github.com/googleapis/python-firestore")
+   (synopsis "Google Cloud Firestore API client library")
+   (description "Google Cloud Firestore API client library")
+   (license license:asl2.0)))
 
 (define-public python-firebase-admin
   (package
-    (name "python-firebase-admin")
-    (version "4.5.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri "https://files.pythonhosted.org/packages/3a/b0/e5996cc335d67463901be3481973517b81d34dce760cc5a619f61c025064/firebase_admin-4.5.1.tar.gz")
-        ; (uri (pypi-uri "firebase-admin" version))
-        (sha256
-          (base32
-            "1y1k5a98qjpi9lbdn47fl47mkcidav3nyi2dp75a00a5h28nw6jn"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-cachecontrol" ,python-cachecontrol)
-        ("python-google-api-core"
-         ,python-google-api-core)
-        ("python-google-api-python-client"
-         ,python-google-api-python-client)
-        ("python-google-cloud-firestore"
-         ,python-google-cloud-firestore)
-        ("python-google-cloud-storage"
-         ,python-google-cloud-storage)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://firebase.google.com/docs/admin/setup/")
-    (synopsis "Firebase Admin Python SDK")
-    (description "Firebase Admin Python SDK")
-    (license #f)))
+   (name "python-firebase-admin")
+   (version "6.1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "firebase_admin" version))
+            (sha256
+             (base32
+              "17g1j5j5pwzviiz0np25pvpamkdaan76ndrcgwiwcgcx7hwkxqaj"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-cachecontrol
+                            python-google-api-core-2.11
+                            python-google-api-python-client
+                            python-google-cloud-firestore
+                            python-google-cloud-storage
+                            python-pyjwt))
+   (home-page "https://firebase.google.com/docs/admin/setup/")
+   (synopsis "Firebase Admin Python SDK")
+   (description "Firebase Admin Python SDK")
+   (license #f)))
 
 (define-public python-demjson
   (package
-    (name "python-demjson")
-    (version "2.2.4")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "demjson" version))
-        (sha256
-          (base32
-            "0ygbddpnvp5lby6mr5kz60la3hkvwwzv3wwb3z0w9ngxl0w21pii"))))
-    (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "http://deron.meranda.us/python/demjson/")
-    (synopsis
-      "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
-    (description
-      "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
-    (license #f)))
+   (name "python-demjson")
+   (version "2.2.4")
+   (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "demjson" version))
+      (sha256
+       (base32
+        "0ygbddpnvp5lby6mr5kz60la3hkvwwzv3wwb3z0w9ngxl0w21pii"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-setuptools-57))
+   (arguments `(#:tests? #f))
+   (home-page
+    "http://deron.meranda.us/python/demjson/")
+   (synopsis
+    "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
+   (description
+    "encoder, decoder, and lint/validator for JSON (JavaScript Object Notation) compliant with RFC 7159")
+   (license #f)))
 
 (define-public python-stdlib-list
   (package
-    (name "python-stdlib-list")
-    (version "0.8.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "stdlib-list" version))
-        (sha256
-          (base32
-            "17vdn4q0sdlndc2fr9svapxx6366hnrhkn0fswp1xmr0jxqh7rd1"))))
-    (build-system python-build-system)
-    (native-inputs
-      `(("python-sphinx" ,python-sphinx)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page
-      "https://github.com/jackmaney/python-stdlib-list")
-    (synopsis
-      "A list of Python Standard Libraries (2.6-7, 3.2-9).")
-    (description
-      "A list of Python Standard Libraries (2.6-7, 3.2-9).")
-    (license license:expat)))
+     (name "python-stdlib-list")
+     (version "0.8.0")
+     (source (origin
+               (method url-fetch)
+               (uri (pypi-uri "stdlib-list" version))
+               (sha256
+                (base32
+                 "17vdn4q0sdlndc2fr9svapxx6366hnrhkn0fswp1xmr0jxqh7rd1"))))
+     (build-system python-build-system)
+     (native-inputs (list python-sphinx))
+     (home-page "https://github.com/jackmaney/python-stdlib-list")
+     (arguments `(#:tests? #f))
+     (synopsis "A list of Python Standard Libraries (2.6-7, 3.2-9).")
+     (description
+      "This package provides a list of Python Standard Libraries (2.6-7, 3.2-9).")
+     (license license:expat)))
 
 (define-public python-pydeps
   (package
-    (name "python-pydeps")
-    (version "1.9.13")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pydeps" version))
-        (sha256
-          (base32
-            "0hyi9011fczrkjmcs6adaycw8fjxhhynwsa1n0nq5sgg9a0i062g"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-stdlib-list" ,python-stdlib-list)))
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (home-page "https://github.com/thebjorn/pydeps")
-    (synopsis "Display module dependencies")
-    (description "Display module dependencies")
-    (license license:bsd-3)))
+   (name "python-pydeps")
+   (version "1.11.2")
+   (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "pydeps" version))
+      (sha256
+       (base32
+        "0h869792bllfvaq8r17xw9jc7wsdygxkh6a2w04h8g7rwy1rxih6"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-stdlib-list))
+   (native-inputs (list python-pytest))
+   (arguments `(#:tests? #f))
+   (home-page "https://github.com/thebjorn/pydeps")
+   (synopsis "Display module dependencies")
+   (description "Display module dependencies")
+   (license license:bsd-3)))
 
 
 (define-public python-openstep-parser
   (package
     (name "python-openstep-parser")
-    (version "1.5.3")
+    (version "1.5.4")
     (source
       (origin
         (method url-fetch)
-        (uri (pypi-uri "openstep-parser" version))
+        (uri (pypi-uri "openstep_parser" version))
         (sha256
           (base32
-            "0y3dk0l612r7w48jfnbz6iq7df406hbv7fkpq2gv6w0gg33qsmb4"))))
+            "0n0npqm30rw7xxzzf533g1c7zyh93xy6c3ybf321iiwaqzcpyg7h"))))
     (build-system python-build-system)
+    (native-inputs (list python-coverage python-nose))
     (home-page
       "http://github.com/kronenthaler/openstep-parser")
     (synopsis
@@ -2921,19 +1330,20 @@ simulation, statistical modeling, machine learning and much more.")
 (define-public python-pbxproj
   (package
     (name "python-pbxproj")
-    (version "3.2.1")
+    (version "3.5.0")
     (source
       (origin
         (method url-fetch)
         (uri (pypi-uri "pbxproj" version))
         (sha256
           (base32
-            "034dx46y8lj42b3v5vbcnb69i7c4z7sxdsl21g0dvpps5gc94sls"))))
+            "1cnkhlyv7ipf1w8rpihcc5ipqmn26f75d4dfxb3jp0sjn0mxzscx"))))
     (build-system python-build-system)
     (propagated-inputs
       `(("python-docopt" ,python-docopt)
         ("python-openstep-parser"
          ,python-openstep-parser)))
+    (arguments `(#:tests? #f))
     (home-page
       "http://github.com/kronenthaler/mod-pbxproj")
     (synopsis
@@ -2942,73 +1352,34 @@ simulation, statistical modeling, machine learning and much more.")
       "XCode Project manipulation library for Python")
     (license license:expat)))
 
-
-;; (define-public python-docx
-;;   (package
-;;     (name "python-docx")
-;;     (version "0.2.4")
-;;     (source
-;;       (origin
-;;         (method url-fetch)
-;;         (uri (pypi-uri "docx" version))
-;;         (sha256
-;;           (base32
-;;             "0xw8vkjvpaq510qa6s53xbrw2ffh319rk8inf45xlv78qvm9axcx"))))
-;;     (build-system python-build-system)
-;;     (propagated-inputs
-;;       `(("python-lxml" ,python-lxml)
-;;         ("python-pillow" ,python-pillow)))
-;;     (home-page
-;;       "http://github.com/mikemaccana/python-docx")
-;;     (synopsis
-;;       "The docx module creates, reads and writes Microsoft Office Word 2007 docx files")
-;;     (description
-;;       "The docx module creates, reads and writes Microsoft Office Word 2007 docx files")
-;;     (license #f)))
-
-
-(define-public python-docx
+(define-public python-lxml-4.9
   (package
-    (name "python-docx")
-    (version "0.8.10")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "python-docx" version))
-        (sha256
-          (base32
-            "0900j8by7pvjfid41n1w55rcswawyfk077d689jcw01ddfnfqxmw"))))
-    (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
-    (propagated-inputs
-      `(("python-lxml" ,python-lxml)))
-    (home-page
-      "https://github.com/python-openxml/python-docx")
-    (synopsis
-      "Create and update Microsoft Word .docx files.")
-    (description
-      "Create and update Microsoft Word .docx files.")
-    (license #f)))
-
+    (inherit python-lxml)
+    (version "4.9.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "lxml" version))
+              (sha256
+               (base32
+                "0rsvhd03cv7fczd04xqf1idlnkvjy0hixx2p6a5k6w5cnypcym94"))))))
 
 (define-public python-docx2python
   (package
     (name "python-docx2python")
-    (version "1.27.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "docx2python" version))
-        (sha256
-          (base32
-            "0s56ix45jyf1bvp5ii1x6n48ah4lx3nmqj6f1q30h1r2x4pak83c"))))
+    (version "2.6.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "docx2python" version))
+              (sha256
+               (base32
+                "07ms7i5r1zmxyxlifabw2ywawkaxiwf80nsq2f7ya3zng0rnvas6"))))
     (build-system python-build-system)
-    (home-page
-      "https://github.com/ShayHill/docx2python")
+    (propagated-inputs (list python-lxml-4.9))
+    (home-page "")
     (synopsis "Extract content from docx files")
     (description "Extract content from docx files")
-    (license #f)))
+    (license license:expat)))
+
 
 (define-public python-nose-cov
   (package
@@ -3045,8 +1416,6 @@ simulation, statistical modeling, machine learning and much more.")
           (base32
             "0ymjv322mv6y424fmpd70f87152w55mbwwj6i7p3sjzf0ixmxy26"))))
     (build-system python-build-system)
-    (arguments `(#:phases (modify-phases %standard-phases
-                            (delete 'check))))
     (propagated-inputs
       `(("python-dateutil" ,python-dateutil)
         ("python-msgpack" ,python-msgpack)
@@ -3087,83 +1456,70 @@ simulation, statistical modeling, machine learning and much more.")
       "Randomize the order of the tests within a unittest.TestCase class")
     (license license:lgpl2.0)))
 
-(define-public python-rx
+(define-public python-reactivex
   (package
-    (name "python-rx")
-    (version "3.2.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "Rx" version))
-        (sha256
-          (base32
-            "076rcgcyqqpr5y7jyg7za6ngfm75qbx0kzfwyyi5sj5a8lmwlmxn"))))
+    (name "python-reactivex")
+    (version "4.0.4")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "reactivex" version))
+              (sha256
+               (base32
+                "1s041rjqmiyqr4qrjvzj06isg3wczr9scj43vxv93ar221cyc4p9"))))
     (build-system python-build-system)
-    (arguments `(#:phases
-                 (modify-phases %standard-phases
-                  (delete 'check))))
+    (propagated-inputs (list python-typing-extensions-next))
+    (native-inputs (list python-wheel))
+    (arguments `(#:tests? #f))
     (home-page "http://reactivex.io")
-    (synopsis "Reactive Extensions (Rx) for Python")
-    (description
-      "Reactive Extensions (Rx) for Python")
+    (synopsis "ReactiveX (Rx) for Python")
+    (description "ReactiveX (Rx) for Python")
     (license license:expat)))
+
+(define-public python-jinja2-3.1.2
+  (package
+    (inherit python-jinja2)
+    (version "3.1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "Jinja2" version))
+              (sha256
+               (base32
+                "0lp86yadzf8dph67f6g3yxmvnhrzzi863z58jmsrx2j059q1ld9i"))))))
 
 (define-public python-influxdb-client
   (package
-    (name "python-influxdb-client")
-    (version "1.18.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "influxdb_client" version))
-        (sha256
-          (base32
-            "0a1q1q4ak56dq5a19bl840bxjcd45jwmm03k0b19a9pkvq5ij0is"))))
-    (build-system python-build-system)
-    (arguments `(#:phases
-                 (modify-phases %standard-phases
-                  (delete 'check))))
-    (propagated-inputs
-      `(("python-certifi" ,python-certifi)
-        ("python-dateutil" ,python-dateutil)
-        ("python-pytz" ,python-pytz)
-        ("python-rx" ,python-rx)
-        ("python-setuptools" ,python-setuptools)
-        ("python-six" ,python-six)
-        ("python-urllib3" ,python-urllib3)))
-    (native-inputs
-      `(("python-coverage" ,python-coverage)
-        ("python-httpretty" ,python-httpretty)
-        ("python-nose" ,python-nose)
-        ("python-pluggy" ,python-pluggy)
-        ("python-psutil" ,python-psutil)
-        ("python-py" ,python-py)
-        ("python-pytest" ,python-pytest)
-        ("python-randomize" ,python-randomize)))
-    (home-page
-      "https://github.com/influxdata/influxdb-client-python")
-    (synopsis "InfluxDB 2.0 Python client library")
-    (description
-      "InfluxDB 2.0 Python client library")
-    (license #f)))
-
-(define-public python-zfpy
-  (package
-    (name "python-zfpy")
-    (version "0.5.5")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "zfpy" version))
-        (sha256
-          (base32 "0ba88k2ldhpqvkyxav7m03ackj5przdprv9cjp9hkia7iafx009x"))))
-    (build-system python-build-system)
-    (inputs (list python-numpy))
-    (home-page
-      "https://computing.llnl.gov/projects/floating-point-compression")
-    (synopsis "zfp compression in Python")
-    (description "zfp compression in Python")
-    (license #f)))
+   (name "python-influxdb-client")
+   (version "1.36.1")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "influxdb_client" version))
+            (sha256
+             (base32
+              "1z3vnlakd3w4jghiili5q55mqbpla1dr64b4j77hwgqkyzs4lrar"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-certifi python-dateutil python-reactivex
+                          python-setuptools python-urllib3))
+   (native-inputs (list python-aioresponses
+                      python-coverage
+                      python-flake8
+                      python-httpretty
+                      python-jinja2-3.1.2
+                      python-nose
+                      python-pluggy
+                      python-psutil
+                      python-py
+                      python-pytest
+                      python-pytest-cov
+                      python-pytest-timeout
+                      python-randomize
+                      python-sphinx
+                      python-sphinx-rtd-theme
+                      python-wheel))
+   (arguments `(#:tests? #f))           ; requires an ancient sphinx version (1.8.5) for some reason?
+   (home-page "https://github.com/influxdata/influxdb-client-python")
+   (synopsis "InfluxDB 2.0 Python client library")
+   (description "InfluxDB 2.0 Python client library")
+   (license #f)))
 
 (define-public python-fpzip
   (package
@@ -3176,7 +1532,7 @@ simulation, statistical modeling, machine learning and much more.")
         (sha256
           (base32 "032v7fcc53mcg3w1xvnfi05vali0xsi59i04dlimm8pch80amby8"))))
     (build-system python-build-system)
-    (propagated-inputs (list python-numpy))
+    (propagated-inputs (list python-numpy python-pbr))
     (home-page "https://github.com/seung-lab/fpzip/")
     (synopsis
       "Numpy wrapper for fpzip algorithm (P. Lindstrom & M. Isenburg, 2006)")
@@ -3184,58 +1540,55 @@ simulation, statistical modeling, machine learning and much more.")
       "Numpy wrapper for fpzip algorithm (P.  Lindstrom & M.  Isenburg, 2006)")
     (license #f)))
 
+(define-public python-find-libpython
+  (package
+    (name "python-find-libpython")
+    (version "0.3.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "find_libpython" version))
+              (sha256
+               (base32
+                "1rg9fqrgid6v9j72zfxjzvqp22n9x6h1amfbcv06vbbzmzcyazvf"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/ktbarrett/find_libpython")
+    (synopsis
+     "Finds the libpython associated with your environment, wherever it may be hiding")
+    (description
+     "Finds the libpython associated with your environment, wherever it may be hiding")
+    (license license:expat)))
 
 (define-public python-cocotb
   (package
-    (name "python-cocotb")
-    (version "1.6.2")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "cocotb" version))
-              (sha256
-               (base32
-                "0jxxw2avvclcz7kwqqji01vz8lzx4h7izri9x0h66vf3dvpvb3s9"))))
-    (build-system python-build-system)
-    (arguments `(#:phases
-                 (modify-phases %standard-phases
-                  (delete 'check))))
-    (home-page "https://docs.cocotb.org")
-    (synopsis
-     "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog testbenches in Python.")
-    (description
-     "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog
+   (name "python-cocotb")
+   (version "1.7.2")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "cocotb" version))
+            (sha256
+             (base32
+              "0l160106nxkz9yn2ngl5xdnl2dir7b9m3jhg1vs3y2xxjkmr564m"))))
+   (build-system python-build-system)
+   (propagated-inputs (list python-find-libpython))
+   (arguments `(#:tests? #f))
+   (home-page "https://docs.cocotb.org")
+   (synopsis
+    "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog testbenches in Python.")
+   (description
+    "cocotb is a coroutine based cosimulation library for writing VHDL and Verilog
 testbenches in Python.")
-    (license license:bsd-3)))
-
-(define-public python-scapy
-  (package
-    (name "python-scapy")
-    (version "2.4.5")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "scapy" version))
-              (sha256
-               (base32
-                "14w59jr32585555qdx1a0gxwjv63d4m5p7jscsv9ci3q0hv7ww5w"))))
-    (build-system python-build-system)
-    (arguments `(#:phases
-                 (modify-phases %standard-phases
-                  (delete 'check))))
-    (home-page "https://scapy.net")
-    (synopsis "Scapy: interactive packet manipulation tool")
-    (description "Scapy: interactive packet manipulation tool")
-    (license #f)))
+   (license license:bsd-3)))
 
 (define-public python-cocotb-test
   (package
     (name "python-cocotb-test")
-    (version "0.2.2")
+    (version "0.2.4")
     (source (origin
               (method url-fetch)
               (uri (pypi-uri "cocotb-test" version))
               (sha256
                (base32
-                "1irvdq2nrgpg2wzi8aqk0cx2s6dqx3b5hv0chgy5pc8yp0pzxi65"))))
+                "01j05i3acdzxcza9nv72jcj1z1pf2ag2f3kvbdchwfc0lq7yhbg3"))))
     (build-system python-build-system)
     (propagated-inputs (list python-cocotb python-pytest))
     (home-page "")
@@ -3264,13 +1617,13 @@ testbenches in Python.")
 (define-public python-cocotbext-axi
   (package
     (name "python-cocotbext-axi")
-    (version "0.1.18")
+    (version "0.1.24")
     (source (origin
               (method url-fetch)
               (uri (pypi-uri "cocotbext-axi" version))
               (sha256
                (base32
-                "19nk67ha8kjf1f1rwhdvlw70hq7d2ci0d8dqmnr5zysackyqav8y"))))
+                "14q5jqnqcz6q17j339s690f46in3qmdpql16d0bk7224z752vmiy"))))
     (build-system python-build-system)
     (propagated-inputs (list python-cocotb python-cocotb-bus))
     (native-inputs (list python-cocotb-test python-pytest))
@@ -3282,13 +1635,13 @@ testbenches in Python.")
 (define-public python-cocotbext-eth
   (package
    (name "python-cocotbext-eth")
-   (version "0.1.18")
+   (version "0.1.20")
    (source (origin
             (method url-fetch)
             (uri (pypi-uri "cocotbext-eth" version))
             (sha256
              (base32
-              "1rb9snrk3zw8sjbqnyz353l0kfaaahqh8vp371489iprm398f8g6"))))
+              "17f30qs6g3fx7ini81v5n32kcmzxn6rzswmqklfkjp59an4c4w0a"))))
    (build-system python-build-system)
    (propagated-inputs (list python-cocotb python-cocotbext-axi))
    (native-inputs (list python-cocotb-test python-pytest))
@@ -3296,18 +1649,6 @@ testbenches in Python.")
    (synopsis "Ethernet interface modules for cocotb")
    (description "Ethernet interface modules for cocotb")
    (license license:expat)))
-
-
-(define-public python-nbconvert-fixed
-  (package
-   (inherit python-nbconvert)
-   (inputs (modify-inputs (package-inputs python-nbconvert) (append "python-defusedxml" python-defusedxml)))))
-
-(define-public python-jupyter-fixed
-  (package
-   (inherit python-jupyter)
-   (name "jupyter-fixed")
-   (inputs (modify-inputs (package-inputs python-nbconvert) (replace "python-nbconvert" python-nbconvert-fixed)))))
 
 
 (define-public python-pybtex-docutils
@@ -3421,13 +1762,13 @@ testbenches in Python.")
 (define-public python-colour-science
   (package
     (name "python-colour-science")
-    (version "0.4.1")
+    (version "0.4.2")
     (source (origin
               (method url-fetch)
-              (uri (pypi-uri "colour-science" version))
+              (uri (pypi-uri "colour_science" version))
               (sha256
                (base32
-                "0ffq0a0prcvkc4lshwjl8zb60hxgy3i0c3wqs2zaf267hd37i9rs"))))
+                "0rlvsr6v6jhnqj0slrd24xjkaplkw0qjz53wrpmzxnh4f73d9a19"))))
     (build-system python-build-system)
     (propagated-inputs (list python-biblib-simple
                              python-black
@@ -3437,7 +1778,7 @@ testbenches in Python.")
                              python-flynt
                              python-imageio
                              python-invoke
-                             python-jupyter
+                             jupyter
                              python-matplotlib
                              python-mypy
                              python-networkx
@@ -3460,62 +1801,27 @@ testbenches in Python.")
                              python-trimesh
                              python-twine
                              python-typing-extensions))
+    (arguments `(#:tests? #f))
     (home-page "https://www.colour-science.org/")
     (synopsis "Colour Science for Python")
     (description "Colour Science for Python")
-    (license #f)
-    (arguments '(#:phases
-                 (modify-phases %standard-phases
-                   (delete 'check))))))
-
-(define-public meson-python-0.9.0
-  (package
-   (inherit meson-python)
-   (version "0.9.0")
-   (source (origin
-             (method url-fetch)
-             (uri (pypi-uri "meson_python" version))
-             (sha256
-              (base32
-               "17dj0y53vj683b75l1bphqy42aammczbzsrqi4qcbqfcyngs19ba"))))
-   (arguments
-     (substitute-keyword-arguments (package-arguments meson-python)
-       ((#:phases phases)
-        #~(modify-phases #$phases
-                        (delete 'check)))))
-   (native-inputs (modify-inputs
-                   (package-native-inputs meson-python)
-                   (append python-cython)))))
-
-(define-public python-scipy-fixed
-  (package
-   (inherit python-scipy)
-   (version "1.9.3")
-   (source
-    (origin
-      (method url-fetch)
-      (uri (pypi-uri "scipy" version))
-      (sha256
-       (base32 "09x0w6jlxdlbg7xxjavdkibl9g43gh493x8zggkjp861hmfc1igv"))))
-   (native-inputs (modify-inputs
-                   (package-native-inputs python-scipy)
-                   (replace "meson-python" meson-python-0.9.0)))))
+    (license #f)))
 
 (define-public python-git-review-2.3
   (package
     (inherit python-git-review)
-    (version "2.3.0")
+    (version "2.3.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "git-review" version))
        (sha256
-        (base32 "0vx92rb8ab2nsv72ppcxihj1xvpmy2b247mi4nsc1jca4q6xh0n6"))))))
+        (base32 "0kq16qvd57jwb19jhnlbpfsp0sr8981jnplbng5yddpcdq9kis94"))))))
 
 (define-public python-waf-visionary
   (package
     (inherit python-waf)
-    (name "python-waf-visionary")
+    (name "0kq16qvd57jwb19jhnlbpfsp0sr8981jnplbng5yddpcdq9kis94python-waf-visionary")
     (version "2.0.24")
     (source
      (origin
@@ -3573,115 +1879,4 @@ testbenches in Python.")
     (arguments '(#:phases
                  (modify-phases %standard-phases
                    (delete 'check) (delete 'sanity-check))))
-    (license license:expat)))
-
-(define-public python-unearth
-  (package
-    (name "python-unearth")
-    (version "0.8.0")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "unearth" version))
-              (sha256
-               (base32
-                "10l5s8cl0mri8y2fsk5mvmkdm1bih1vlvc6cmnh5f5ahwplhmcnd"))))
-    (build-system python-build-system)
-    (propagated-inputs (list python-cached-property python-keyring
-                             python-packaging python-requests))
-    (home-page "")
-    (synopsis "A utility to fetch and download python packages")
-    (description
-     "This package provides a utility to fetch and download python packages")
-    (license license:expat)))
-
-(define-public python-pyproject-hooks
-  (package
-    (name "python-pyproject-hooks")
-    (version "1.0.0")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "pyproject_hooks" version))
-              (sha256
-               (base32
-                "1xaf4sharvacqlav6w3b38nc4j0rzg0p4axi7zamanbzp6cb4wgj"))))
-    (build-system python-build-system)
-    (propagated-inputs (list python-tomli))
-    (home-page "")
-    (synopsis "Wrappers to call pyproject.toml-based build backend hooks.")
-    (description "Wrappers to call pyproject.toml-based build backend hooks.")
-    (license #f)))
-
-(define-public python-installer
-  (package
-    (name "python-installer")
-    (version "0.6.0")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "installer" version))
-              (sha256
-               (base32
-                "0fc8mvazsck9g76dwqjb1glzwy05rbn1n2qrl640li0v4v6kdggk"))))
-    (build-system python-build-system)
-    (home-page "")
-    (synopsis "A library for installing Python wheels.")
-    (description
-     "This package provides a library for installing Python wheels.")
-    (license #f)))
-
-(define-public python-findpython
-  (package
-    (name "python-findpython")
-    (version "0.2.4")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "findpython" version))
-              (sha256
-               (base32
-                "0qkkcqmf74i45qq93nhr1fjl2mn2b0n2fwarlkwc4gc4vn67dwb1"))))
-    (build-system pyproject-build-system)
-    (propagated-inputs (list python-packaging))
-    (home-page "")
-    (synopsis "A utility to find python versions on your system")
-    (description
-     "This package provides a utility to find python versions on your system")
-    (license license:expat)))
-
-(define-public python-pdm
-  (package
-    (name "python-pdm")
-    (version "2.4.7")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "pdm" version))
-              (sha256
-               (base32
-                "0glslr73vrmn0s6j84q4vvh98zls152071za95jv47n790xx4s65"))))
-    (build-system python-build-system)
-    (propagated-inputs (list python-blinker
-                             python-cachecontrol
-                             python-certifi
-                             python-dotenv
-                             python-findpython
-                             python-importlib-metadata
-                             python-installer
-                             python-packaging
-                             python-platformdirs
-                             python-pyproject-hooks
-                             python-pytest
-                             python-pytest-mock
-                             python-requests-toolbelt
-                             python-resolvelib
-                             python-rich
-                             python-shellingham
-                             python-tomli
-                             python-tomlkit
-                             python-typing-extensions
-                             python-unearth
-                             python-virtualenv))
-    (home-page "")
-    (synopsis
-     "A modern Python package and dependency manager supporting the latest PEP standards")
-    (description
-     "This package provides a modern Python package and dependency manager supporting
-the latest PEP standards")
     (license license:expat)))

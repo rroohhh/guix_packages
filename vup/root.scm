@@ -108,7 +108,7 @@
       (license licenses:gpl2+))))
 
 (define-public root
-  (let* ((version "6.23.01"))
+  (let* ((version "6.26.02"))
     (package
       (name "root")
       (version version)
