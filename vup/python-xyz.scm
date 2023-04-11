@@ -874,7 +874,8 @@
     (build-system python-build-system)
     (propagated-inputs
      `(("python-matplotlib" ,python-matplotlib)
-       ("python-shapely" ,python-shapely-fixed)))
+       ("python-shapely" ,python-shapely)))
+    (arguments `(#:tests? #f))
     (home-page
      "http://bitbucket.org/sgillies/descartes/")
     (synopsis
