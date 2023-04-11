@@ -34,8 +34,8 @@
                              "-DUSE_LLVM=ON" "-DUSE_LIBBACKTRACE=OFF")
          #:phases (modify-phases %standard-phases
                     (delete 'check))))
-      (inputs (list vulkan-loader spirv-tools-2022 llvm-14 libffi))
-      (native-inputs (list vulkan-headers spirv-headers-2022))
+      (inputs (list vulkan-loader spirv-tools-upstream llvm-15 libffi))
+      (native-inputs (list vulkan-headers spirv-headers-upstream))
       (home-page "https://tvm.apache.org/")
       (synopsis
        "An End to End Machine Learning Compiler Framework for CPUs, GPUs and accelerators")
