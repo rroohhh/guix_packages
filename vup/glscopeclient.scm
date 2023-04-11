@@ -55,8 +55,8 @@
         (base32 "1wzzggwz93aysw4gy57jljvx405p2rjzc9qyifhka6xb67j0wc14"))))
      (build-system cmake-build-system)
      (inputs `(("ffts" ,ffts) ("yaml" ,yaml-cpp) ("glew" ,glew) ("gtkmm" ,gtkmm-3) ("catch2" ,catch2)
-               ("vulkan-headers" ,vulkan-headers-upstream) ("vulkan-loader" ,vulkan-loader) ("shaderc" ,shaderc-2022)
-               ("vulkan-hpp" ,vulkan-hpp) ("glslang" ,glslang-11.11) ("glfw" ,glfw)))
+               ("vulkan-headers" ,vulkan-headers-upstream) ("vulkan-loader" ,vulkan-loader) ("shaderc" ,shaderc-upstream)
+               ("vulkan-hpp" ,vulkan-hpp) ("glslang" ,glslang-upstream) ("glfw" ,glfw)))
      (native-inputs `(("pkg-config" ,pkg-config) ("git" ,git)))
      (arguments
       `(#:configure-flags '("-DCMAKE_BUILD_TYPE=RELEASE")
