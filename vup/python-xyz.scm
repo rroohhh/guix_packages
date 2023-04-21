@@ -442,6 +442,7 @@
       (propagated-inputs
        `(("python-jinja2" ,python-jinja2)
          ("python-pyvcd" ,python-pyvcd)
+         ("python-click" ,python-click)
          ("python-paramiko" ,python-paramiko)))
       (home-page "https://amaranth-lang.org/")
       (synopsis
