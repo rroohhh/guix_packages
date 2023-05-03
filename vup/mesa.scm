@@ -24,7 +24,4 @@
   (package
    (inherit mesa)
    (name "mesa-new-libdrm")
-   (propagated-inputs (modify-inputs (package-propagated-inputs mesa) (replace "libdrm" libdrm-2.4.110)))
-   (inputs (modify-inputs (package-inputs mesa) (replace "wayland-protocols" wayland-protocols-next)))))
-
-libdrm-2.4.110
+   (propagated-inputs (modify-inputs (package-propagated-inputs mesa) (replace "libdrm" libdrm-2.4.110)))))
