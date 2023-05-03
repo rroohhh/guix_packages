@@ -1469,7 +1469,7 @@ basically runs on top of any Linux distribution. Features:
                (base32
                 "1s041rjqmiyqr4qrjvzj06isg3wczr9scj43vxv93ar221cyc4p9"))))
     (build-system python-build-system)
-    (propagated-inputs (list python-typing-extensions-next))
+    (propagated-inputs (list python-typing-extensions))
     (native-inputs (list python-wheel))
     (arguments `(#:tests? #f))
     (home-page "http://reactivex.io")
