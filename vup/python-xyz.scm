@@ -1882,3 +1882,21 @@ testbenches in Python.")
                  (modify-phases %standard-phases
                    (delete 'check) (delete 'sanity-check))))
     (license license:expat)))
+
+(define-public python-mypy-next
+  (package
+    (name "python-mypy")
+    (version "1.2.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "mypy" version))
+              (sha256
+               (base32
+                "1lbjdd1d3j492w5sz3llwx6s0199cp5bxysarczy4jkp1m0l02pp"))))
+    (build-system pyproject-build-system)
+    (propagated-inputs (list python-mypy-extensions python-tomli
+                             python-typed-ast python-typing-extensions))
+    (home-page "http://www.mypy-lang.org/")
+    (synopsis "Optional static typing for Python")
+    (description "Optional static typing for Python")
+    (license license:expat)))

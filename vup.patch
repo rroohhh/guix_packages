@@ -30,22 +30,6 @@ diff -Naur a/rules/base.xml b/rules/base.xml
              <name>mac</name>
              <description>German (Macintosh)</description>
            </configItem>
-diff -Naur a/rules/evdev.xml b/rules/evdev.xml
---- a/rules/evdev.xml	2019-05-31 01:30:43.000000000 +0200
-+++ b/rules/evdev.xml	2019-08-03 16:27:43.614294224 +0200
-@@ -3499,6 +3499,12 @@
-         </variant>
-         <variant>
-           <configItem>
-+            <name>vup</name>
-+            <description>German (vup)</description>
-+          </configItem>
-+        </variant>
-+        <variant>
-+          <configItem>
-             <name>mac</name>
-             <description>German (Macintosh)</description>
-           </configItem>
 diff -Naur a/symbols/de b/symbols/de
 --- a/symbols/de	2019-05-31 01:30:31.000000000 +0200
 +++ b/symbols/de	2019-08-03 16:30:13.153523476 +0200
