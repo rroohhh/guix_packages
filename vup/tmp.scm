@@ -2,8 +2,11 @@
   #:use-module (gnu packages apr)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages autotools)
+  #:use-module (gnu packages telegram)
+  #:use-module (gnu packages glib)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix utils)
   #:use-module (guix build-system cmake)
   #:use-module ((guix licenses) #:prefix license:))
 
@@ -74,12 +77,31 @@
 ;;             (lambda* (#:key outputs inputs #:allow-other-keys)
 ;;               ((assoc-ref qt:%standard-phases 'qt-wrap) #:inputs inputs #:outputs outputs #:qtbase (assoc-ref inputs "qtbase"))
 ;;               #t))))))))
+(define-public glibmm-2.66.6
+   (package
+    (inherit glibmm)
+    (name "glibmm")
+    (version "2.66.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri
+        (string-append "mirror://gnome/sources/glibmm/"
+                       (version-major+minor version)
+                       "/glibmm-" version ".tar.xz"))
+       (sha256
+        (base32 "0bqm9vqwhas69q6n89wd2xgxvrlkpxra13dzsx8m67hqk0jp8n2k"))))
+    (propagated-inputs
+     (modify-inputs (package-propagated-inputs glibmm)
+       (replace "libsigc++" libsigc++-2)))))
 
-;; (define-public telegram-desktop-fixed
-;;   (package
-;;    (inherit telegram-desktop)
-;;    (inputs
-;;     (modify-inputs
-;;      (package-inputs telegram-desktop)
-;;      (replace "hime" hime-fixed)
-;;      (replace "nimf" nimf-fixed)))))
+
+(define-public telegram-desktop-fixed
+  (package
+   (inherit telegram-desktop)
+   (inputs
+    (modify-inputs
+     (package-inputs telegram-desktop)
+     (replace "glibmm" glibmm-2.66.6)))))
+
+telegram-desktop-fixed
