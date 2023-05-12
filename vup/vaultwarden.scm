@@ -1,5 +1,4 @@
 (define-module (vup vaultwarden)
- #:use-module (vup rust-nightly)
  #:use-module (gnu packages perl)
  #:use-module (guix build-system cargo)
  #:use-module (guix build-system copy)
@@ -8942,7 +8941,6 @@
      `(#:phases (modify-phases %standard-phases
                                (delete 'check))
        #:features '("sqlite" "vendored_openssl")
-       #:rust ,rust-nightly
        #:cargo-inputs
        (("rust-backtrace" ,rust-backtrace_0_3_65)        
         ("rust-bytes" ,rust-bytes_1_1_0)        

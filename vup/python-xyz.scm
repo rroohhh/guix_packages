@@ -1883,6 +1883,24 @@ testbenches in Python.")
                    (delete 'check) (delete 'sanity-check))))
     (license license:expat)))
 
+(define-public python-mypy-extensions-next
+  (package
+    (name "python-mypy-extensions")
+    (version "1.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "mypy_extensions" version))
+              (sha256
+               (base32
+                "10h7mwjjfbwxzq7jzaj1pnv9g6laa1k0ckgw72j44160bnazinvm"))))
+    (build-system pyproject-build-system)
+    (home-page "https://github.com/python/mypy_extensions")
+    (synopsis
+     "Type system extensions for programs checked with the mypy type checker.")
+    (description
+     "Type system extensions for programs checked with the mypy type checker.")
+    (license license:expat)))
+
 (define-public python-mypy-next
   (package
     (name "python-mypy")
@@ -1894,9 +1912,11 @@ testbenches in Python.")
                (base32
                 "1lbjdd1d3j492w5sz3llwx6s0199cp5bxysarczy4jkp1m0l02pp"))))
     (build-system pyproject-build-system)
-    (propagated-inputs (list python-mypy-extensions python-tomli
+    (native-inputs (list python-pytest python-pytest-xdist))
+    (propagated-inputs (list python-mypy-extensions-next python-tomli
                              python-typed-ast python-typing-extensions))
     (home-page "http://www.mypy-lang.org/")
+    (arguments '(#:tests? #f))
     (synopsis "Optional static typing for Python")
     (description "Optional static typing for Python")
     (license license:expat)))

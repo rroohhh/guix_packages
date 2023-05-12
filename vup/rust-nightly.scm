@@ -32,7 +32,7 @@
                  (if date (string-append date "/") "")
                  "rustc-" version "-src.tar.gz"))
 
-(define rust-1.65 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.65))
+(define rust-1.68 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.68))
 
 (define* (rust-bootstrapped-package base-rust version checksum #:key date)
   "Bootstrap rust VERSION with source checksum CHECKSUM using BASE-RUST."
@@ -50,8 +50,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.65 "1.66.1"
-           "1fjr94gsicsxd2ypz4zm8aad1zdbiccr7qjfbmq8f8f7jhx96g2v")))
+         (rust-bootstrapped-package rust-1.68 "1.69.0"
+           "03zn7kx5bi5mdfsqfccj4h8gd6abm7spj0kjsfxwlv5dcwc9f1gv")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -60,7 +60,7 @@
         (origin
           (inherit (package-source base-rust))
           (snippet #f)))
-      (inputs (append (alist-replace "llvm" (list llvm-15) (package-inputs base-rust)) `(("ninja" ,ninja))))
+      (inputs (append (package-inputs base-rust) `(("ninja" ,ninja))))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
@@ -114,16 +114,12 @@ llvm-tools=true
                      (copy-file (string-append from-dir "libclang_rt.msan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.msan.a"))
                      (copy-file (string-append from-dir "libclang_rt.lsan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.lsan.a")))
                  (invoke "./x.py" "install")
+                 (invoke "./x.py" "install" "rustfmt")
                  (substitute* "config.toml"
                    ;; Adjust the prefix to the 'cargo' output.
                    (("prefix = \"[^\"]*\"")
                     (format #f "prefix = ~s" (assoc-ref outputs "cargo"))))
-                 (invoke "./x.py" "install" "cargo")
-                 (substitute* "config.toml"
-                   ;; Adjust the prefix to the 'rustfmt' output.
-                   (("prefix = \"[^\"]*\"")
-                    (format #f "prefix = ~s" (assoc-ref outputs "rustfmt"))))
-                 (invoke "./x.py" "install" "rustfmt")))
+                 (invoke "./x.py" "install" "cargo")))
              (delete 'patch-cargo-checksums)
              (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
                ;; Generate checksums after patching generated files (in
@@ -162,7 +158,3 @@ llvm-tools=true
               (lambda _
                 (substitute* "config.toml"
                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
-
-(define-public rust-nightly-1.67
-  (rust-bootstrapped-package
-   rust-nightly "1.67.1" "0vpzv6rm3w1wbni17ryvcw83k5klhghklylfdza3nnp8blz3sj26"))
