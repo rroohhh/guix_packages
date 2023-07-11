@@ -236,6 +236,7 @@
      `(("python-pytest" ,python-pytest)
        ("python-pytest-black" ,python-pytest-black)
        ("python-pytest-cov" ,python-pytest-cov)))
+    ;; (arguments '(#:tests? #f))
     (home-page "https://github.com/pydata/sparse/")
     (synopsis "Sparse n-dimensional arrays")
     (description "Sparse n-dimensional arrays")
