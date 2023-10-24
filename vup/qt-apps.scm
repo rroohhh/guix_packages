@@ -40,7 +40,7 @@
 (define-public klayout
   (package
    (name "klayout")
-   (version "0.28.6")
+   (version "0.28.10")
    (source
     (origin
      (method git-fetch)
@@ -49,7 +49,7 @@
            (commit (string-append "v" version))))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "1fb96bx605cnv51lpw6a42nf3splijwcxfkgpbf5kic7c6gykfhj"))))
+      (base32 "0xn9r46cf26a3gya7nyqq8zziriny1pml3lz65ackqp620l8ndh8"))))
    (arguments
     `(#:tests? #f
       #:phases

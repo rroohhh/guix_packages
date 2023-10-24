@@ -5,6 +5,7 @@
                 #:prefix licenses:)
   #:use-module (guix download)
   #:use-module (guix utils)
+  #:use-module (guix gexp)
   #:use-module (guix build utils)
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
@@ -16,7 +17,10 @@
   #:use-module (guix build-system copy)
   #:use-module (guix build-system perl)
   #:use-module (gnu packages)
+  #:use-module (gnu packages tcl)
   #:use-module (gnu packages nettle)
+  #:use-module (gnu packages version-control)
+  #:use-module (gnu packages shells)
   #:use-module ((gnu packages animation)
                 #:prefix guix:)
   #:use-module (gnu packages audio)
@@ -1128,7 +1132,7 @@
 (define-public bash-preexec
   (let* ((version "0.5.0"))
     (package
-      (name "bash-prexeec")
+      (name "bash-preexec")
       (version version)
       (source (origin
                 (method url-fetch)
@@ -1145,3 +1149,93 @@
       (synopsis "preexec and precmd functions for Bash just like Zsh.")
       (description "preexec and precmd functions for Bash just like Zsh.")
       (license licenses:expat))))
+
+
+(define-public xschem-3.4.2
+  (package
+    (inherit xschem)
+    (version "3.4.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/StefanSchippers/xschem")
+                    (commit version)))
+              (file-name (git-file-name "xschem" version))
+              (sha256
+               (base32
+                "1gvm7fzq6x5h7f47djf95y607jpgqqxpvcvh173nx2vc72nssdqf"))))))
+
+
+(define-public magic
+  (let* ((version "8.3.421"))
+    (package
+      (name "magic")
+      (version version)
+      (source (origin
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/RTimothyEdwards/magic/archive/refs/tags/"
+                      version ".tar.gz"))
+                (sha256
+                 (base32
+                  "1aizkx5s4h0bbnsgpwya51mwc5sbqvm0xgfp92486nhhzvjjg03s"))))
+      (build-system gnu-build-system)
+      (inputs (list tcsh python libx11 mesa cairo tcl glu tk git))
+      (home-page "http://opencircuitdesign.com/magic/")
+      (arguments
+       (list #:configure-flags
+             #~(list
+                (string-append "--with-tcl="
+                               (assoc-ref %build-inputs "tcl"))
+                (string-append "--with-tk="
+                               (assoc-ref %build-inputs "tk")))
+             #:tests? #f))
+      (synopsis
+       "Magic VLSI Layout Tool")
+      (description
+       "Magic VLSI Layout Tool")
+      (license #f))))
+
+
+;; X11:          no
+
+;; Magic requires X11 for all graphics operations.  Without it,
+;; magic can only be run in batch mode using option '-dnull'.
+;; Generally, not finding X11 means that paths to header files
+;; and/or libraries are missing or in an unexpected place.  Try
+;; using configure options --x-includes=<DIR> and --x-libraries=<DIR>.
+;;
+;; Python3:      no
+;;
+;; Magic installation will use the gcc preprocessor for forming
+;; the default SCMOS technology files and the macro definitions.
+;; This usually works, but in case of preprocessor failure, you
+;; may need python3 installed.
+;;
+;; OpenGL:       no
+;;
+;; OpenGL graphics are considerably better than the standard 8-bit
+;; and 24-bit X11 graphics, provided that you have a video card and
+;; driver supporting accelerated OpenGL graphics.  If you get this
+;; message, you may need to download OpenGL libraries and header
+;; files, which are usually available from the video card manufacturer.
+;; Magic with un-accelerated OpenGL, such as using Mesa GL without
+;; a supported graphics card, is usually a very bad combination.
+;;
+;; Cairo:        no
+;;
+;; Cairo graphics are considerably better than the standard 8-bit
+;; and 24-bit X11 graphics, provided that you have a video card and
+;; driver supporting hardware-accelerated graphics.  If you get this
+;; message, you may need to download Cairo and fontconfig libraries
+;; and header files, which are usually found in package cairo-devel.
+;;
+;; Tcl/Tk:       no
+;;
+;; Without Tcl/Tk, you cannot run the enhanced version of magic
+;; with the toolbar and menus, and a number of other functions
+;; are disabled.  If you did not specifically disable Tcl/Tk on
+;; the configure command line, then getting this message means
+;; that you do not have Tcl/Tk headers and or libraries installed,
+;; or they are not in a standard path.  Try using configure options
+;; --with-tcl=<DIR> and --with-tk=<DIR>.

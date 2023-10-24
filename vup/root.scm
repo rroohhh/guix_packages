@@ -122,7 +122,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1lwr4l73p8isp5ifs9vq06rnjk0wfp3psxf9ih6rbxhrd2k042qm"))))
+                  "1hjd6fv354flg8bjvk520qwch91rni0dr3bjgz0rv3hfv3626zga"))))
       (build-system cmake-build-system)
       (inputs `(("xrootd" ,xrootd)
                 ("zstd" ,zstd "lib")
