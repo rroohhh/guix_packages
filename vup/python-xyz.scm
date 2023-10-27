@@ -76,7 +76,7 @@
     (source
      (origin
        (method url-fetch)
-       (uri (string-append "https://zenodo.org/record/5751934/files/nschloe/orthopy-v" version ".zip"))
+       (uri (string-append "https://zenodo.org/records/5751934/files/nschloe/orthopy-v" version ".zip"))
        (sha256
         (base32
          "0ghcahjy7cjx95hdccbqvcds3vmcj3gpr852fqy92czfsnpc0lna"))))
@@ -127,7 +127,7 @@
     (source
      (origin
        (method url-fetch)
-       (uri (string-append "https://zenodo.org/record/5541216/files/nschloe/quadpy-v" version ".zip"))
+       (uri (string-append "https://zenodo.org/records/5541216/files/nschloe/quadpy-v" version ".zip"))
        (sha256
         (base32
          "1f989dipv7lqxvalfrvvlmhlxyl67a87lavyyqrr1mh88glhl592"))))
