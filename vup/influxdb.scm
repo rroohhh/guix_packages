@@ -10,20 +10,21 @@
   #:use-module (gnu packages elf)
   #:use-module ((guix licenses) #:prefix license:))
 
+;; https://dl.influxdata.com/influxdb/releases/influxdb2-2.7.4_linux_amd64.tar.gz
 (define-public influxd
   (package
     (name "influxd")
-    (version "2.6.1")
+    (version "2.7.4")
     (source
      (origin
        (method url-fetch)
-       (uri (string-append "https://dl.influxdata.com/influxdb/releases/influxdb2-" version "-linux-amd64.tar.gz"))
+       (uri (string-append "https://dl.influxdata.com/influxdb/releases/influxdb2-" version "_linux_amd64.tar.gz"))
        (sha256
-        (base32 "07ll8q9vfcvbs8l54c3rjahbclk5yr08xmnaqwy60lwnrjx0hf80"))))
+        (base32 "12322iaxfkcmbng20cxyq17q1ysg4v5p4dmcjcy4iys25sjwqb1a"))))
     (build-system copy-build-system)
     (arguments
      '(#:install-plan
-       '(("influxd" "bin/influxd"))))
+       '(("usr/bin/influxd" "bin/influxd"))))
     (home-page
       "https://www.influxdata.com/")
     (synopsis "InfluxDB is a time series platform")
@@ -31,25 +32,39 @@
       "InfluxDB is a time series platform")
     (license #f)))                      ; MIT
 
+;; https://dl.influxdata.com/influxdb/releases/influxdb2-client-2.7.3-linux-amd64.tar.gz
 (define-public influx
   (package
-   (inherit influxd)
-   (name "influx")
-   (arguments
-    '(#:install-plan
-      '(("influx" "bin/influx"))))))
+    (name "influx")
+    (version "2.7.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://dl.influxdata.com/influxdb/releases/influxdb2-client-" version "-linux-amd64.tar.gz"))
+       (sha256
+        (base32 "1rmzixan29f5g26snmiixc6cqar5gpilbgw6g2ybcqvlah2g6rm2"))))
+    (build-system copy-build-system)
+    (arguments
+     '(#:install-plan
+       '(("influx" "bin/influx"))))
+    (home-page
+      "https://www.influxdata.com/")
+    (synopsis "InfluxDB is a time series platform - cli")
+    (description
+      "InfluxDB is a time series platform - cli")
+    (license #f)))                      ; MIT
 
 (define-public telegraf
   (package
     (name "telegraf")
-    (version "1.26.0")
+    (version "1.28.5")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://dl.influxdata.com/telegraf/releases/telegraf-" (string-replace-substring version "-" "~") "_linux_amd64.tar.gz"))
        (file-name (string-append name "-" version ".tar.gz"))
        (sha256
-        (base32 "0rm2n4zl3h1a2s915cihk125kjqwai30rps6l4n0wia68fcwwscq"))))
+        (base32 "0sgn3r8cpkl5sr98c4mlvxz4a4sq74h7rnz6yka9k4lrirg94bxf"))))
     (build-system copy-build-system)
     (inputs `(("libc" ,glibc)
               ("patchelf" ,patchelf)))
