@@ -32,7 +32,7 @@
                  (if date (string-append date "/") "")
                  "rustc-" version "-src.tar.gz"))
 
-(define rust-1.68 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.68))
+(define rust-1.73 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.73))
 
 (define* (rust-bootstrapped-package base-rust version checksum #:key date)
   "Bootstrap rust VERSION with source checksum CHECKSUM using BASE-RUST."
@@ -50,8 +50,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.68 "1.69.0"
-           "03zn7kx5bi5mdfsqfccj4h8gd6abm7spj0kjsfxwlv5dcwc9f1gv")))
+         (rust-bootstrapped-package rust-1.73 "1.74.0"
+           "0j8hrwjjjjf7spy0hy7gami96swhfzr6kandfzzdri91qd5mhaw8")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -60,7 +60,9 @@
         (origin
           (inherit (package-source base-rust))
           (snippet #f)))
-      (inputs (append (package-inputs base-rust) `(("ninja" ,ninja))))
+      (inputs (modify-inputs (package-inputs base-rust)
+                             (append ninja)
+                             (replace "llvm" llvm-17)))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
          ((#:phases phases)
@@ -76,7 +78,7 @@
                             (cons (string-append
                                    (assoc-ref inputs "gcc") "/include/c++/x86_64-unknown-linux-gnu")
                                   (string-split (getenv "CPLUS_INCLUDE_PATH")
-                                                        #\:))
+                                                #\:))
                             ":"))
                    (format #true
                            "environment variable `CPLUS_INCLUDE_PATH' changed to ~a~%"
@@ -94,7 +96,7 @@ tools = [\"cargo\",  \"rust-demangler\", \"clippy\", \"rustfmt\", \"analysis\", 
                    (("jemalloc=true")
                     "jemalloc=true
 codegen-backends=[\"llvm\"]
-lld=true
+lld=false
 use-lld=false
 llvm-tools=true
 "))
@@ -126,13 +128,14 @@ llvm-tools=true
                ;; particular, vendor/jemalloc/rep/Makefile).
                (lambda* _
                  (use-modules (guix build cargo-utils))
-                 (substitute* '("Cargo.lock"
-                                "src/tools/rust-analyzer/Cargo.lock"
-                                "src/tools/miri/Cargo.lock"
-                                "src/tools/rustfmt/Cargo.lock"
-                                "src/bootstrap/Cargo.lock"
-                                "compiler/rustc_codegen_gcc/Cargo.lock"
-                                "compiler/rustc_codegen_cranelift/Cargo.lock")
+                 (substitute* (cons* "Cargo.lock"
+                                     "src/tools/rust-analyzer/Cargo.lock"
+                                     "src/tools/miri/Cargo.lock"
+                                     "src/tools/rustfmt/Cargo.lock"
+                                     "src/bootstrap/Cargo.lock"
+                                     "compiler/rustc_codegen_gcc/Cargo.lock"
+                                     "compiler/rustc_codegen_cranelift/Cargo.lock"
+                                     (find-files "src/tools" "Cargo.lock"))
                    (("(checksum = )\".*\"" all name)
                     (string-append name "\"" ,%cargo-reference-hash "\"")))
                  (generate-all-checksums "vendor")
