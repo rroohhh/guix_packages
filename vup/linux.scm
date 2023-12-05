@@ -47,9 +47,8 @@
          "v" (version-prefix version 1) ".x/"
          "linux-" version ".tar.xz")))
 
-;; TODO: newer versions are incompatible with zfs 2.1.12
 (define-public linux-nonfree
-  (let* ((version "6.3.12"))
+  (let* ((version "6.6.4"))
     (package
       (inherit linux-libre)
       (name "linux-nonfree")
@@ -59,13 +58,13 @@
                 (uri (linux-nonfree-urls version))
                 (sha256
                  (base32
-                  "1mvcirkhqnf03cci3jiq077fs9b42a3xdk3zjkpyim3x43ydwzyb"))))
+                  "0i9ym5nqf704iz5674k66kn9a5hkm0y0sdhqy5c6v39xr5h9dr29"))))
       (synopsis "Mainline Linux kernel, nonfree binary blobs included.")
       (description "Linux is a kernel.")
       (license license:gpl2)
       (home-page "https://kernel.org/"))))
 
-(define linux-firmware-version "20230625")
+(define linux-firmware-version "20231111")
 (define (linux-firmware-source version)
   (origin
     (method git-fetch)
@@ -76,7 +75,7 @@
     (file-name (git-file-name "linux-firmware" (string-take version 8)))
     (sha256
      (base32
-      "11lm36939pfchx21qmxkq4bij49p43j6za2f4pn2zbn2b58mlm52"))))
+      "16p88zvqccknxk81mdx7nhv4rpdv96j7xhrlmbqn2slvc27y9mab"))))
 
 (define-public linux-firmware-nonfree
   (package
