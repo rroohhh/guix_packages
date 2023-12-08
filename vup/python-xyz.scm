@@ -416,7 +416,7 @@
      #t))
 
 (define-public python-amaranth
-  (let ((commit "5f6b36e91f44c43bd7073fc94be239e795a12128"))
+  (let ((commit "120375dabeceaeeb1cf3fcaff2d9217b3e513cb3"))
     (package
       (name "python-amaranth")
       (version (string-append "0.3+g" (string-take commit 9)))
@@ -428,16 +428,24 @@
                (commit commit)))
          (file-name (git-file-name name version))
          (modules '((guix build utils)))
-         (snippet
-          '(begin
-             (substitute* "setup.py"
-               (("if git.exact:")
-                "if git is not None and git.exact:")) ; we have no git folder
-             #t))
+         ;; (snippet
+         ;;  '(begin
+         ;;     (substitute* "setup.py"
+         ;;       (("if git.exact:")
+         ;;        "if git is not None and git.exact:")) ; we have no git folder
+         ;;     #t))
          (sha256
           (base32
-           "0pjvzl2p1ajjy3sshvc8sscm77am9dq070381kipmfcy4vjrvazl"))))
-      (build-system python-build-system)
+           "03d8r21y2q1bb3qksg26v9920d17mkq3rdpvjqk4f9si8dix79gm"))))
+      (build-system pyproject-build-system)
+      (native-inputs (list python-pdm-backend python-pytest))
+      (arguments
+       `(#:phases
+         ,#~(modify-phases %standard-phases
+             (add-before 'build 'pretend-version
+               (lambda _
+                 (setenv "PDM_BUILD_SCM_VERSION" #$version))))))
+         ;; #:tests? #f))
       (inputs `(("yosys" ,yosys-git)
                 ("symbiyosys" ,symbiyosys)))
       (propagated-inputs
@@ -454,7 +462,7 @@
 
 
 (define-public python-amaranth-boards
-  (let ((commit "892236ade101e929a11a90a7684c685411ea89b8"))
+  (let ((commit "54000b09498080706152bbb8782f68b8efa0ad33"))
     (package
       (name "python-amaranth-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -467,7 +475,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "16lygwb797zi42qcrmlzikannl6qxk1c5v9037q2hrgq2brgrnmw"))))
+           "047q9h5cphd98j41bmvnrprsymggc9z1rjbvs142jws2npcsvx28"))))
       (build-system python-build-system)
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
@@ -480,7 +488,7 @@
       (license license:bsd-3))))
 
 (define-public python-amaranth-stdio
-  (let ((commit "f41e7e50ef1e608e337e8146fd9e6806fc48a727"))
+  (let ((commit "21f44f5f712a149b97dd4f6b534417679c7dfc27"))
     (package
       (name "python-amaranth-stdio")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -493,7 +501,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0yyjsr8b0z3b161347f6y2xsmwmv70dn75f4yr3rxlsvfqka7iz8"))))
+           "09axmgv114jfk70ijyz0kb5rw02rawkhx1z5lb5fc774gkry9id7"))))
       (build-system python-build-system)
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
@@ -504,7 +512,7 @@
       (license license:bsd-3))))
 
 (define-public python-amaranth-soc
-  (let ((commit "d2185e3082c8101720d1a951a2e090a989b82394"))
+  (let ((commit "2b37115c7b996ad0befc73837ed16683dd07f06b"))
     (package
       (name "python-amaranth-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -517,7 +525,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1yxa1libb75fjvvbj342v86ycjd1fs843c5g6qbqhfv12ijij5cx"))))
+           "0m1nk63ybfzmv99gmn9y8xf858gk1v1xl25r9113cvdcxndfxd93"))))
       (build-system python-build-system)
       (propagated-inputs
        `(("python-amaranth" ,python-amaranth)))
@@ -607,10 +615,10 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "74f33880bd42fadd6deeda533aaceb44bafae1f9"))
+  (let ((commit "f0f140c83c766c71368a457d035ea06da34ecf2f"))
     (package
       (name "symbiyosys")
-      (version (string-append "2023.04.05-" (string-take commit 9)))
+      (version (string-append "2023.12.07-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -620,7 +628,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1qr7crjr43lkdgka5c69xmmz7krgkqb2wjb36aqv2mg26r1kh7rb"))))
+           "1rrcac8c9a342gb5zihz8041w7sffmhcw69rhjfqkhpnm20ckl9y"))))
       (inputs `(("python" ,python)
                 ("yosys" ,yosys-git)))
       (propagated-inputs `(("yices" ,yices)))

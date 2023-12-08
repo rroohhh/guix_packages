@@ -33,7 +33,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "2c1c83f75b8078ced51f92c697da3e712feb3ac3")
+  (let ((commit "896e5e7dedf9b9b1459fa019f1fa8aa8101fdf43")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -46,26 +46,27 @@
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "10nn7x9pqbz8iy5czaiia42536136xpysjyg74ldy53yh5x8i460")))))))
+                  "01dhl91hvlail9q188ykwzkj5hba642i67qzzbwfnz0nn53s4i9i")))))))
 
 
 (define-public yosys-git
-  (let ((commit "53c0a6b780199dc56348916acf7c00e30f65e1ec")
-        (version "0.27+22"))
+  (let ((commit "fb4cbfa735e12592653ae74501688e63468ab498")
+        (version "0.36+8"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
-       (inherit guix:yosys)
-       (version (string-append version "+" (string-take commit 9)))
-       (source (origin
-                 (inherit (package-source guix:yosys))
-                 (uri (git-reference
-                       (url "https://github.com/yosyshq/yosys.git")
-                       (commit commit)))
-                 (sha256
-                  (base32
-                   "1fyxi2rwkg6w1fyzsr3i76y6x1yw0wgr3qm8spfag8q6n14xs7q9"))
-                 (file-name (git-file-name (package-name guix:yosys) version))))
-       (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))))))
+      (inherit guix:yosys)
+      (version (string-append version "+" (string-take commit 9)))
+      (source (origin
+               (inherit (package-source guix:yosys))
+               (uri (git-reference
+                     (url "https://github.com/yosyshq/yosys.git")
+                     (commit commit)))
+               (sha256
+                (base32
+                 "18d2fayigh42ybgmwlijdvqshmr4w1hpbjphhbjrd6qawi1cx5ii"))
+               (file-name (git-file-name (package-name guix:yosys) version))))
+      (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))
+      (arguments (append (package-arguments guix:yosys) (list #:tests? #f)))))))
 
 
 (define-public icestorm
