@@ -32,8 +32,6 @@
                  (if date (string-append date "/") "")
                  "rustc-" version "-src.tar.gz"))
 
-(define rust-1.73 (module-ref (resolve-module '(gnu packages rust)) 'rust-1.73))
-
 (define* (rust-bootstrapped-package base-rust version checksum #:key date)
   "Bootstrap rust VERSION with source checksum CHECKSUM using BASE-RUST."
   (package
@@ -50,16 +48,25 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.73 "1.74.0"
+         (rust-bootstrapped-package rust "1.74.0"
            "0j8hrwjjjjf7spy0hy7gami96swhfzr6kandfzzdri91qd5mhaw8")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
-      (outputs '("out" "doc" "cargo" "rustfmt"))
+      (outputs '("out" "doc" "cargo" "rust-src" "tools"))
       (source
         (origin
           (inherit (package-source base-rust))
-          (snippet #f)))
+          (snippet
+           '(begin
+;              (for-each delete-file-recursively
+;                        '("src/llvm-project"
+;                          "vendor/tikv-jemalloc-sys/jemalloc"))
+              ;; Remove vendored dynamically linked libraries.
+              ;; find . -not -type d -executable -exec file {} \+ | grep ELF
+              ;; Also remove the bundled (mostly Windows) libraries.
+              (for-each delete-file
+                        (find-files "vendor" "\\.(a|dll|exe|lib)$"))))))
       (inputs (modify-inputs (package-inputs base-rust)
                              (append ninja)
                              (replace "llvm" llvm-17)))
@@ -91,8 +98,12 @@
 sanitizers = true
 profiler = true
 extended = true
+# target = [\"x86_64-unknown-linux-gnu\",\"armv7-none-eabi\",\"armv7a-none-eabi\",\"thumbv7m-none-eabi\",\"thumbv6m-none-eabi\",\"armv7-none-eabihf\",\"armv7a-none-eabihf\",\"thumbv7em-none-eabi\",\"thumbv7em-none-eabihf\",\"wasm32-unknown-unknown\",\"armv7-unknown-linux-musleabihf\"]
 tools = [\"cargo\",  \"rust-demangler\", \"clippy\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\", \"miri\"]"))
                  (substitute* "config.toml"
+;                   (("target\\.x86.*")
+;                    "target]
+;")
                    (("jemalloc=true")
                     "jemalloc=true
 codegen-backends=[\"llvm\"]
@@ -116,12 +127,21 @@ llvm-tools=true
                      (copy-file (string-append from-dir "libclang_rt.msan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.msan.a"))
                      (copy-file (string-append from-dir "libclang_rt.lsan-x86_64.a") (string-append sanitizers-dir "librustc-nightly_rt.lsan.a")))
                  (invoke "./x.py" "install")
-                 (invoke "./x.py" "install" "rustfmt")
                  (substitute* "config.toml"
                    ;; Adjust the prefix to the 'cargo' output.
                    (("prefix = \"[^\"]*\"")
                     (format #f "prefix = ~s" (assoc-ref outputs "cargo"))))
-                 (invoke "./x.py" "install" "cargo")))
+                 (invoke "./x.py" "install" "cargo")
+                 (substitute* "config.toml"
+                   ;; Adjust the prefix to the 'tools' output.
+                   (("prefix = \"[^\"]*\"")
+                    (format #f "prefix = ~s" (assoc-ref outputs "tools"))))
+                 (invoke "./x.py" "install" "clippy")
+                 (invoke "./x.py" "install" "rust-analyzer")
+                 (invoke "./x.py" "install" "rustfmt")
+                 (for-each delete-file-recursively
+                          '("src/llvm-project"
+                            "vendor/tikv-jemalloc-sys/jemalloc"))))
              (delete 'patch-cargo-checksums)
              (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
                ;; Generate checksums after patching generated files (in
@@ -161,3 +181,5 @@ llvm-tools=true
               (lambda _
                 (substitute* "config.toml"
                              (("channel = \"stable\"") "channel = \"nightly\"")))))))))))
+
+rust-nightly
