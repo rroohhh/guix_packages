@@ -2,6 +2,7 @@
   #:use-module (guix build-system cargo)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
+  #:use-module (gnu packages shells)
   #:use-module (gnu packages crates-crypto)
   #:use-module (gnu packages crates-web)
   #:use-module (gnu packages crates-apple)
