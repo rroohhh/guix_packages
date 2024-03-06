@@ -6,6 +6,7 @@
  #:use-module (gnu packages crates-crypto)
  #:use-module (gnu packages crates-windows)
  #:use-module (gnu packages crates-io)
+ #:use-module (gnu packages crates-tls)
  #:use-module (gnu packages perl)
  #:use-module (gnu packages c)
  #:use-module (guix download)
