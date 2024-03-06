@@ -7,6 +7,7 @@
  #:use-module (gnu packages crates-windows)
  #:use-module (gnu packages crates-io)
  #:use-module (gnu packages perl)
+ #:use-module (gnu packages c)
  #:use-module (guix download)
  #:use-module (guix git-download)
  #:use-module ((guix import utils) #:select (beautify-description)))
