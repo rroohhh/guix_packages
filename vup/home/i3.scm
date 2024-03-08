@@ -32,12 +32,12 @@
 (define-record-type* <i3-bar-configuration>
     i3-bar-configuration make-i3-bar-configuration i3-bar-configuration?
     (bar-command i3-bar-configuration-bar-command)
-    (position i3-bar-configuration-position)
-    (workspace-buttons i3-bar-configuration-workspace-buttons)
-    (status-command i3-bar-configuration-status-command)
-    (font i3-bar-configuration-font)
-    (strip-workspace-numbers i3-bar-configuration-strip-workspace-numbers)
-    (colors i3-bar-configuration-colors))
+    (position i3-bar-configuration-position (default #f))
+    (workspace-buttons i3-bar-configuration-workspace-buttons (default #f))
+    (status-command i3-bar-configuration-status-command (default #f))
+    (font i3-bar-configuration-font (default #f))
+    (strip-workspace-numbers i3-bar-configuration-strip-workspace-numbers (default #f))
+    (colors i3-bar-configuration-colors (default #f)))
 
 (define-record-type* <i3-bar-colors-configuration>
     i3-bar-colors-configuration make-i3-bar-colors-configuration i3-bar-colors-configuration?
@@ -144,12 +144,12 @@
         status-command font strip-workspace-numbers colors)
       `("bar {"
         ("swaybar_command " ,bar-command)
-        ,(format #f "workspace_buttons ~a" (i3-yes-no workspace-buttons))
-        ,(format #f "strip_workspace_numbers ~a" (i3-yes-no strip-workspace-numbers))
-        ("status_command " ,status-command)
-        ,@(generate-i3-font-config font)
-        ,(format #f "position ~a" position)
-        ,@(generate-i3-bar-color-config colors)
+        ,(if workspace-buttons (format #f "workspace_buttons ~a" (i3-yes-no workspace-buttons)))
+        ,(if strip-workspace-numbers (format #f "strip_workspace_numbers ~a" (i3-yes-no strip-workspace-numbers)))
+        ,@(if status-command (list "status_command " status-command))
+        ,@(if font (generate-i3-font-config font))
+        ,(if position (format #f "position ~a" position))
+        ,@(if colors (generate-i3-bar-color-config colors))
         "}")
      )))
 
