@@ -3,6 +3,7 @@
 (use-modules (gnu packages))
 (use-modules (gnu packages rust))
 (use-modules (gnu packages ninja))
+(use-modules (gnu packages cmake))
 (use-modules (guix packages))
 (use-modules (guix build utils))
 (use-modules (guix utils))
@@ -48,8 +49,8 @@
                                    (package-native-inputs base-rust))))))
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.74.0"
-           "0j8hrwjjjjf7spy0hy7gami96swhfzr6kandfzzdri91qd5mhaw8")))
+         (rust-bootstrapped-package rust "1.76.0"
+           "08f06shp6l72qrv5fwg1is7yzr6kwj8av0l9h5k243bz781zyp4y")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -69,6 +70,7 @@
                         (find-files "vendor" "\\.(a|dll|exe|lib)$"))))))
       (inputs (modify-inputs (package-inputs base-rust)
                              (append ninja)
+                             (append cmake)
                              (replace "llvm" llvm-17)))
       (arguments
        (substitute-keyword-arguments (package-arguments base-rust)
