@@ -1239,3 +1239,25 @@
 ;; that you do not have Tcl/Tk headers and or libraries installed,
 ;; or they are not in a standard path.  Try using configure options
 ;; --with-tcl=<DIR> and --with-tk=<DIR>.
+
+(define-public gtk4-layer-shell
+  (package
+    (name "gtk4-layer-shell")
+    (version "1.0.2")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/wmww/gtk4-layer-shell")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1kppzbnw8sw0r0853arkgkgv0j84gg0cxa1w4bj2wqv484z27rvm"))))
+    (build-system meson-build-system)
+    (arguments `(#:tests? #f #:configure-flags (list "-Dtests=true")))
+    (native-inputs (list pkg-config gobject-introspection vala))
+    (inputs (list gtk))
+    (home-page "https://github.com/wmww/gtk4-layer-shell")
+    (synopsis "A library to create panels and other desktop components for Wayland using the Layer Shell protocol and GTK4")
+    (description "A library to create panels and other desktop components for Wayland using the Layer Shell protocol and GTK4")
+    (license #f)))
