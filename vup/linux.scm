@@ -48,7 +48,7 @@
          "linux-" version ".tar.xz")))
 
 (define-public linux-nonfree
-  (let* ((version "6.6.4"))
+  (let* ((version "6.7.11"))
     (package
       (inherit linux-libre)
       (name "linux-nonfree")
@@ -58,13 +58,13 @@
                 (uri (linux-nonfree-urls version))
                 (sha256
                  (base32
-                  "0i9ym5nqf704iz5674k66kn9a5hkm0y0sdhqy5c6v39xr5h9dr29"))))
+                  "0jhb175nlcncrp0y8md7p83yydlx6qqql6llav8djbv3f74rfr1c"))))
       (synopsis "Mainline Linux kernel, nonfree binary blobs included.")
       (description "Linux is a kernel.")
       (license license:gpl2)
       (home-page "https://kernel.org/"))))
 
-(define linux-firmware-version "20231111")
+(define linux-firmware-version "20240312")
 (define (linux-firmware-source version)
   (origin
     (method git-fetch)
@@ -75,7 +75,7 @@
     (file-name (git-file-name "linux-firmware" (string-take version 8)))
     (sha256
      (base32
-      "16p88zvqccknxk81mdx7nhv4rpdv96j7xhrlmbqn2slvc27y9mab"))))
+      "15nwk3bk9dzpa659vlf8h7b38ajf273qq9lp7awg3vpwn4iyffkw"))))
 
 (define-public linux-firmware-nonfree
   (package
