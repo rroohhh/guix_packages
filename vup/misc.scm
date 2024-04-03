@@ -232,73 +232,76 @@
       (license licenses:gpl2+))))
 
 (define-public libsigrokdecode-master
-  (package
-    (inherit libsigrokdecode)
-    (version "0.5.3-73cb546")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "git://sigrok.org/libsigrokdecode")
-                    (commit "73cb5461acdbd007f4aa9e81385940fad6607696")
-                    (recursive? #t)))
-              (file-name (git-file-name "libsigrokdecode" version))
-              (sha256
-               (base32
-                "1i4jpkhb9yqf1fmbvlzdifj9arkspspffn93q8yh4vq5zr27k085"))))
-    (arguments
-     (append `(#:modules ((guix build utils)
-                          (guix build gnu-build-system)
-                          ((guix build gnu-build-system)
-                           #:prefix gnu:)))
-             (substitute-keyword-arguments (package-arguments libsigrokdecode)
-               ((#:phases phases)
-                `(modify-phases ,phases
-                   (replace 'bootstrap
-                     (assoc-ref gnu:%standard-phases
-                                'bootstrap)))))))
-    (native-inputs (modify-inputs (package-native-inputs libsigrokdecode)
-                     (append autoconf automake libtool)))))
+  (let ((commit "0235970293590f673a253950e6c61017cefa97df"))
+    (package
+      (inherit libsigrokdecode)
+      (version (string-append "0.5.3-1." (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "git://sigrok.org/libsigrokdecode")
+                      (commit commit)
+                      (recursive? #t)))
+                (file-name (git-file-name "libsigrokdecode" version))
+                (sha256
+                 (base32
+                  "055nz79ai3ya2c4b461bh8c04ky3b436xqg85a6g51lkzjwi689p"))))
+      (arguments
+       (append `(#:modules ((guix build utils)
+                            (guix build gnu-build-system)
+                            ((guix build gnu-build-system)
+                             #:prefix gnu:)))
+               (substitute-keyword-arguments (package-arguments libsigrokdecode)
+                 ((#:phases phases)
+                  `(modify-phases ,phases
+                     (replace 'bootstrap
+                       (assoc-ref gnu:%standard-phases
+                                  'bootstrap)))))))
+      (native-inputs (modify-inputs (package-native-inputs libsigrokdecode)
+                       (append autoconf automake libtool))))))
 
 (define-public libsigrok-master
-  (package
-    (inherit libsigrok)
-    (version "0.5.3-66d58fcb9")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "git://sigrok.org/libsigrok.git")
-                    (commit "66d58fcb9fdd3a167b8fc6ca19f7f0a007c2ee8f")
-                    (recursive? #t)))
-              (file-name (git-file-name "libsigrok" version))
-              (sha256
-               (base32
-                "1g15q92pdhpcy0lkk25yghwkdzd4f3f33ngm6i41g22vy9fv3npy"))))
-    (inputs (append (package-inputs libsigrok)
-                    `(("glibmm" ,glibmm-2.64))))
-    (native-inputs (append (package-native-inputs libsigrok)
-                           `(("autoconf" ,autoconf)
-                             ("automake" ,automake)
-                             ("libtool" ,libtool))))))
+  (let ((commit "b503d24cdf56abf8c0d66d438ccac28969f01670"))
+    (package
+      (inherit libsigrok)
+      (version (string-append "0.5.3-1." (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "git://sigrok.org/libsigrok.git")
+                      (commit commit)
+                      (recursive? #t)))
+                (file-name (git-file-name "libsigrok" version))
+                (sha256
+                 (base32
+                  "116lgqsv0iy6yj9bq25z5q1f9h06mf84zr5aby0wms6l5i8b8igl"))))
+      (inputs (append (package-inputs libsigrok)
+                      `(("glibmm" ,glibmm))))
+      (native-inputs (append (package-native-inputs libsigrok)
+                             `(("autoconf" ,autoconf)
+                               ("automake" ,automake)
+                               ("libtool" ,libtool)))))))
 
 (define-public pulseview-libsigrok-master
-  (package
-    (inherit ((package-input-rewriting/spec `(("libsigrok" unquote
-                                               (const libsigrok-master))
-                                              ("libsigrokdecode" unquote
-                                               (const libsigrokdecode-master))))
-              pulseview))
-    (version (string-append (package-version pulseview) "-136995b8"))
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "git://sigrok.org/pulseview.git")
-                    (commit "136995b831c50d3261143b1183c73af55c9ba3a5")))
-              (file-name (git-file-name (package-name pulseview) version))
-              (sha256
-               (base32
-                "1m3cmp421qzgyj8bv13s4zraczjkrvwy58nxpwcwzb3c4w08919q"))))
-    (inputs (append (package-inputs pulseview)
-                    `(("glibmm" ,glibmm-2.64))))))
+  (let ((commit "d00efc65ef47090b71c4da12797056033bee795f"))
+    (package
+      (inherit ((package-input-rewriting/spec `(("libsigrok" unquote
+                                                 (const libsigrok-master))
+                                                ("libsigrokdecode" unquote
+                                                 (const libsigrokdecode-master))))
+                pulseview))
+      (version (string-append (package-version pulseview) "-" (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "git://sigrok.org/pulseview.git")
+                      (commit commit)))
+                (file-name (git-file-name (package-name pulseview) version))
+                (sha256
+                 (base32
+                  "1lcq9dv1yvkjh21c7l9b1v1627jljxbp1dqgn9g3qykplm9cq1rk"))))
+      (inputs (append (package-inputs pulseview)
+                      `(("glibmm" ,glibmm)))))))
 
 (define-public ofono
   (package
