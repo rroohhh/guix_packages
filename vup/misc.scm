@@ -18,6 +18,7 @@
   #:use-module (guix build-system perl)
   #:use-module (gnu packages)
   #:use-module (gnu packages tcl)
+  #:use-module (gnu packages llvm)
   #:use-module (gnu packages nettle)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages shells)
@@ -40,6 +41,7 @@
   #:use-module (gnu packages polkit)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages elf)
+  #:use-module (gnu packages sdl)
   #:use-module (gnu packages gl)
   #:use-module (gnu packages hardware)
   #:use-module (gnu packages mingw)
@@ -80,6 +82,7 @@
   #:use-module (gnu packages perl-compression)
   #:use-module (gnu packages web)
   #:use-module (gnu packages libcanberra)
+  #:use-module (gnu packages networking)
   #:use-module (vup mesa))
 
 (define-public mbuffer
@@ -1264,3 +1267,25 @@
     (synopsis "A library to create panels and other desktop components for Wayland using the Layer Shell protocol and GTK4")
     (description "A library to create panels and other desktop components for Wayland using the Layer Shell protocol and GTK4")
     (license #f)))
+
+(define-public umr
+  (let ((commit "39c91cdee3804ea209dc21619087212bc75d267e"))
+    (package
+     (name "umr")
+     (version (string-append "0.1" (string-take commit 7)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://gitlab.freedesktop.org/tomstdenis/umr")
+                    (commit commit)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1jwp45z24rj9lsq0wmmmxc50rmxp50qxz0gq11hwn6cg71kf9b48"))))
+     (build-system cmake-build-system)
+     (arguments `(#:tests? #f))
+     (inputs (list ncurses nanomsg libglvnd pkg-config libpciaccess libdrm llvm-15 mesa sdl2 bash-completion))
+     (synopsis "User Mode Register Debugger for AMDGPU Hardware")
+     (description "User Mode Register Debugger for AMDGPU Hardware")
+     (home-page "https://gitlab.freedesktop.org/tomstdenis/umr")
+     (license #f))))
