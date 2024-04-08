@@ -141,6 +141,7 @@ llvm-tools=true
                  (invoke "./x.py" "install" "clippy")
                  (invoke "./x.py" "install" "rust-analyzer")
                  (invoke "./x.py" "install" "rustfmt")
+                 (delete-file (string-append (assoc-ref outputs "out") "/lib/rustlib/src/rust/Cargo.lock"))
                  (for-each delete-file-recursively
                           '("src/llvm-project"
                             "vendor/tikv-jemalloc-sys/jemalloc"))))
