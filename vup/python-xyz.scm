@@ -36,6 +36,7 @@
   #:use-module (gnu packages graphviz)
   #:use-module (gnu packages openstack)
   #:use-module (gnu packages machine-learning)
+  #:use-module (guix-science packages python)
   #:use-module (vup fpga)
   #:use-module (vup smt)
   #:use-module (vup linux)
@@ -1929,3 +1930,24 @@ testbenches in Python.")
     (synopsis "Optional static typing for Python")
     (description "Optional static typing for Python")
     (license license:expat)))
+
+(define-public python-jaxopt
+  (package
+    (name "python-jaxopt")
+    (version "0.8.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "jaxopt" version))
+       (sha256
+        (base32 "0ih6k5i0v107qpa94p6w90d3fsb0mx2n4q4r2qlz790mz6kdy1jb"))))
+    (build-system pyproject-build-system)
+    (arguments '(#:tests? #f))
+    (propagated-inputs (list python-jax python-jaxlib python-numpy
+                             python-scipy))
+    (home-page "https://github.com/google/jaxopt")
+    (synopsis
+     "Hardware accelerated, batchable and differentiable optimizers in JAX.")
+    (description
+     "Hardware accelerated, batchable and differentiable optimizers in JAX.")
+    (license license:asl2.0)))
