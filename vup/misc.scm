@@ -1197,6 +1197,7 @@
        (substitute-keyword-arguments (package-arguments ngspice)
          ((#:phases phases)
           `(modify-phases ,phases
+            (delete 'delete-scripts)
             (add-before 'delete-include-files 'reconf
               (lambda _
                 (invoke "autoreconf" "-vfi")))
