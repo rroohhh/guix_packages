@@ -10,6 +10,8 @@
  #:use-module (gnu packages crates-web)
  #:use-module (gnu packages perl)
  #:use-module (gnu packages c)
+ #:use-module (gnu packages tls)
+ #:use-module (gnu packages pkg-config)
  #:use-module (guix download)
  #:use-module (guix git-download)
  #:use-module ((guix import utils) #:select (beautify-description)))
@@ -70,10 +72,11 @@ drop-in allocator.")
           (base32
             "1j0g93zq93k7nwfk58pwh5jl9b3z6nimlj31rmrfy50kz5dj0h5x"))))
     (build-system cargo-build-system)
-    (native-inputs (list perl))
+    (native-inputs (list perl pkg-config))
+    (inputs (list openssl))
     (arguments
     `(#:tests? #f
-      #:features '("sqlite" "vendored_openssl")
+      #:features '("sqlite") ;  "vendored_openssl"
       #:cargo-inputs
       (("rust-argon2" ,rust-argon2_0_5_3)        
        ("rust-bigdecimal" ,rust-bigdecimal_0_4_2)        
@@ -105,7 +108,7 @@ drop-in allocator.")
        ("rust-num-derive" ,rust-num-derive_0_4_1)        
        ("rust-num-traits" ,rust-num-traits-0.2)        
        ("rust-once_cell" ,rust-once_cell_1_19_0)        
-       ("rust-openssl" ,rust-openssl_0_10_63)        
+       ("rust-openssl" ,rust-openssl-0.10)
        ("rust-paste" ,rust-paste-1)        
        ("rust-percent-encoding" ,rust-percent-encoding_2_3_1)        
        ("rust-pico-args" ,rust-pico-args_0_5_0)        
@@ -1158,7 +1161,7 @@ drop-in allocator.")
     `(#:cargo-inputs
       (("rust-base64" ,rust-base64-0.13)        
        ("rust-nom" ,rust-nom_7_1_3)        
-       ("rust-openssl" ,rust-openssl_0_10_63)        
+       ("rust-openssl" ,rust-openssl-0.10)
        ("rust-rand" ,rust-rand-0.8)        
        ("rust-serde" ,rust-serde_1_0_195)        
        ("rust-serde_cbor" ,rust-serde_cbor_0_11_2)        
@@ -1358,34 +1361,34 @@ drop-in allocator.")
       (beautify-description "higher level HTTP client library"))
     (license (list license:expat license:asl2.0))))
 
-(define rust-openssl_0_10_63
-  (package
-    (name "rust-openssl")
-    (version "0.10.63")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "openssl" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "1j03p28gh2idm6pfb12il1360w0qqn7gwz019n6mcabsv2fxdj8m"))))
-    (build-system cargo-build-system)
-    (arguments
-    `(#:cargo-inputs
-      (("rust-bitflags" ,rust-bitflags_2_4_2)        
-       ("rust-cfg-if" ,rust-cfg-if-1)        
-       ("rust-foreign-types" ,rust-foreign-types-0.3)        
-       ("rust-libc" ,rust-libc_0_2_152)        
-       ("rust-once_cell" ,rust-once_cell_1_19_0)        
-       ("rust-openssl-macros" ,rust-openssl-macros_0_1_1)        
-       ("rust-openssl-sys" ,rust-openssl-sys_0_9_99))))
-    (home-page "None")
-    (synopsis "OpenSSL bindings")
-    (description
-      (beautify-description "OpenSSL bindings"))
-    (license (list license:asl2.0))))
+;; (define rust-openssl_0_10_63
+;;   (package
+;;     (name "rust-openssl")
+;;     (version "0.10.63")
+;;     (source
+;;       (origin
+;;         (method url-fetch)
+;;         (uri (crate-uri "openssl" version))
+;;         (file-name
+;;           (string-append name "-" version ".tar.gz"))
+;;         (sha256
+;;           (base32
+;;             "1j03p28gh2idm6pfb12il1360w0qqn7gwz019n6mcabsv2fxdj8m"))))
+;;     (build-system cargo-build-system)
+;;     (arguments
+;;     `(#:cargo-inputs
+;;       (("rust-bitflags" ,rust-bitflags_2_4_2)
+;;        ("rust-cfg-if" ,rust-cfg-if-1)
+;;        ("rust-foreign-types" ,rust-foreign-types-0.3)
+;;        ("rust-libc" ,rust-libc_0_2_152)
+;;        ("rust-once_cell" ,rust-once_cell_1_19_0)
+;;        ("rust-openssl-macros" ,rust-openssl-macros_0_1_1)
+;;        ("rust-openssl-sys" ,rust-openssl-sys_0_9_99))))
+;;     (home-page "None")
+;;     (synopsis "OpenSSL bindings")
+;;     (description
+;;       (beautify-description "OpenSSL bindings"))
+;;     (license (list license:asl2.0))))
 
 (define rust-url_2_5_0
   (package
@@ -6257,32 +6260,32 @@ drop-in allocator.")
       (beautify-description "Internal macros used by the openssl crate."))
     (license (list license:expat license:asl2.0))))
 
-(define rust-openssl-sys_0_9_99
-  (package
-    (name "rust-openssl-sys")
-    (version "0.9.99")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (crate-uri "openssl-sys" version))
-        (file-name
-          (string-append name "-" version ".tar.gz"))
-        (sha256
-          (base32
-            "1bjl4jczvc2zk15gd5pqrnm2apf04iw7j3s66948w2868chvzq92"))))
-    (build-system cargo-build-system)
-    (arguments
-    `(#:cargo-inputs
-      (("rust-cc" ,rust-cc_1_0_83)        
-       ("rust-libc" ,rust-libc_0_2_152)        
-       ("rust-openssl-src" ,rust-openssl-src_300_2_1+3_2_0)        
-       ("rust-pkg-config" ,rust-pkg-config_0_3_29)        
-       ("rust-vcpkg" ,rust-vcpkg-0.2))))
-    (home-page "None")
-    (synopsis "FFI bindings to OpenSSL")
-    (description
-      (beautify-description "FFI bindings to OpenSSL"))
-    (license (list license:expat))))
+;; (define rust-openssl-sys_0_9_99
+;;   (package
+;;     (name "rust-openssl-sys")
+;;     (version "0.9.99")
+;;     (source
+;;       (origin
+;;         (method url-fetch)
+;;         (uri (crate-uri "openssl-sys" version))
+;;         (file-name
+;;           (string-append name "-" version ".tar.gz"))
+;;         (sha256
+;;           (base32
+;;             "1bjl4jczvc2zk15gd5pqrnm2apf04iw7j3s66948w2868chvzq92"))))
+;;     (build-system cargo-build-system)
+;;     (arguments
+;;     `(#:cargo-inputs
+;;       (("rust-cc" ,rust-cc_1_0_83)
+;;        ("rust-libc" ,rust-libc_0_2_152)
+;;        ("rust-openssl-src" ,rust-openssl-src_300_2_1+3_2_0)
+;;        ("rust-pkg-config" ,rust-pkg-config_0_3_29)
+;;        ("rust-vcpkg" ,rust-vcpkg-0.2))))
+;;     (home-page "None")
+;;     (synopsis "FFI bindings to OpenSSL")
+;;     (description
+;;       (beautify-description "FFI bindings to OpenSSL"))
+;;     (license (list license:expat))))
 
 (define rust-openssl-src_300_2_1+3_2_0
   (package
