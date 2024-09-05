@@ -33,7 +33,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "896e5e7dedf9b9b1459fa019f1fa8aa8101fdf43")
+  (let ((commit "2188bc71228b0788569d83ad2b7e7b91ca5dcc09")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -46,12 +46,12 @@
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "01dhl91hvlail9q188ykwzkj5hba642i67qzzbwfnz0nn53s4i9i")))))))
+                  "0j0abl3lym30k3jswfm11lb3xfa7nlgahmk8s8jkqlapb5rwh4nj")))))))
 
 
 (define-public yosys-git
-  (let ((commit "fb4cbfa735e12592653ae74501688e63468ab498")
-        (version "0.36+8"))
+  (let ((commit "d56716417336a085afec954f8ecc24722721b98b")
+        (version "0.45+3"))
     ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
       (inherit guix:yosys)
@@ -63,7 +63,7 @@
                      (commit commit)))
                (sha256
                 (base32
-                 "18d2fayigh42ybgmwlijdvqshmr4w1hpbjphhbjrd6qawi1cx5ii"))
+                 "1c724sk1bwsy07cqa2s91pp8k0ick06zvv5nmpgch71lbyjf44am"))
                (file-name (git-file-name (package-name guix:yosys) version))))
       (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))
       (arguments (append (package-arguments guix:yosys) (list #:tests? #f)))))))

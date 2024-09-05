@@ -411,16 +411,68 @@
                (setenv "KSRC" kernel-src-dir))))
          (delete 'check)))))) ; broken for some reason
 
-(define (setuptools-scm-version-setter v)
-  `(lambda* (#:key inputs #:allow-other-keys)
-     (setenv "SETUPTOOLS_SCM_PRETEND_VERSION" ,v)
+(define-public python-pdm-backend-2.3
+  (package
+    (name "python-pdm-backend")
+    (version "2.3.3")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pdm_backend" version))
+              (sha256
+               (base32
+                "156m4ljaa4akksid3r69xdfsn6zhvhlb51msl3bm6hy8iri6yqd8"))))
+    (build-system pyproject-build-system)
+    (arguments
+     (list
+      #:tests? #f ; Depends on pytest, which we cannot import into this module.
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'unpack 'set-pythonpath
+            (lambda _
+              (setenv "PYTHONPATH" (string-append (getcwd) "/src")))))))
+    (home-page "https://pdm-backend.fming.dev/")
+    (synopsis
+     "PEP 517 build backend for PDM")
+    (description
+     "PDM-Backend is a build backend that supports the latest packaging
+standards, which includes PEP 517, PEP 621 and PEP 660.")
+    (license license:expat)))
+
+(define-public python-jschon
+  (package
+    (name "python-jschon")
+    (version "0.11.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "jschon" version))
+       (sha256
+        (base32 "17qlpwaq5xv5szm93bpkg9waf166bvbixf96sw1llsgin7m0pjn0"))))
+    (build-system pyproject-build-system)
+    (propagated-inputs (list python-rfc3986))
+    (native-inputs (list python-coverage
+                         python-hypothesis
+                         python-pytest
+                         python-pytest-benchmark
+                         python-pytest-httpserver
+                         python-requests
+                         python-tox))
+    (arguments (list #:tests? #f))
+    (home-page "https://github.com/marksparkza/jschon")
+    (synopsis "A JSON toolkit for Python developers.")
+    (description "This package provides a JSON toolkit for Python developers.")
+    (license license:expat)))
+
+(define (pdm-scm-version-setter v)
+  `(lambda _
+     (setenv "PDM_BUILD_SCM_VERSION" ,v)
      #t))
 
 (define-public python-amaranth
-  (let ((commit "120375dabeceaeeb1cf3fcaff2d9217b3e513cb3"))
+  (let ((commit "0f274291e7e3909a2e3f3783fdecd2c5fd565841"))
     (package
       (name "python-amaranth")
-      (version (string-append "0.3+g" (string-take commit 9)))
+      (version (string-append "0.5.1+g" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -437,23 +489,17 @@
          ;;     #t))
          (sha256
           (base32
-           "03d8r21y2q1bb3qksg26v9920d17mkq3rdpvjqk4f9si8dix79gm"))))
+           "1d8184nyr31dzm8yc6yhgs7h34yj4kq2xgvi35jh4yrrrfjf3haw"))))
       (build-system pyproject-build-system)
-      (native-inputs (list python-pdm-backend python-pytest))
+      (native-inputs (list python-pdm-backend-2.3 python-pytest))
       (arguments
-       `(#:phases
-         ,#~(modify-phases %standard-phases
+       (list #:phases
+         #~(modify-phases %standard-phases
              (add-before 'build 'pretend-version
-               (lambda _
-                 (setenv "PDM_BUILD_SCM_VERSION" #$version))))))
-         ;; #:tests? #f))
-      (inputs `(("yosys" ,yosys-git)
-                ("symbiyosys" ,symbiyosys)))
+               #$(pdm-scm-version-setter version)))))
+      (inputs (list yosys-git symbiyosys))
       (propagated-inputs
-       `(("python-jinja2" ,python-jinja2)
-         ("python-pyvcd" ,python-pyvcd)
-         ("python-click" ,python-click)
-         ("python-paramiko" ,python-paramiko)))
+       (list python-jinja2 python-pyvcd python-paramiko python-jschon))
       (home-page "https://amaranth-lang.org/")
       (synopsis
        "Python toolbox for building complex digital hardware")
@@ -462,8 +508,9 @@
       (license license:bsd-3))))
 
 
+
 (define-public python-amaranth-boards
-  (let ((commit "54000b09498080706152bbb8782f68b8efa0ad33"))
+  (let ((commit "19b97324ecf9111c5d16377af79f82aad761c476"))
     (package
       (name "python-amaranth-boards")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -476,11 +523,17 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "047q9h5cphd98j41bmvnrprsymggc9z1rjbvs142jws2npcsvx28"))))
-      (build-system python-build-system)
-      (propagated-inputs
-       `(("python-amaranth" ,python-amaranth)))
-      (arguments `(#:tests? #f))                  ; kind of super broken?
+           "14hj300sxv4fbb4wvhwl1pnp0dx3dznf8jwrxwcf5jmzb3vygsyj"))))
+      (build-system pyproject-build-system)
+      (native-inputs (list python-pdm-backend-2.3))
+      (propagated-inputs (list python-amaranth))
+      (arguments
+       (list
+        #:tests? #f ; broken atm
+        #:phases #~(modify-phases %standard-phases
+             (add-before 'build 'pretend-version
+               #$(pdm-scm-version-setter version)))))
+      ;; (arguments `(#:tests? #f))                  ; kind of super broken?
       (home-page "https://amaranth-lang.org/")
       (synopsis
        "Board and connector definitions for Amaranth")
@@ -489,7 +542,7 @@
       (license license:bsd-3))))
 
 (define-public python-amaranth-stdio
-  (let ((commit "21f44f5f712a149b97dd4f6b534417679c7dfc27"))
+  (let ((commit "f43669d04bb5d5f8c1092ba68087226ec05277ae"))
     (package
       (name "python-amaranth-stdio")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -502,18 +555,23 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "09axmgv114jfk70ijyz0kb5rw02rawkhx1z5lb5fc774gkry9id7"))))
-      (build-system python-build-system)
-      (propagated-inputs
-       `(("python-amaranth" ,python-amaranth)))
-      (arguments `(#:tests? #f))                  ; kind of super broken?
+           "03v0r66xiiqnvf9qcbjzgd3rjw63ajza32liaw9kxl5860wr547g"))))
+      (build-system pyproject-build-system)
+      (native-inputs (list python-pdm-backend-2.3))
+      (propagated-inputs (list python-amaranth))
+      (arguments
+       (list
+        #:tests? #f ; broken atm
+        #:phases #~(modify-phases %standard-phases
+             (add-before 'build 'pretend-version
+               #$(pdm-scm-version-setter version)))))
       (home-page "https://amaranth-lang.org/")
       (synopsis "Industry standard I/O for Amaranth")
       (description "Industry standard I/O for Amaranth")
       (license license:bsd-3))))
 
 (define-public python-amaranth-soc
-  (let ((commit "2b37115c7b996ad0befc73837ed16683dd07f06b"))
+  (let ((commit "9d6bd2c54b4ca28ea4c96cae38edb4c9c3bfdf51"))
     (package
       (name "python-amaranth-soc")
       (version (string-append "0.0+g" (string-take commit 9)))
@@ -526,11 +584,16 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0m1nk63ybfzmv99gmn9y8xf858gk1v1xl25r9113cvdcxndfxd93"))))
-      (build-system python-build-system)
-      (propagated-inputs
-       `(("python-amaranth" ,python-amaranth)))
-      (arguments `(#:tests? #f))                  ; kind of super broken?
+           "1rlpz2rmsvwd9rx4hbl0416afsi5x7bblmbcfq574znrz5x0wrni"))))
+      (build-system pyproject-build-system)
+      (native-inputs (list python-pdm-backend-2.3))
+      (propagated-inputs (list python-amaranth))
+      (arguments
+       (list
+        #:tests? #f ; broken atm
+        #:phases #~(modify-phases %standard-phases
+             (add-before 'build 'pretend-version
+               #$(pdm-scm-version-setter version)))))
       (home-page "https://amaranth-lang.org/")
       (synopsis "System on Chip toolkit for Amaranth")
       (description "System on Chip toolkit for Amaranth")
@@ -616,10 +679,10 @@
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "f0f140c83c766c71368a457d035ea06da34ecf2f"))
+  (let ((commit "67a7821946b77aebda7049c260ab5641850010bf"))
     (package
       (name "symbiyosys")
-      (version (string-append "2023.12.07-" (string-take commit 9)))
+      (version (string-append "2024.09.05-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -629,10 +692,9 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1rrcac8c9a342gb5zihz8041w7sffmhcw69rhjfqkhpnm20ckl9y"))))
-      (inputs `(("python" ,python)
-                ("yosys" ,yosys-git)))
-      (propagated-inputs `(("yices" ,yices)))
+           "1sci68z2a2hnsl52mm9ccbp8czvigfmlbzcvk6wcrjq24igrgpfi"))))
+      (inputs (list python yosys-git))
+      (propagated-inputs (list yices python-click))
       (arguments
        `(#:make-flags `(,(string-append "PREFIX=" %output))
          #:tests? #f
