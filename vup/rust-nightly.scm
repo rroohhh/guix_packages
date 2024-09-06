@@ -3,7 +3,14 @@
 (use-modules (gnu packages))
 (use-modules (gnu packages rust))
 (use-modules (gnu packages ninja))
+(use-modules (gnu packages curl))
+(use-modules (gnu packages libffi))
+(use-modules (gnu packages web))
+(use-modules (gnu packages compression))
+(use-modules (gnu packages gdb))
+(use-modules (gnu packages linux))
 (use-modules (gnu packages cmake))
+(use-modules (gnu packages jemalloc))
 (use-modules (guix packages))
 (use-modules (guix build utils))
 (use-modules (guix utils))
@@ -44,13 +51,18 @@
         (uri (rust-uri version #:date date))
         (sha256 (base32 checksum))))
     (native-inputs
-     (alist-replace "cargo-bootstrap" (list base-rust "cargo")
+     (cons*
+      `("clang-source" ,(package-source clang-runtime-18))
+      `("gdb" ,gdb/pinned)
+      `("procps" ,procps)
+       (alist-replace "cargo-bootstrap" (list base-rust "cargo")
                     (alist-replace "rustc-bootstrap" (list base-rust)
-                                   (package-native-inputs base-rust))))))
+                                   (package-native-inputs base-rust)))))))
+
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust "1.76.0"
-           "08f06shp6l72qrv5fwg1is7yzr6kwj8av0l9h5k243bz781zyp4y")))
+         (rust-bootstrapped-package rust-1.79 "1.80.1"
+           "1i1dbpwnv6ak244lapsxvd26w6sbas9g4l6crc8bip2275j8y2rc")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -71,12 +83,28 @@
       (inputs (modify-inputs (package-inputs base-rust)
                              (append ninja)
                              (append cmake)
-                             (replace "llvm" llvm-17)))
+                             (append jemalloc)
+                             (append curl)
+                             (append libffi)
+                             (append `(,nghttp2 "lib"))
+                             (append zlib)
+                             (replace "llvm" llvm-18)))
       (arguments
-       (substitute-keyword-arguments (package-arguments base-rust)
+       (substitute-keyword-arguments (package-arguments rust)
          ((#:phases phases)
           `(modify-phases ,phases
              (delete 'check) ;; TODO(robin): remove again, just delete for testing
+             (replace 'adjust-rpath-values
+               ;; This adds %output:out to rpath, allowing us to install utilities in
+               ;; different outputs while reusing the shared libraries.
+               (lambda* (#:key outputs #:allow-other-keys)
+                 (let ((out (assoc-ref outputs "out")))
+                   (substitute* "src/bootstrap/src/core/builder.rs"
+                     ((" = rpath.*" all)
+                      (string-append all
+                                     "                "
+                                     "self.rustflags.arg(\"-Clink-args=-Wl,-rpath="
+                                     out "/lib\");\n"))))))
              (add-after 'set-paths 'adjust-CPLUS_INCLUDE_PATH
                (lambda* (#:key inputs #:allow-other-keys)
                  (let ((gcc (assoc-ref inputs  "gcc")))
@@ -101,16 +129,16 @@ sanitizers = true
 profiler = true
 extended = true
 # target = [\"x86_64-unknown-linux-gnu\",\"armv7-none-eabi\",\"armv7a-none-eabi\",\"thumbv7m-none-eabi\",\"thumbv6m-none-eabi\",\"armv7-none-eabihf\",\"armv7a-none-eabihf\",\"thumbv7em-none-eabi\",\"thumbv7em-none-eabihf\",\"wasm32-unknown-unknown\",\"armv7-unknown-linux-musleabihf\"]
-tools = [\"cargo\",  \"rust-demangler\", \"clippy\", \"rustfmt\", \"analysis\", \"src\", \"rust-analyzer\", \"miri\"]"))
+tools = [\"cargo\",  \"rust-demangler\", \"clippy\", \"rustfmt\", \"rustdoc\", \"analysis\", \"src\", \"rust-analyzer\", \"rust-analyzer-proc-macro-srv\"]"))
                  (substitute* "config.toml"
 ;                   (("target\\.x86.*")
 ;                    "target]
 ;")
                    (("jemalloc=true")
                     "jemalloc=true
-codegen-backends=[\"llvm\"]
-lld=false
-use-lld=false
+codegen-backends=[\"llvm\", \"cranelift\"]
+lld=true
+use-lld=true
 llvm-tools=true
 "))
                  #t))
@@ -143,8 +171,8 @@ llvm-tools=true
                  (invoke "./x.py" "install" "rustfmt")
                  (delete-file (string-append (assoc-ref outputs "out") "/lib/rustlib/src/rust/Cargo.lock"))
                  (for-each delete-file-recursively
-                          '("src/llvm-project"
-                            "vendor/tikv-jemalloc-sys/jemalloc"))))
+                          '("src/llvm-project"))))
+                            ;; "vendor/tikv-jemalloc-sys/jemalloc"))))
              (delete 'patch-cargo-checksums)
              (add-after 'patch-generated-file-shebangs 'patch-cargo-checksums
                ;; Generate checksums after patching generated files (in
