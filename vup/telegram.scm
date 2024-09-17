@@ -104,7 +104,7 @@
         (base32
          "0r8y8qmzcfj7b7brqcxr9lg8pavfds815ffvj0kqc378fhgaln5q"))
        ;; disable portal tests since they try to use fuse
-       (patches (search-patches "xdg-desktop-portal-disable-portal-tests.patch"))))
+       (patches (search-patches "vup-xdg-desktop-portal-disable-portal-tests.patch"))))
     (build-system meson-build-system)
     (native-inputs
      (list gettext-minimal
@@ -254,8 +254,8 @@ Specification for URL parser can be found from the WHATWG website.")
     (patches
      ;; https://github.com/desktop-app/cmake_helpers/pull/320
      ;; https://github.com/desktop-app/cmake_helpers/pull/305
-     (search-patches "telegram-desktop-unbundle-gsl.patch"
-                     "telegram-desktop-unbundle-cppgir.patch"))
+     (search-patches "vup-telegram-desktop-unbundle-gsl.patch"
+                     "vup-telegram-desktop-unbundle-cppgir.patch"))
     (sha256
      (base32
       "0a2y9dpszw686lk83k3psvid6kqrwnx7z4zcb35xahn4ab3pp7il"))))
@@ -450,7 +450,7 @@ Specification for URL parser can be found from the WHATWG website.")
           (patches
            (search-patches
             ;; https://github.com/desktop-app/tg_owt/pull/123
-            "webrtc-for-telegram-desktop-unbundle-libsrtp.patch"))
+            "vup-webrtc-for-telegram-desktop-unbundle-libsrtp.patch"))
           (modules '((guix build utils)
                      (ice-9 ftw)
                      (srfi srfi-1)))
@@ -592,7 +592,7 @@ Telegram project, for its use in telegram desktop client.")
        (patches
         (search-patches
          ;; https://github.com/telegramdesktop/tdesktop/pull/24126
-         "telegram-desktop-allow-disable-libtgvoip.patch"))
+         "vup-telegram-desktop-allow-disable-libtgvoip.patch"))
        (modules '((guix build utils)
                   (ice-9 ftw)
                   (srfi srfi-1)))
