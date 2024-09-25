@@ -6,7 +6,7 @@ diff -Naur a/quirks/50-system-lenovo.quirks b/quirks/50-system-lenovo.quirks
  MatchName=*TPPS/2 Elan TrackPoint*
  MatchDMIModalias=dmi:*svnLENOVO:*:pvrThinkPadP14sGen1*
 -AttrTrackpointMultiplier=0.4
-+AttrTrackpointMultiplier=1.0
++AttrTrackpointMultiplier=4.0
  
  # Touchpad is a clickpad but INPUT_PROP_BUTTONPAD is not set, see
  # https://gitlab.freedesktop.org/libinput/libinput/issues/234
