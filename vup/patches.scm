@@ -29,7 +29,7 @@
      (source
       (origin
        (inherit old-source)
-       (patches (append (origin-patches old-source) (list (origin (method url-fetch) (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/ec60db1ffd03df360a236b0a856b0d02e26ce7fd/libinput-quirk.patch") (sha256 "0adjp37g0zrlkc5qh6v3i5lddqn2yjqz1kvkhsdf3psjs9alimfi"))))))))))
+       (patches (append (origin-patches old-source) (list (origin (method url-fetch) (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/f2330c71a4b455f10e3ecf4641568cc7c802f166/libinput-quirk.patch") (sha256 "1zpyqcv343qabqhy8r3hl62j75c9ysalpglrcavcq4w3vhisqz4p"))))))))))
   (if (not (package-replacement old-libinput))
     (module-define! (resolve-module '(gnu packages freedesktop)) 'libinput
       (package (inherit old-libinput)
@@ -44,7 +44,7 @@
      (source
       (origin
        (inherit old-source)
-       (patches (append (origin-patches old-source) (list (origin (method url-fetch) (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/ec60db1ffd03df360a236b0a856b0d02e26ce7fd/libinput-quirk.patch") (sha256 "0adjp37g0zrlkc5qh6v3i5lddqn2yjqz1kvkhsdf3psjs9alimfi"))))))))))
+       (patches (append (origin-patches old-source) (list (origin (method url-fetch) (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/f2330c71a4b455f10e3ecf4641568cc7c802f166/libinput-quirk.patch") (sha256 "1zpyqcv343qabqhy8r3hl62j75c9ysalpglrcavcq4w3vhisqz4p"))))))))))
   (if (not (package-replacement old-libinput-minimal))
     (module-define! (resolve-module '(gnu packages freedesktop)) 'libinput-minimal
       (package (inherit old-libinput-minimal)
