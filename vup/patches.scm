@@ -34,3 +34,18 @@
     (module-define! (resolve-module '(gnu packages freedesktop)) 'libinput
       (package (inherit old-libinput)
         (replacement patched-pkg)))))
+
+(let*
+  ((old-libinput-minimal (module-ref (resolve-module '(gnu packages freedesktop)) 'libinput-minimal))
+   (old-source (package-source old-libinput-minimal))
+   (patched-pkg
+    (package
+     (inherit old-libinput-minimal)
+     (source
+      (origin
+       (inherit old-source)
+       (patches (append (origin-patches old-source) (list (origin (method url-fetch) (uri "https://raw.githubusercontent.com/rroohhh/guix_packages/ec60db1ffd03df360a236b0a856b0d02e26ce7fd/libinput-quirk.patch") (sha256 "0adjp37g0zrlkc5qh6v3i5lddqn2yjqz1kvkhsdf3psjs9alimfi"))))))))))
+  (if (not (package-replacement old-libinput-minimal))
+    (module-define! (resolve-module '(gnu packages freedesktop)) 'libinput-minimal
+      (package (inherit old-libinput-minimal)
+        (replacement patched-pkg)))))
