@@ -679,10 +679,10 @@ standards, which includes PEP 517, PEP 621 and PEP 660.")
     (license license:expat)))
 
 (define-public symbiyosys
-  (let ((commit "67a7821946b77aebda7049c260ab5641850010bf"))
+  (let ((commit "62d17081bf620c8571653e7845b137ec465109c7"))
     (package
       (name "symbiyosys")
-      (version (string-append "2024.09.05-" (string-take commit 9)))
+      (version (string-append "2024.09.30-" (string-take commit 9)))
       (source
        (origin
          (method git-fetch)
@@ -692,7 +692,7 @@ standards, which includes PEP 517, PEP 621 and PEP 660.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1sci68z2a2hnsl52mm9ccbp8czvigfmlbzcvk6wcrjq24igrgpfi"))))
+           "0dk7yiwx57r18kf70nwyalqpki5hvqb6fvkqn079qrgfa6dkl986"))))
       (inputs (list python yosys-git))
       (propagated-inputs (list yices python-click))
       (arguments

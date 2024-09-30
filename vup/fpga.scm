@@ -17,6 +17,9 @@
   #:use-module (gnu packages flex)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages glib)
+  #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages readline)
+  #:use-module (gnu packages version-control)
   #:use-module (gnu packages gperf)
   #:use-module (gnu packages bison)
   #:use-module (gnu packages ghostscript)
@@ -27,6 +30,7 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages serialization)
+  #:use-module (gnu packages)
   #:use-module (vup prjoxide)
   #:use-module (vup python-xyz))
 
@@ -279,3 +283,28 @@ simulator trace files (@dfn{FST}).")
     (home-page "http://gtkwave.sourceforge.net/")
     ;; Exception against free government use in tcl_np.c and tcl_np.h.
     (license (list license:gpl2+ license:expat license:tcl/tk))))
+
+
+
+(define-public super-prove
+  (let ((commit "c7a4df4f60b9fe847f673b566c9a4fb4f71f4181"))
+    (package
+      (name "super-prove")
+      (version (string-append "0.1.0-" (string-take commit 9)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/sterin/super-prove-build")
+                      (commit commit)
+                      (recursive? #t)))
+                (file-name (git-file-name name version))
+                (patches (search-patches "super-prove.patch"))
+                (sha256
+                 (base32
+                  "1xlbz619kz4q1502sr0kgqg82qig4l30y596aqskakqlfd0z9ikh"))))
+      (inputs (list python-wrapper ncurses readline git zlib))
+      (build-system cmake-build-system)
+      (synopsis "super-prove")
+      (description "super-prove")
+      (home-page "https://github.com/sterin/super-prove-build")
+      (license #f))))
