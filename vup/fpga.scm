@@ -6,6 +6,7 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system python)
+  #:use-module (guix build-system meson)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module ((gnu packages fpga) #:prefix guix:)
   #:use-module (gnu packages python)
@@ -17,6 +18,7 @@
   #:use-module (gnu packages flex)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages glib)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages ncurses)
   #:use-module (gnu packages readline)
   #:use-module (gnu packages version-control)
@@ -237,52 +239,29 @@ open Verilog to bitstream toolchain for these devices.")
       (home-page "https://github.com/yosyshq/nextpnr")
       (license license:isc))))
 
-(define-public gtkwave-gtk3
-  (package
-    (name "gtkwave-gtk3")
-    (version "3.3.114")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (list (string-append "mirror://sourceforge/gtkwave/"
-                                 "gtkwave-gtk3-" version "/"
-                                 "gtkwave-gtk3-" version ".tar.gz")
-                  (string-append "http://gtkwave.sourceforge.net/"
-                                 "gtkwave-gtk3-" version ".tar.gz")))
-       (sha256
-        (base32 "1b44rwbp1r6vjjkngkj6j4gba9yz7d0agr72rlj6ga9ppg55yfng"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     (list gperf pkg-config `(,glib "bin")))
-    (inputs
-     `(("tcl" ,tcl)
-       ("tk" ,tk)
-       ("gtk+-3" ,gtk+)))
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-        (add-after 'wrap-python 'wrap-glib-or-gtk
-          (assoc-ref glib-or-gtk:%standard-phases 'glib-or-gtk-wrap)))
-       #:modules ((guix build gnu-build-system)
-                  ((guix build glib-or-gtk-build-system) #:prefix glib-or-gtk:)
-                  (guix build utils))
-       #:imported-modules (,@%gnu-build-system-modules
-                           (guix build glib-or-gtk-build-system))
-       #:configure-flags
-       (list "--enable-gtk3" "--with-gsettings" 
-             (string-append "--with-tcl="
-                            (assoc-ref %build-inputs "tcl")
-                            "/lib")
-             (string-append "--with-tk="
-                            (assoc-ref %build-inputs "tk")
-                            "/lib"))))
-
+(define-public gtkwave-gtk4
+  (let ((commit "0a800de96255f7fb11beadb6729fdf670da76ecb"))
+   (package
+    (name "gtkwave-gtk4")
+    (version (string-append "3.3.116-" (string-take commit 9)))
+    (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/gtkwave/gtkwave")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "113psdcv6a1npfv40gs1cjf9ck342fp31pf4y8msvc2dhcr72l1b"))))
+    (build-system meson-build-system)
+    (native-inputs (list pkg-config gperf flex `(,glib "bin") desktop-file-utils `(,gtk "bin")))
+    (inputs (list glib gtk gtk+ bzip2 gobject-introspection))
     (synopsis "Waveform viewer for FPGA simulator trace files")
     (description "This package is a waveform viewer for FPGA
 simulator trace files (@dfn{FST}).")
     (home-page "http://gtkwave.sourceforge.net/")
     ;; Exception against free government use in tcl_np.c and tcl_np.h.
-    (license (list license:gpl2+ license:expat license:tcl/tk))))
+    (license (list license:gpl2+ license:expat license:tcl/tk)))))
 
 
 
