@@ -64,6 +64,23 @@
       (license license:gpl2)
       (home-page "https://kernel.org/"))))
 
+(define-public linux-nonfree-stable
+  (let* ((version "6.6.63"))
+    (package
+      (inherit linux-libre)
+      (name "linux-nonfree-stable")
+      (version version)
+      (source (origin
+                (method url-fetch)
+                (uri (linux-nonfree-urls version))
+                (sha256
+                 (base32
+                  "0d8q0vwv3lcix3wiq2n53rir3h298flg2l0ghpify4rlh2s4l1fi"))))
+      (synopsis "Mainline Linux kernel, nonfree binary blobs included.")
+      (description "Linux is a kernel.")
+      (license license:gpl2)
+      (home-page "https://kernel.org/"))))
+
 (define linux-firmware-version "20241017")
 (define (linux-firmware-source version)
   (origin
