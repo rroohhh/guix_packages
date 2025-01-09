@@ -12,6 +12,7 @@
 (use-modules (gnu packages cmake))
 (use-modules (gnu packages jemalloc))
 (use-modules (guix packages))
+(use-modules (guix search-paths))
 (use-modules (guix build utils))
 (use-modules (guix utils))
 (use-modules (ice-9 match))
@@ -61,8 +62,8 @@
 
 (define-public rust-nightly
   (let ((base-rust
-         (rust-bootstrapped-package rust-1.79 "1.80.1"
-           "1i1dbpwnv6ak244lapsxvd26w6sbas9g4l6crc8bip2275j8y2rc")))
+         (rust-bootstrapped-package rust-1.82 "1.83.0"
+           "0vhwhk4cbyppnz0lcazfjyddyz811fgvadfxswldicpashxpfbbj")))
     (package
       (inherit base-rust)
       (name "rust-nightly")
@@ -89,6 +90,19 @@
                              (append `(,nghttp2 "lib"))
                              (append zlib)
                              (replace "llvm" llvm-18)))
+
+      (native-search-paths
+       (cons
+         ;; For HTTPS access, Cargo reads from a single-file certificate
+         ;; specified with $CARGO_HTTP_CAINFO. See
+         ;; https://doc.rust-lang.org/cargo/reference/environment-variables.html
+         (search-path-specification
+          (variable "CARGO_HTTP_CAINFO")
+          (file-type 'regular)
+          (separator #f)              ;single entry
+          (files '("etc/ssl/certs/ca-certificates.crt")))
+         ;; rustc invokes gcc, so we need to set its search paths accordingly.
+         %gcc-search-paths))
       (arguments
        (substitute-keyword-arguments (package-arguments rust)
          ((#:phases phases)
@@ -120,9 +134,28 @@
                    (format #true
                            "environment variable `CPLUS_INCLUDE_PATH' changed to ~a~%"
                            (getenv "CPLUS_INCLUDE_PATH")))))
+             ;; (add-after 'unpack 'unpack-profiler-rt
+             ;;   ;; Copy compiler-rt sources to where libprofiler_builtins looks
+             ;;   ;; for its vendored copy.
+             ;;   (lambda* (#:key inputs #:allow-other-keys)
+             ;;     (mkdir-p "src/llvm-project/compiler-rt")
+             ;;     (copy-recursively
+             ;;       (string-append (assoc-ref inputs "clang-source")
+             ;;                      "/compiler-rt")
+             ;;       "src/llvm-project/compiler-rt")))
+             ;; (add-after 'configure 'add-gdb-to-config
+             ;;   (lambda* (#:key inputs #:allow-other-keys)
+             ;;     (let ((gdb (assoc-ref inputs "gdb")))
+             ;;       (substitute* "config.toml"
+             ;;         (("^python =.*" all)
+             ;;          (string-append all
+             ;;                         "gdb = \"" gdb "/bin/gdb\"\n"))))))
              (add-after 'configure 'enable-extended
                (lambda* (#:key outputs #:allow-other-keys)
                  (substitute* "config.toml"
+                   (("\\[llvm\\]")
+                    "[llvm]
+download-ci-llvm = false")
                    (("submodules = false")
                     "submodules = false
 sanitizers = true
@@ -169,7 +202,7 @@ llvm-tools=true
                  (invoke "./x.py" "install" "clippy")
                  (invoke "./x.py" "install" "rust-analyzer")
                  (invoke "./x.py" "install" "rustfmt")
-                 (delete-file (string-append (assoc-ref outputs "out") "/lib/rustlib/src/rust/Cargo.lock"))
+                 ;; (delete-file (string-append (assoc-ref outputs "out") "/lib/rustlib/src/rust/Cargo.lock"))
                  (for-each delete-file-recursively
                           '("src/llvm-project"))))
                             ;; "vendor/tikv-jemalloc-sys/jemalloc"))))
@@ -180,10 +213,8 @@ llvm-tools=true
                (lambda* _
                  (use-modules (guix build cargo-utils))
                  (substitute* (cons* "Cargo.lock"
-                                     "src/tools/rust-analyzer/Cargo.lock"
-                                     "src/tools/miri/Cargo.lock"
-                                     "src/tools/rustfmt/Cargo.lock"
                                      "src/bootstrap/Cargo.lock"
+                                     "library/Cargo.lock"
                                      "compiler/rustc_codegen_gcc/Cargo.lock"
                                      "compiler/rustc_codegen_cranelift/Cargo.lock"
                                      (find-files "src/tools" "Cargo.lock"))
@@ -193,21 +224,7 @@ llvm-tools=true
                  (generate-all-checksums "compiler")
                  (generate-all-checksums "src/tools")
                  #t))
-             (delete 'delete-install-logs)
-            ;; (replace 'delete-install-logs
-            ;;    (lambda* (#:key outputs #:allow-other-keys)
-            ;;      (define (delete-manifest-file out-path file)
-            ;;        (delete-file (string-append out-path "/lib/rustlib/" file)))
-
-            ;;      (let ((out (assoc-ref outputs "out")))
-            ;;        (for-each
-            ;;          (lambda (file) (delete-manifest-file out file))
-            ;;          '("install.log"
-            ;;            "manifest-rust-docs"
-            ;;            ,(string-append "manifest-rust-std-"
-            ;;                            (nix-system->gnu-triplet-for-rust))
-            ;;            "manifest-rustc"))
-            ;;        #t)))
+            (delete 'delete-install-logs)
             (add-after 'configure 'switch-to-nightly
               (lambda _
                 (substitute* "config.toml"
