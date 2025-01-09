@@ -10,6 +10,8 @@
   #:use-module (gnu packages crates-io)
   #:use-module (gnu packages crates-tls)
   #:use-module (gnu packages crates-graphics)
+  #:use-module (gnu packages crates-shell)
+  #:use-module (gnu packages crates-database)
   #:use-module (guix download)
   #:use-module ((guix import utils) #:select (beautify-description)))
 

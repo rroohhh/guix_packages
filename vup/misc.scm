@@ -46,6 +46,12 @@
   #:use-module (gnu packages hardware)
   #:use-module (gnu packages mingw)
   #:use-module (gnu packages webkit)
+  #:use-module (gnu packages pretty-print)
+  #:use-module (gnu packages gcc)
+  #:use-module (gnu packages crypto)
+  #:use-module (gnu packages libunwind)
+  #:use-module (gnu packages popt)
+  #:use-module (gnu packages logging)
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages efi)
   #:use-module (gnu packages python-xyz)
@@ -1321,3 +1327,76 @@
       (description "User Mode Register Debugger for AMDGPU Hardware")
       (home-page "https://gitlab.freedesktop.org/tomstdenis/umr")
       (license #f))))
+
+
+(define-public glfw-3.4
+  (package
+    (inherit glfw)
+    (version "3.4")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "https://github.com/glfw/glfw"
+                                  "/releases/download/" version
+                                  "/glfw-" version ".zip"))
+              (sha256
+               (base32
+                "1sd396kkn53myp61kxrd18h7b1q4ix173hhxhvl0iz8j4x5h1v5m"))))
+    (native-inputs (modify-inputs (package-native-inputs glfw)
+                     (prepend pkg-config)))
+    ;; When building out of source, the install phase fails with:
+    ;;  file INSTALL cannot find "/tmp/guix-build-glfw-3.4.drv-0/build/docs/html":
+    ;;  No such file or directory
+    (arguments (substitute-keyword-arguments (package-arguments glfw)
+                 ((#:out-of-source? _ #f) #f)
+                 ((#:configure-flags flags) #~(cons* "_DCMAKE_TESSESES=reiea" #$flags))))))
+
+
+(define-public folly-tunable
+  (package
+    (name "folly-tunable")
+    (version "2024.09.09.00")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/facebook/folly")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "17fdigkaxivbrww5yhz9fh25d8pirqjp126zbv4kg4qsprywfww5"))))
+    (build-system cmake-build-system)
+    (arguments
+     (list
+      ;; Tests must be explicitly enabled
+      ;;#:configure-flags #~(list "-DBUILD_TESTS=ON")
+      ;; Leave tests disabled; see https://github.com/facebook/folly/issues/2246
+      #:tests? #f
+      #:configure-flags #~(list "-DFOLLY_SUPPORT_SHARED_LIBRARY=ON")))
+    (propagated-inputs
+     (list boost gflags glog liburing))
+    (inputs
+     (list bzip2
+           double-conversion
+           fast-float
+           fmt
+           libaio
+           libevent
+           libiberty
+           libsodium
+           libunwind
+           lz4
+           openssl
+           snappy
+           zlib
+           `(,zstd "lib")))
+    (native-inputs
+     (list googletest))
+    (synopsis "Collection of C++ components complementing the standard library")
+    (description
+     "Folly (acronymed loosely after Facebook Open Source Library) is a library
+of C++14 components that complements @code{std} and Boost.")
+    (home-page "https://github.com/facebook/folly/wiki")
+    ;; 32-bit is not supported: https://github.com/facebook/folly/issues/103
+    (supported-systems '("aarch64-linux" "x86_64-linux"))
+    (properties `((tunable? . #t)))
+    (license licenses:asl2.0)))

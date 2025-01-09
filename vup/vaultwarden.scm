@@ -7,6 +7,7 @@
  #:use-module (gnu packages crates-windows)
  #:use-module (gnu packages crates-io)
  #:use-module (gnu packages crates-tls)
+ #:use-module (gnu packages crates-database)
  #:use-module (gnu packages crates-web)
  #:use-module (gnu packages perl)
  #:use-module (gnu packages c)
