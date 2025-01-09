@@ -456,6 +456,8 @@ standards, which includes PEP 517, PEP 621 and PEP 660.")
                          python-pytest-benchmark
                          python-pytest-httpserver
                          python-requests
+                         python-setuptools
+                         python-wheel
                          python-tox))
     (arguments (list #:tests? #f))
     (home-page "https://github.com/marksparkza/jschon")
