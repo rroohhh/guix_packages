@@ -39,17 +39,20 @@
 
 (define (git-package? package)
   "Return true if PACKAGE is hosted on a Git repository."
-  (match (package-source package)
-    ((? origin? origin)
-     (and (eq? (origin-method origin) git-fetch)
-          (git-reference? (origin-uri origin))))
-    (_ #f)))
+  (and (match (package-source package)
+         ((? origin? origin)
+          (and (eq? (origin-method origin) git-fetch)
+               (git-reference? (origin-uri origin))))
+         (_ #f))
+       (string-contains (package-version package) "-")))
 
+(define honor-system-x509-certificates!
+  (@@ (guix git) honor-system-x509-certificates!))
+(define %certificates-initialized?
+  (@@ (guix git) honor-system-x509-certificates!))
 
-(define honor-system-x509-certificates! (@@ (guix git) honor-system-x509-certificates!))
-(define %certificates-initialized? (@@ (guix git) honor-system-x509-certificates!))
-
-(define latest-git-tag-version (@@ (guix import git) latest-git-tag-version))
+(define latest-git-tag-version
+  (@@ (guix import git) latest-git-tag-version))
 
 (define-syntax-rule (with-libgit2 thunk ...)
   (begin
@@ -60,58 +63,77 @@
     (unless %certificates-initialized?
       (honor-system-x509-certificates!)
       (set! %certificates-initialized? #t))
-    thunk ...))
+    thunk
+    ...))
 
+(define* (find-latest-commit url cache-directory)
+  (let* ((repository (repository-init cache-directory))
+         ;; Create an in-memory remote so we don't touch disk.
+         (remote (remote-create-anonymous repository url)))
+    (remote-connect remote)
 
-(define* (import-git-release pkg-in #:key (version #f))
+    (let* ((remote-heads (remote-ls remote))
+           (head-ref (find (lambda (head)
+                             (and (string=? "HEAD"
+                                            (remote-head-name head)) head))
+                           remote-heads)))
+      ;; Wait until we're finished with the repository before closing it.
+      (remote-disconnect remote)
+      (repository-close! repository)
+      (oid->string (remote-head-oid head-ref)))))
+
+(define* (import-git-release pkg-in
+                             #:key (version #f))
   "Return an <upstream-source> for the latest release of PACKAGE.
 Optionally include a VERSION string to fetch a specific version."
   (let* ((pkg (package
-                    (inherit pkg-in)
-                    (properties
-                      (append (package-properties pkg-in) '((accept-pre-releases? #t))))
-              ))
+                (inherit pkg-in)
+                (properties (append (package-properties pkg-in)
+                                    '((accept-pre-releases? #t))))))
          (name (package-name pkg))
          (old-version (package-version pkg))
          (old-reference (origin-uri (package-source pkg)))
-         ; for some reason using the patched pkg doesnt work sometimes
+         ;; for some reason using the patched pkg doesnt work sometimes
          (new-version-from-tag new-version-tag
-                      (latest-git-tag-version pkg-in #:version version))
+                               (latest-git-tag-version pkg-in
+                                                       #:version version))
          (new-version-from-tag-pre new-version-tag-pre
-                      (latest-git-tag-version pkg #:version version))
-         (new-version-from-tag (or (and new-version-from-tag-pre new-version-from-tag-pre) new-version-from-tag))
+                                   (latest-git-tag-version pkg
+                                                           #:version version))
+         (new-version-from-tag (or (or (and new-version-from-tag-pre
+                                            new-version-from-tag-pre)
+                                       new-version-from-tag) "0.0"))
          (url (git-reference-url old-reference))
-         (latest-commit (with-libgit2
-                         (call-with-temporary-directory
-                          (lambda (cache-directory)
-                            (let* ((repository (repository-init cache-directory))
-                                   ;; Create an in-memory remote so we don't touch disk.
-                                   (remote (remote-create-anonymous repository url)))
-                              (remote-connect remote)
-
-                              (let* ((remote-heads (remote-ls remote))
-                                     (head-ref
-                                      (find
-                                       (lambda (head)
-                                         (and (string=? "HEAD" (remote-head-name head)) head))
-                                       remote-heads)))
-                                ;; Wait until we're finished with the repository before closing it.
-                                (remote-disconnect remote)
-                                (repository-close! repository)
-                                (oid->string (remote-head-oid head-ref))))))))
-         (new-version (and new-version-from-tag (string-append new-version-from-tag "+g" (string-take latest-commit 9)))))
+         (latest-commit (with-libgit2 (call-with-temporary-directory
+                                       (lambda (cd) (find-latest-commit url cd)))))
+         (new-version-from-tag-base (car (string-split new-version-from-tag #\-)))
+         (old-ver-split (string-split old-version #\-))
+         (old-version-base (car old-ver-split))
+         (old-version-rev (last old-ver-split))
+         (old-revision (string->number (version-prefix old-version-rev 1)))
+         (old-commit (git-reference-commit old-reference))
+         (revision (if (eq? '=
+                            (version-compare old-version-base
+                                             new-version-from-tag-base))
+                       (number->string (if (string=? old-commit latest-commit)
+                                           old-revision
+                                           (+ 1 old-revision))) "0"))
+         (new-version (and new-version-from-tag
+                           (git-version new-version-from-tag revision
+                                        latest-commit))))
     (and new-version
-         (upstream-source
-          (package name)
-          (version new-version)
-          (urls (git-reference
-                 (url (git-reference-url old-reference))
-                 (commit latest-commit)
-                 (recursive? (git-reference-recursive? old-reference))))))))
+         (upstream-source (package
+                            name)
+                          (version new-version)
+                          (urls (git-reference (url (git-reference-url
+                                                     old-reference))
+                                               (commit latest-commit)
+                                               (recursive? (git-reference-recursive?
+                                                            old-reference))))))))
 
 (define %generic-git-updater-head
-  (upstream-updater
-   (name 'generic-git-head)
-   (description "Updater for packages hosted on Git repositories to HEAD commit")
-   (pred git-package?)
-   (import import-git-release)))
+  (upstream-updater (name 'generic-git-head)
+                    (description
+                     "Updater for packages hosted on Git repositories to HEAD commit")
+                    (pred git-package?)
+                    (import import-git-release)))
