@@ -39,7 +39,7 @@
 
 ;; kept in lockstep with yosys upstream for reproducability
 (define-public abc-for-yosys
-  (let ((commit "2188bc71228b0788569d83ad2b7e7b91ca5dcc09")
+  (let ((commit "cac8f99eaa220a5e3db5caeb87cef0a975c953a2")
         (revision "1"))
     (package
       (inherit guix:abc)
@@ -52,27 +52,24 @@
                 (file-name (git-file-name (package-name guix:abc) version))
                 (sha256
                  (base32
-                  "0j0abl3lym30k3jswfm11lb3xfa7nlgahmk8s8jkqlapb5rwh4nj")))))))
+                  "1r1qcfm4c16v0582zxi1n0jaqb8ah8alzmwjsr49y8j3wlnx6han")))))))
 
 
 (define-public yosys-git
-  (let ((commit "d56716417336a085afec954f8ecc24722721b98b")
-        (version "0.45+3"))
-    ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
+  ((package-input-rewriting/spec `(("abc" . ,(const abc-for-yosys))))
      (package
       (inherit guix:yosys)
-      (version (string-append version "+" (string-take commit 9)))
+      (version "0.48-0.4f0dae1")
       (source (origin
                (inherit (package-source guix:yosys))
                (uri (git-reference
                      (url "https://github.com/yosyshq/yosys.git")
-                     (commit commit)))
+                     (commit "4f0dae17adb7a8df490398851307e08a5532e3a2")))
                (sha256
                 (base32
-                 "1c724sk1bwsy07cqa2s91pp8k0ick06zvv5nmpgch71lbyjf44am"))
+                 "1njnrlyf5jwhmyiwq4r53x3mw9pjgqc66m68mrmcnmjd8yfxkix9"))
                (file-name (git-file-name (package-name guix:yosys) version))))
-      (inputs (append (package-inputs guix:yosys) `(("zlib" ,zlib))))
-      (arguments (append (package-arguments guix:yosys) (list #:tests? #f)))))))
+      (arguments (append (package-arguments guix:yosys) (list #:tests? #f))))))
 
 
 (define-public icestorm
